@@ -18,6 +18,8 @@ import { WinstonOptions } from '@App/Common/Logs/Winston.Helper';
 import { CommonModule } from '@App/Common/Common.Module';
 import { JwtOptions } from '@App/Common/Auth/Jwt.Helper';
 import { JwtStrategy } from '@App/Common/Auth/Jwt.Strategy';
+import { TypeOrmOptions } from '@App/Base/TypeOrmOptions';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
 	imports: [
@@ -31,6 +33,7 @@ import { JwtStrategy } from '@App/Common/Auth/Jwt.Strategy';
 			...JwtModule.registerAsync(JwtOptions),
 			global: true // to register only once and be accessed across the whole app
 		},
+		TypeOrmModule.forRootAsync(TypeOrmOptions),
 		CommonModule
 	],
 	controllers: [AppController],
@@ -45,4 +48,4 @@ import { JwtStrategy } from '@App/Common/Auth/Jwt.Strategy';
 		{ provide: APP_INTERCEPTOR, useClass: CurrentUserInterceptor }
 	]
 })
-export class AppModule {}
+export class AppModule { }

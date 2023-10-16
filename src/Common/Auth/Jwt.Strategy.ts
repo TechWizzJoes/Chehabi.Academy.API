@@ -3,7 +3,7 @@ import { AppConfig } from '@App/Config/App.Config';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
-import { UserModels } from '@App/Common/Models/User.Models';
+import { AccountModels } from '@App/Features/Account/Account.Models';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -16,25 +16,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 		});
 	}
 
-	async validate(req: Request, user: UserModels.JwtModel) {
+	async validate(req: Request, user: AccountModels.JwtModel) {
 		console.log('<validate>');
-
-		const requestedHost = req.headers.host;
-		const env = this.AppConfig.Config.Env ?? 'local';
-
-		console.log(user.AccountHost);
-		console.log(requestedHost);
-		// console.log(this.AppConfig.Config.NODE_ENV);
-		// console.log(user.AccountHost != requestedHost);;
-		// console.log(this.AppConfig.Config.NODE_ENV != 'local');
-
-		if (!requestedHost.includes(user.AccountHost) && env != 'local') {
-			throw new HttpException(
-				`not allowed client\n user.AccountHost:${user.AccountHost}, requestedHost:${requestedHost}, env:${env}`,
-				HttpStatus.AMBIGUOUS
-			); // any custom error
-			// return false; // throws unauthorized exception
-		}
 
 		// const role = payload.IsAdmin ? RoleEnum.Admin : RoleEnum.User;
 		console.log('</validate>');

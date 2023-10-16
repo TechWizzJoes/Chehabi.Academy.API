@@ -4,40 +4,26 @@ import Configuration from '@App/Config/Configuration';
 
 export interface Config {
 	Env: string;
-	StorageFolder: string;
-	VoicemailStorageFolder: string;
-	FrontendUrl: string;
 	Server: {
 		Host: string;
 		Port: number;
 	};
 	Database: {
-		Mother: {
-			Host: string;
-			Username: string;
-			Password: string;
-			Name: string;
-			Min: number;
-			Max: number;
-			Idle: number;
-		};
-		Client: {
-			Host: string;
-			Port: number;
-			Username: string;
-			Password: string;
-			Asterisk: string;
-			Dialer: string;
-			Min: number;
-			Max: number;
-			Idle: number;
-		};
+		Host: string;
+		Name: string;
+		Username: string;
+		Password: string;
+		Min: number;
+		Max: number;
+		Idle: number;
 	};
+	StorageFolder: string;
 	Auth: {
 		EncryptionKey: string;
 		Jwt: {
 			Key: string;
 			Lifespan: string;
+			RefreshTokenSpan: string;
 			Issuer: string;
 			Audience: string;
 		};
@@ -57,5 +43,5 @@ export class AppConfig {
 	constructor(
 		@Inject(Configuration.KEY)
 		public Config: ConfigType<typeof Configuration>
-	) {}
+	) { }
 }
