@@ -109,7 +109,6 @@ export class WinstonService {
 				Method: request.method,
 				RemoteIp: request.connection.remoteAddress,
 				UserId: request.user?.UserId, // ? due to no user in login needs to be removed after account api login
-				AccountId: request.user?.AccountId, // ? due to no user in login needs to be removed after account api login
 				Start: this.ParseDate(request.StartTime),
 				End: this.ParseDate(),
 				Time: `${Date.now() - request.StartTime}`
@@ -124,7 +123,6 @@ export class WinstonService {
 			Method: request.method,
 			RemoteIp: request.connection.remoteAddress,
 			UserId: request.user?.UserId, // ? due to no user in login needs to be removed after account api login
-			AccountId: request.user?.AccountId, // ? due to no user in login needs to be removed after account api login
 			Start: this.ParseDate(startTime),
 			End: this.ParseDate(),
 			Time: `${Date.now() - startTime}`,
@@ -150,9 +148,7 @@ export class WinstonService {
 	DataBase(message: string, time, trace?: string, context?: string) {
 		const CurrentUser = this.UserHelper.GetCurrentUser();
 		this.DataBaseLogger.info({
-			LogToken: CurrentUser.LogToken,
 			UserId: CurrentUser.UserId,
-			AccountId: CurrentUser.AccountId,
 			Query: message,
 			Time: time
 		});

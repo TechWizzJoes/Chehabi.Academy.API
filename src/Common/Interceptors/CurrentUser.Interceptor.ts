@@ -2,11 +2,11 @@ import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nes
 import { AsyncLocalStorage } from 'async_hooks';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { UserModels } from '../Models/User.Models';
+import { AccountModels } from '../../Features/Account/Account.Models';
 
 @Injectable()
 export class CurrentUserInterceptor implements NestInterceptor {
-	constructor(private readonly AsyncLocalStorage: AsyncLocalStorage<UserModels.JwtModel>) {}
+	constructor(private readonly AsyncLocalStorage: AsyncLocalStorage<AccountModels.JwtModel>) { }
 
 	intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
 		// console.log('<CurrentUser.Interceptor>');

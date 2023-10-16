@@ -1,0 +1,1 @@
+npx typeorm-model-generator -h host -u username -x 'password' -d dbname -e mysql > ./src/Data/TypeOrmEntities
