@@ -19,7 +19,7 @@ export class AccountController {
 	@Post('register')
 	@ApiBody({ type: AccountModels.RegisterReqModel })
 	Register(@Body() RegisterReqModel: AccountModels.RegisterReqModel): Promise<AccountModels.RegisterResModel> {
-		return this.AccountService.Register(RegisterReqModel.Email, RegisterReqModel.Password);
+		return this.AccountService.Register(RegisterReqModel);
 	}
 
 	@Post('refresh')

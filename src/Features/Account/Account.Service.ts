@@ -7,7 +7,7 @@ import { ErrorCodesEnum } from '@App/Common/Enums/ErrorCodes.Enum';
 import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
 import { AccountRepository } from './Account.Repository';
 import { AccountModels } from './Account.Models';
-import { LoginException } from '@App/Common/Exceptions/Login.Exception';
+import { AccountException } from '@App/Common/Exceptions/Account.Exception';
 
 @Injectable()
 export class AccountService {
@@ -26,7 +26,7 @@ export class AccountService {
 		const user: AccountModels.User = await this.AccountRepository.GetUserByEmail(email);
 		const loginResult = this.CanSignIn(user, password);
 		if (!loginResult.Success) {
-			throw new LoginException(loginResult.ErrorMsg);
+			throw new AccountException(loginResult.ErrorMsg);
 		}
 		const accessToken = this.GetAccessToken(user);
 		const refreshToken = this.GetRefreshToken(user);
@@ -34,12 +34,15 @@ export class AccountService {
 		return new AccountModels.LoginResModel(accessToken, refreshToken, currentUser);
 	}
 
-	async Register(email: string, password: string): Promise<AccountModels.LoginResModel> {
-		const user = await this.AccountRepository.GetUserByEmail(email);
-		const loginResult = this.CanSignIn(user, password);
-		if (!loginResult.Success) {
-			throw new LoginException(loginResult.ErrorMsg);
+	async Register(registerReqModel: AccountModels.RegisterReqModel): Promise<AccountModels.LoginResModel> {
+		let user = await this.AccountRepository.GetUserByEmail(registerReqModel.Email);
+		const RegisterResult = this.CanRegister(user);
+		if (!RegisterResult.Success) {
+			throw new AccountException(RegisterResult.ErrorMsg);
 		}
+		const encryptedPassword = CryptoHelper.TripleDES.Encrypt(user.Password, this.Config.Auth.EncryptionKey)
+		user.Password = encryptedPassword;
+		user = await this.AccountRepository.CreateUser(registerReqModel as AccountModels.User);
 		const accessToken = this.GetAccessToken(user);
 		const refreshToken = this.GetRefreshToken(user);
 		const currentUser = this.GetCurrentUser(user);
@@ -49,7 +52,7 @@ export class AccountService {
 	async RefreshAccessToken(id: number): Promise<AccountModels.RefreshTokenResModel> {
 		const user = await this.AccountRepository.GetUserById(id);
 		if (!user) {
-			throw new LoginException(ErrorCodesEnum.USER_NOT_FOUND);
+			throw new AccountException(ErrorCodesEnum.USER_NOT_FOUND);
 		}
 		const accessToken = this.GetAccessToken(user);
 		const refreshToken = this.GetRefreshToken(user);
@@ -58,6 +61,8 @@ export class AccountService {
 
 	CanSignIn(user: AccountModels.User, password: string) {
 		const passwordEncrypted = CryptoHelper.TripleDES.Encrypt(password, this.Config.Auth.EncryptionKey);
+		console.log(passwordEncrypted);
+
 		if (user == null) {
 			return {
 				Success: false,
@@ -78,6 +83,20 @@ export class AccountService {
 		};
 	}
 
+	CanRegister(user: AccountModels.User) {
+		if (user == null) {
+			return {
+				Success: true,
+				ErrorMsg: null
+			};
+		} else {
+			return {
+				Success: true,
+				ErrorMsg: ErrorCodesEnum.USER_ALREADY_EXISTS
+			};
+		}
+	}
+
 	GetAccessToken(user: AccountModels.User): string {
 		const accessToken =
 			'Bearer ' +
@@ -95,7 +114,7 @@ export class AccountService {
 				IsAdmin: user.IsAdmin,
 			} as AccountModels.JwtModel,
 			{
-				expiresIn: this.appConfig.Config.Auth.Jwt.RefreshTokenSpan
+				expiresIn: this.Config.Auth.Jwt.RefreshTokenSpan
 			}
 		);
 		// we should add this refresh token to the contact in db

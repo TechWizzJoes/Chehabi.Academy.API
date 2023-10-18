@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-export class LoginException extends HttpException {
+export class AccountException extends HttpException {
 	constructor(message) {
 		super(message, HttpStatus.BAD_REQUEST);
 	}

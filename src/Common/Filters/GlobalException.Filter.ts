@@ -2,7 +2,7 @@ import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from
 import sequelize, { ConnectionError, TimeoutError } from 'sequelize';
 
 import { WinstonService } from '@App/Common/Logs/Winston.Helper';
-import { LoginException } from '../Exceptions/Login.Exception';
+import { AccountException } from '../Exceptions/Account.Exception';
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
 	logError: boolean = true;
@@ -15,7 +15,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 		const startTime = request.StartTime ?? Date.now();
 
 		console.log(exception);
-		if (exception instanceof LoginException) {
+		if (exception instanceof AccountException) {
 			const statusCode = exception.getStatus();
 			this.WinstonService.LoginError(request, startTime, message);
 
