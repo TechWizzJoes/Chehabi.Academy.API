@@ -24,7 +24,7 @@ jobs:
                   node-version: ${{ matrix.node-version }}
             - run: npm i
             - run: npm run build
-            - run: cp -r  /var/www/action-runner-api/Api/chehabi.academy.api/chehabi.academy.api/dist/* /usr/local/chehabi_academy_api/
+            - run: cp -r  /var/www/action-runner-api/Api/Chehabi.Academy.API/Chehabi.Academy.API/dist/* /usr/local/chehabi_academy_api/
             - run: pm2 stop main
             - run: pm2 start main
             - run: pm2 save
