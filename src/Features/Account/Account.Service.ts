@@ -7,7 +7,7 @@ import { ErrorCodesEnum } from '@App/Common/Enums/ErrorCodes.Enum';
 import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
 import { AccountRepository } from './Account.Repository';
 import { AccountModels } from './Account.Models';
-import { AccountException } from '@App/Common/Exceptions/Account.Exception';
+import { AccountException } from '@App/Common/Exceptions/Login.Exception';
 
 @Injectable()
 export class AccountService {
