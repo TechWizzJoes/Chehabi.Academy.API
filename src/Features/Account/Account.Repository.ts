@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import * as mssql from 'mssql';
 import { AppConfig, Config } from '@App/Config/App.Config';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './Entities/User.Entity';
+import { User } from '@App/Data/TypeOrmEntities/User';
+import { AccountModels } from './Account.Models';
 @Injectable()
 export class AccountRepository {
-	dbConn: mssql.ConnectionPool;
 	Config: Config;
 
 	constructor(
@@ -27,5 +26,19 @@ export class AccountRepository {
 				Email: email
 			}
 		});
+	}
+
+	async CreateUser(user: AccountModels.User): Promise<User> {
+		const newUser = this.User.create({
+			FirstName: user.FirstName,
+			LastName: user.LastName,
+			Birthdate: user.Birthdate,
+			IsActive: true,
+			IsDeleted: false,
+			Email: user.Email,
+			Password: user.Password,
+			IsAdmin: false,
+		});
+		return await this.User.save(newUser)
 	}
 }

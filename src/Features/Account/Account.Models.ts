@@ -5,10 +5,13 @@ export namespace AccountModels {
 		Id: number;
 		FirstName: string;
 		LastName: string;
+		Birthdate?: string;
+		IsActive?: boolean;
+		IsDeleted?: boolean;
 		Email: string;
 		Password: string;
-		AccountIsAdmin: boolean;
-		ProfilePicturePath: string;
+		IsAdmin: boolean;
+		ProfilePicturePath: string
 	}
 
 	export class CurrentUser {
@@ -37,6 +40,21 @@ export namespace AccountModels {
 		Email!: string;
 		@ApiProperty()
 		Password!: string;
+		@ApiProperty()
+		FirstName: string;
+		@ApiProperty()
+		LastName: string;
+		@ApiProperty()
+		Birthdate?: string;
+	}
+
+	export class RefreshTokenReqModel {
+		@ApiProperty()
+		Id!: number;
+		@ApiProperty()
+		RefreshToken!: string;
+		@ApiProperty()
+		AccessToken!: string;
 	}
 
 	export class LoginResModel {
@@ -45,18 +63,6 @@ export namespace AccountModels {
 
 	export class RegisterResModel {
 		constructor(public AccessToken: string, public RefreshToken: string, public CurrentUser: CurrentUser) { }
-	}
-
-	export class CurrentUserResModel {
-		Id!: number;
-		FirstName!: string;
-		LastName!: string;
-		Email!: string;
-		Extension!: string;
-		ExtensionPassword!: string;
-		IsAdmin!: boolean;
-		AccountHost!: string;
-		ProfilePicturePath!: string;
 	}
 
 	export class RefreshTokenResModel {

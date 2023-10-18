@@ -39,9 +39,6 @@ async function bootstrap() {
 	// CORS
 	app.enableCors({
 		origin: '*'
-		// methods: ['GET', 'POST', 'PUT', 'DELETE'],
-		// allowedHeaders: ['Content-Type', 'Authorization'],
-		// credentials: true,
 	});
 
 	// Gzip compression
@@ -51,7 +48,7 @@ async function bootstrap() {
 		const url = await app.getUrl();
 		console.log(`ENV= ${config.Env}`);
 		console.log(`Server  running on ${url}`);
-		console.log(`Swagger running on ${url}/api`);
+		console.log(`Swagger running on ${url}/swagger`);
 	});
 }
 bootstrap();

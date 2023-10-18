@@ -6,11 +6,10 @@ import { AccountController } from '@App/Features/Account/Account.Controller';
 import { AccountService } from '@App/Features/Account/Account.Service';
 import { AccountRepository } from './Account.Repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './Entities/User.Entity';
+import { User } from '@App/Data/TypeOrmEntities/User';
 
-const Entities = [User];
 @Module({
-	imports: [CommonModule, TypeOrmModule.forFeature(Entities)],
+	imports: [DataModule, CommonModule],
 	controllers: [AccountController],
 	providers: [AppConfig, AccountService, AccountRepository]
 })

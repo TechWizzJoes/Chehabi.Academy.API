@@ -25,13 +25,5 @@ export default registerAs('Config', () => ({
 			Audience: process.env.AUTH_JWT_AUDIENCE,
 			RefreshTokenSpan: process.env.AUTH_REFRESH_TOKEN_LIFESPAN
 		},
-		EmailConfirmation: {
-			Key: process.env.AUTH_EMAILCONFIRMATION_KEY,
-			Lifespan: parseInt(process.env.AUTH_EMAILCONFIRMATION_LIFESPAN, 10)
-		},
-		PasswordReset: {
-			Key: process.env.AUTH_PASSWORDRESET_KEY,
-			Lifespan: parseInt(process.env.AUTH_PASSWORDRESET_LIFESPAN, 10)
-		}
 	}
 }));

@@ -27,14 +27,6 @@ export interface Config {
 			Issuer: string;
 			Audience: string;
 		};
-		EmailConfirmation: {
-			Key: string;
-			Lifespan: number;
-		};
-		PasswordReset: {
-			Key: string;
-			Lifespan: number;
-		};
 	};
 }
 
