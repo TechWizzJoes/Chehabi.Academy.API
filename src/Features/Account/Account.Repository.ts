@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import * as mssql from 'mssql';
 import { AppConfig, Config } from '@App/Config/App.Config';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './Entities/User.Entity';
+import { User } from '@App/Data/TypeOrmEntities/User';
 @Injectable()
 export class AccountRepository {
-	dbConn: mssql.ConnectionPool;
 	Config: Config;
 
 	constructor(

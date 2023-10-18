@@ -2,10 +2,11 @@ import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from
 import sequelize, { ConnectionError, TimeoutError } from 'sequelize';
 
 import { WinstonService } from '@App/Common/Logs/Winston.Helper';
+import { LoginException } from '../Exceptions/Login.Exception';
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
 	logError: boolean = true;
-	constructor(private readonly WinstonService: WinstonService) {}
+	constructor(private readonly WinstonService: WinstonService) { }
 
 	catch(exception: any, host: ArgumentsHost) {
 		const response = host.switchToHttp().getResponse();
@@ -14,12 +15,25 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 		const startTime = request.StartTime ?? Date.now();
 
 		console.log(exception);
-		response.status(500).json({
-			message: 'Internal server error.'
-		});
+		if (exception instanceof LoginException) {
+			const statusCode = exception.getStatus();
+			this.WinstonService.LoginError(request, startTime, message);
 
-		if (this.logError) {
-			this.WinstonService.Exceptions(request, startTime, message);
+			response.status(statusCode).json(exception.getResponse());
+		} else {
+			if (exception instanceof HttpException) {
+				const statusCode = exception.getStatus();
+				response.status(statusCode).json({ message: message });
+			} else {
+				console.log(exception);
+				response.status(500).json({
+					message: 'Internal server error.'
+				});
+			}
+			if (this.logError) {
+				// log any error other than login errors and database specified errors
+				this.WinstonService.Exceptions(request, startTime, message);
+			}
 		}
 	}
 }
