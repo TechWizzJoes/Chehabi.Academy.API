@@ -22,6 +22,7 @@ import { TypeOrmOptions } from '@App/Data/TypeOrmOptions';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountModule } from '@App/Features/Account/Account.Module';
 import { CoursesModule } from '@App/Features/Courses/Courses.Module';
+import { ClassModule } from '@App/Features/Class/Class.Module';
 
 @Module({
 	imports: [
@@ -38,7 +39,8 @@ import { CoursesModule } from '@App/Features/Courses/Courses.Module';
 		TypeOrmModule.forRootAsync(TypeOrmOptions),
 		CommonModule,
 		AccountModule,
-		CoursesModule
+		CoursesModule,
+		ClassModule
 	],
 	controllers: [AppController],
 	providers: [
