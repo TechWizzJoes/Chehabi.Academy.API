@@ -21,6 +21,7 @@ import { JwtStrategy } from '@App/Common/Auth/Jwt.Strategy';
 import { TypeOrmOptions } from '@App/Data/TypeOrmOptions';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountModule } from '@App/Features/Account/Account.Module';
+import { CoursesModule } from '@App/Features/Courses/Courses.Module';
 
 @Module({
 	imports: [
@@ -36,7 +37,8 @@ import { AccountModule } from '@App/Features/Account/Account.Module';
 		},
 		TypeOrmModule.forRootAsync(TypeOrmOptions),
 		CommonModule,
-		AccountModule
+		AccountModule,
+		CoursesModule
 	],
 	controllers: [AppController],
 	providers: [
@@ -50,4 +52,4 @@ import { AccountModule } from '@App/Features/Account/Account.Module';
 		{ provide: APP_INTERCEPTOR, useClass: CurrentUserInterceptor }
 	]
 })
-export class AppModule { }
+export class AppModule {}
