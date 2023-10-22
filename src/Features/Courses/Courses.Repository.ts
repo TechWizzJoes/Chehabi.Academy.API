@@ -15,7 +15,7 @@ export class CoursesRepository {
 		return this.Course.find();
 	}
 
-	async GetCourseById(id: number): Promise<Course> {
+	async GetById(id: number): Promise<Course> {
 		return this.Course.findOne({
 			where: {
 				Id: id
