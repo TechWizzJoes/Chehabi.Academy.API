@@ -23,6 +23,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountModule } from '@App/Features/Account/Account.Module';
 import { CoursesModule } from '@App/Features/Courses/Courses.Module';
 import { ClassModule } from '@App/Features/Class/Class.Module';
+import { FeedbackModule } from '@App/Features/Feedback/Feedback.Module';
 
 @Module({
 	imports: [
@@ -40,7 +41,8 @@ import { ClassModule } from '@App/Features/Class/Class.Module';
 		CommonModule,
 		AccountModule,
 		CoursesModule,
-		ClassModule
+		ClassModule,
+		FeedbackModule
 	],
 	controllers: [AppController],
 	providers: [
