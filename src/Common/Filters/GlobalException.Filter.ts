@@ -2,7 +2,7 @@ import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from
 import sequelize, { ConnectionError, TimeoutError } from 'sequelize';
 
 import { WinstonService } from '@App/Common/Logs/Winston.Helper';
-import { AccountException } from '../Exceptions/Login.Exception';
+import { AccountException } from '../Exceptions/Account.Exception';
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
 	logError: boolean = true;

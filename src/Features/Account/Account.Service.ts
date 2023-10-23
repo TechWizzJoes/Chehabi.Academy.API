@@ -7,7 +7,7 @@ import { ErrorCodesEnum } from '@App/Common/Enums/ErrorCodes.Enum';
 import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
 import { AccountRepository } from './Account.Repository';
 import { AccountModels } from './Account.Models';
-import { AccountException } from '@App/Common/Exceptions/Login.Exception';
+import { AccountException } from '@App/Common/Exceptions/Account.Exception';
 
 @Injectable()
 export class AccountService {
@@ -61,7 +61,6 @@ export class AccountService {
 
 	CanSignIn(user: AccountModels.User, password: string) {
 		const passwordEncrypted = CryptoHelper.TripleDES.Encrypt(password, this.Config.Auth.EncryptionKey);
-		console.log(passwordEncrypted);
 
 		if (user == null) {
 			return {
