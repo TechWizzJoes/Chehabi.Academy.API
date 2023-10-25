@@ -7,7 +7,7 @@ import { RefreshTokenGuard } from '@App/Common/Auth/RefreshToken.Guard';
 import { CoursesService } from './Courses.Service';
 
 @ApiTags('Courses')
-@UseGuards(AuthenticatedGuard)
+// @UseGuards(AuthenticatedGuard)
 @Controller('Courses')
 export class CoursesController {
 	constructor(private CoursesService: CoursesService) {}
