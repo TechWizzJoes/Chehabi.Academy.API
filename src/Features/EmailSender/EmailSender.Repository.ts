@@ -9,15 +9,16 @@ import * as nodemailer from 'nodemailer';
 export class EmailSenderRepository {
 	Config: Config;
 
-	constructor() // @InjectRepository(EmailSenderModels.EmailSender) private EmailSender: Repository<EmailSenderModels.EmailSender>,
-	{}
+	constructor() {} // @InjectRepository(EmailSenderModels.EmailSender) private EmailSender: Repository<EmailSenderModels.EmailSender>,
 
 	async sendEmail(mailOptions: nodemailer.SendMailOptions): Promise<string> {
 		const transporter = nodemailer.createTransport({
-			service: 'gmail',
+			host: 'smtp.zoho.com',
+			port: 465, // Use 465 for SSL or 587 for TLS
+			secure: true,
 			auth: {
-				user: 'techwizzjoes@gmail.com',
-				pass: 'rbyo phlw yjaj bwro'
+				user: 'support@chehabi-academy.com',
+				pass: 'zj3rnp*K'
 			}
 		});
 

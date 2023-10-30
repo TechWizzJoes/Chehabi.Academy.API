@@ -14,14 +14,14 @@ export class EmailSenderController {
 	@ApiBody({ type: EmailSenderModels.DirectedTo })
 	async sendWelcomeEmail(@Body() directedto: EmailSenderModels.DirectedTo): Promise<string> {
 		const mailOptions = {
-			from: 'techwizzjoes@gmail.com',
+			from: 'support@chehabi-academy.com',
 			to: directedto.Email,
 			subject: 'Welcome to Our Website',
 			html: `<h3>Hello ${directedto.FirstName}</h3>
 			<h2>we are here to know your conceren</h2>
 			 ${directedto.Descriabtion}`
 		};
-
+		console.log(mailOptions);
 		try {
 			const result = await this.EmailSenderService.SendWelcomeMail(mailOptions);
 			return result;
