@@ -8,6 +8,7 @@ import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
 import { AccountRepository } from './Account.Repository';
 import { AccountModels } from './Account.Models';
 import { AccountException } from '@App/Common/Exceptions/Account.Exception';
+import axios from 'axios';
 
 @Injectable()
 export class AccountService {
@@ -23,7 +24,7 @@ export class AccountService {
 	}
 
 	async Login(email: string, password: string): Promise<AccountModels.LoginResModel> {
-		const user: AccountModels.User = await this.AccountRepository.GetUserByEmail(email);
+		const user: AccountModels.User = await this.AccountRepository.GetUserByEmail(email.toLowerCase().trim());
 		const loginResult = this.CanSignIn(user, password);
 		if (!loginResult.Success) {
 			throw new AccountException(loginResult.ErrorMsg);
@@ -34,14 +35,58 @@ export class AccountService {
 		return new AccountModels.LoginResModel(accessToken, refreshToken, currentUser);
 	}
 
+	async GoogleLogin(idToken: string,): Promise<AccountModels.LoginResModel> {
+		const payload = await this.verifyGoogleToken(idToken)
+
+		if (!payload) {
+			throw new AccountException(ErrorCodesEnum.FALSE_GOOGLE_LOGIN);
+		}
+
+		const user: AccountModels.User = await this.AccountRepository.GetUserByEmail(payload.email);
+		if (!user) {
+			return this.Register({
+				Email: payload.email,
+				FirstName: payload.given_name,
+				LastName: payload.family_name,
+				ProfilePicturePath: payload.picture,
+				Password: payload.email
+			} as AccountModels.RegisterReqModel)
+		}
+
+		const accessToken = this.GetAccessToken(user);
+		const refreshToken = this.GetRefreshToken(user);
+		const currentUser = this.GetCurrentUser(user);
+		return new AccountModels.LoginResModel(accessToken, refreshToken, currentUser);
+	}
+	async verifyGoogleToken(idToken: string) {
+		const googleClientId = this.Config.Auth.Google.ClientID;
+		try {
+			const response = await axios.get(
+				`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${idToken}`
+			);
+			const payload = response.data;
+
+			if (payload.aud === googleClientId) {
+				// Token is valid, and you can trust the user information in the payload.
+				return payload;
+			} else {
+				// Token is not valid.
+				return null;
+			}
+		} catch (error) {
+			// Handle verification error
+			console.error('Token verification error:', error);
+			return null;
+		}
+	}
 	async Register(registerReqModel: AccountModels.RegisterReqModel): Promise<AccountModels.LoginResModel> {
 		let user = await this.AccountRepository.GetUserByEmail(registerReqModel.Email);
 		const RegisterResult = this.CanRegister(user);
 		if (!RegisterResult.Success) {
 			throw new AccountException(RegisterResult.ErrorMsg);
 		}
-		const encryptedPassword = CryptoHelper.TripleDES.Encrypt(user.Password, this.Config.Auth.EncryptionKey)
-		user.Password = encryptedPassword;
+		const encryptedPassword = CryptoHelper.AES.Encrypt(registerReqModel.Password, this.Config.Auth.EncryptionKey)
+		registerReqModel.Password = encryptedPassword;
 		user = await this.AccountRepository.CreateUser(registerReqModel as AccountModels.User);
 		const accessToken = this.GetAccessToken(user);
 		const refreshToken = this.GetRefreshToken(user);
@@ -60,7 +105,8 @@ export class AccountService {
 	}
 
 	CanSignIn(user: AccountModels.User, password: string) {
-		const passwordEncrypted = CryptoHelper.TripleDES.Encrypt(password, this.Config.Auth.EncryptionKey);
+		const passwordEncrypted = CryptoHelper.AES.Encrypt(password, this.Config.Auth.EncryptionKey);
+		const dbpw = CryptoHelper.AES.Decrypt(user.Password, this.Config.Auth.EncryptionKey);
 
 		if (user == null) {
 			return {
@@ -69,7 +115,7 @@ export class AccountService {
 			};
 		}
 
-		if (user.Password != passwordEncrypted) {
+		if (password != dbpw) {
 			return {
 				Success: false,
 				ErrorMsg: ErrorCodesEnum.WRONG_PASSWORD

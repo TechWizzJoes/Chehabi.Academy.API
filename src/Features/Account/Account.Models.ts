@@ -35,6 +35,11 @@ export namespace AccountModels {
 		Password!: string;
 	}
 
+	export class GoogleLoginReqModel {
+		@ApiProperty()
+		IdToken: string
+	}
+
 	export class RegisterReqModel {
 		@ApiProperty()
 		Email!: string;
@@ -46,6 +51,7 @@ export namespace AccountModels {
 		LastName: string;
 		@ApiProperty()
 		Birthdate?: string;
+		ProfilePicturePath?: string
 	}
 
 	export class RefreshTokenReqModel {

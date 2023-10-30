@@ -38,6 +38,7 @@ export class AccountRepository {
 			Email: user.Email,
 			Password: user.Password,
 			IsAdmin: false,
+			ProfilePicturePath: user.ProfilePicturePath
 		});
 		return await this.User.save(newUser)
 	}
