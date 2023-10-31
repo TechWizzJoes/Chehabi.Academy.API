@@ -7,10 +7,10 @@ export default registerAs('Config', () => ({
 		Port: parseInt(process.env.SERVER_PORT, 10)
 	},
 	Database: {
-		Host: process.env.DATABASE_HOST,
+		Host: process.env.DATABASE_HOSTT,
 		Name: process.env.DATABASE_NAME,
-		Username: process.env.DATABASE_USERNAME,
-		Password: process.env.DATABASE_PASSWORD,
+		Username: process.env.DATABASE_USERNAMEE,
+		Password: process.env.DATABASE_PASSWORDD,
 		Min: parseInt(process.env.DATABASE_POOL_MIN, 10),
 		Max: parseInt(process.env.DATABASE_POOL_MAX, 10),
 		Idle: parseInt(process.env.DATABASE_POOL_IDLE, 10)
@@ -25,5 +25,8 @@ export default registerAs('Config', () => ({
 			Audience: process.env.AUTH_JWT_AUDIENCE,
 			RefreshTokenSpan: process.env.AUTH_REFRESH_TOKEN_LIFESPAN
 		},
+		Google: {
+			ClientID: process.env.AUTH_GOOGLE_CLIENT_ID
+		}
 	}
 }));

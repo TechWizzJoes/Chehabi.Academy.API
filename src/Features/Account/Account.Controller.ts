@@ -16,6 +16,12 @@ export class AccountController {
 		return this.AccountService.Login(LoginReqModel.Email, LoginReqModel.Password);
 	}
 
+	@Post('google-login')
+	@ApiBody({ type: AccountModels.LoginReqModel })
+	GoogleLogin(@Body() LoginReqModel: AccountModels.GoogleLoginReqModel): Promise<AccountModels.LoginResModel> {
+		return this.AccountService.GoogleLogin(LoginReqModel.IdToken);
+	}
+
 	@Post('register')
 	@ApiBody({ type: AccountModels.RegisterReqModel })
 	Register(@Body() RegisterReqModel: AccountModels.RegisterReqModel): Promise<AccountModels.RegisterResModel> {

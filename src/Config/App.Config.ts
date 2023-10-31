@@ -27,6 +27,9 @@ export interface Config {
 			Issuer: string;
 			Audience: string;
 		};
+		Google: {
+			ClientID: string
+		}
 	};
 }
 
