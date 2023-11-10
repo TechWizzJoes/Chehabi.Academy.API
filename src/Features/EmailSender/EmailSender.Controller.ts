@@ -17,11 +17,12 @@ export class EmailSenderController {
 			from: 'support@chehabi-academy.com',
 			to: directedto.Email,
 			subject: 'Welcome to Our Website',
-			html: `<h3>Hello ${directedto.FirstName}</h3>
-			<h2>we are here to know your conceren</h2>
-			 ${directedto.Descriabtion}`
+			html: `<h1>Welcome to Our Website</h1>
+			<h2>Hello ${directedto.FirstName} ${directedto.LastName}</h2>
+			<h3>we are here to know your conceren about:</h3>
+			<h3> ${directedto.Descriabtion} </h3>`
 		};
-		console.log(mailOptions);
+		// console.log(mailOptions);
 		try {
 			const result = await this.EmailSenderService.SendWelcomeMail(mailOptions);
 			return result;

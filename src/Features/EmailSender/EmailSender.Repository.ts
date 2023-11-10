@@ -13,19 +13,18 @@ export class EmailSenderRepository {
 
 	async sendEmail(mailOptions: nodemailer.SendMailOptions): Promise<string> {
 		const transporter = nodemailer.createTransport({
-			host: 'smtp.zoho.com',
-			port: 465, // Use 465 for SSL or 587 for TLS
+			host: process.env.Email_Host,
+			port: process.env.Email_Port, // Use 465 for SSL or 587 for TLS
 			secure: true,
 			auth: {
-				user: 'support@chehabi-academy.com',
-				pass: 'zj3rnp*K'
+				user: process.env.Email_User,
+				pass: process.env.Email_Password
 			}
 		});
 
 		try {
 			// Read the welcome email template
 			const welcomeHtml = `
-		  <h1>Welcome to Our Website</h1>
 		  <p>Thank you for joining our community!</p>`;
 
 			// Add HTML content to the mailOptions
