@@ -7,7 +7,6 @@ import { ErrorCodesEnum } from '@App/Common/Enums/ErrorCodes.Enum';
 import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
 import { ClassRepository } from './Class.Repository';
 import { ClassModels } from './Class.Models';
-import { AccountException } from '@App/Common/Exceptions/Login.Exception';
 import { promises } from 'dns';
 
 @Injectable()
