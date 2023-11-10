@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 
 export namespace CoursesModels {
 	export class MasterModel {
@@ -9,6 +8,11 @@ export namespace CoursesModels {
 		FilePath: string | null;
 		IsActive: boolean | null;
 		IsDeleted: boolean | null;
+		Rating: number | null;
+		ImageUrl: string | null;
+		Instructor: string | null;
+		Price: number | null;
+		Raters: number | null;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;
@@ -18,17 +22,11 @@ export namespace CoursesModels {
 	// export type ReqModel = Pick<MasterModel, 'Title' | 'Description' | 'Script' | 'SharingOptionId'>;
 
 	export class ReqModel implements Partial<MasterModel> {
-		@ApiProperty()
 		Name: string;
-		@ApiProperty()
 		Description: string | null;
-		@ApiProperty()
 		VideoPath: string | null;
-		@ApiProperty()
 		FilePath: string | null;
-		@ApiProperty()
 		IsActive: boolean | null;
-		@ApiProperty()
 		IsDeleted: boolean | null;
 	}
 }
