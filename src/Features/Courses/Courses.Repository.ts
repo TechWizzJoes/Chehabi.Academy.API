@@ -9,7 +9,7 @@ import { CoursesModels } from './Courses.Models';
 export class CoursesRepository {
 	Config: Config;
 
-	constructor(@InjectRepository(Course) private Course: Repository<Course>) {}
+	constructor(@InjectRepository(Course) private Course: Repository<Course>) { }
 
 	async Getall(): Promise<Course[]> {
 		return this.Course.find();
