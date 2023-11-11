@@ -16,7 +16,8 @@ export class EmailSenderController {
 		const mailOptions = {
 			from: 'support@chehabi-academy.com',
 			to: directedto.Email,
-			subject: ` <div style="display: flex; flex-direction: column; align-items: center; text-align: center;"> 
+			subject: 'Welcome to Our Website',
+			html: `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;"> 
 			<img src="path/to/your/logo.png" alt="Logo" style="width: 100px; height: 100px;">
 			<h1>Welcome to Our Website</h1>
 			<h2>Hello ${directedto.FirstName} ${directedto.LastName}</h2>
