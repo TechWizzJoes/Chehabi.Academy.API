@@ -12,20 +12,21 @@ export class EmailSenderController {
 
 	@Post('send-welcome')
 	@ApiBody({ type: EmailSenderModels.DirectedTo })
-	async sendWelcomeEmail(@Body() directedto: EmailSenderModels.DirectedTo): Promise<string> {
+	async sendWelcomeEmail(@Body() directedto: EmailSenderModels.DirectedTo): Promise<any> {
 		const mailOptions = {
 			from: 'support@chehabi-academy.com',
 			to: directedto.Email,
-			subject: 'Welcome to Our Website',
-			html: `<h1>Welcome to Our Website</h1>
+			subject: ` <div style="display: flex; flex-direction: column; align-items: center; text-align: center;"> 
+			<img src="path/to/your/logo.png" alt="Logo" style="width: 100px; height: 100px;">
+			<h1>Welcome to Our Website</h1>
 			<h2>Hello ${directedto.FirstName} ${directedto.LastName}</h2>
-			<h3>we are here to know your conceren about:</h3>
-			<h3> ${directedto.Descriabtion} </h3>`
+			<h3>We are here to know your concern about:</h3>
+			<h3>${directedto.Description}</h3>	</div>`
 		};
 		// console.log(mailOptions);
 		try {
 			const result = await this.EmailSenderService.SendWelcomeMail(mailOptions);
-			return result;
+			return { result: result };
 		} catch (error) {
 			throw new Error(error);
 		}

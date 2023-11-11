@@ -16,6 +16,6 @@ export namespace EmailSenderModels {
 		@ApiProperty()
 		LastName!: string;
 		@ApiProperty()
-		Descriabtion!: string;
+		Description!: string;
 	}
 }
