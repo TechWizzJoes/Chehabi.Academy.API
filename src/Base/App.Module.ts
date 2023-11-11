@@ -24,6 +24,7 @@ import { AccountModule } from '@App/Features/Account/Account.Module';
 import { CoursesModule } from '@App/Features/Courses/Courses.Module';
 import { ClassModule } from '@App/Features/Class/Class.Module';
 import { FeedbackModule } from '@App/Features/Feedback/Feedback.Module';
+import { EmailSenderModule } from '@App/Features/EmailSender/EmailSender.Module';
 
 @Module({
 	imports: [
@@ -42,7 +43,8 @@ import { FeedbackModule } from '@App/Features/Feedback/Feedback.Module';
 		AccountModule,
 		CoursesModule,
 		ClassModule,
-		FeedbackModule
+		FeedbackModule,
+		EmailSenderModule
 	],
 	controllers: [AppController],
 	providers: [

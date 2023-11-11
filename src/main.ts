@@ -27,8 +27,8 @@ async function bootstrap() {
 
 	// Swagger
 	const swaggerConfig = new DocumentBuilder()
-		.setTitle('Dialer Api')
-		.setDescription('The Dialer API documentation')
+		.setTitle('Chehabi Academy Api')
+		.setDescription('The Chehabi Academy API documentation')
 		.setVersion('1.0')
 		.addBearerAuth()
 		.build();

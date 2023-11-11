@@ -1,4 +1,3 @@
-
 export namespace CoursesModels {
 	export class MasterModel {
 		Id: number;
