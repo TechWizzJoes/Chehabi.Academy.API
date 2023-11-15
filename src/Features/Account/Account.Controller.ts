@@ -8,7 +8,7 @@ import { RefreshTokenGuard } from '@App/Common/Auth/RefreshToken.Guard';
 @ApiTags('Account')
 @Controller('account')
 export class AccountController {
-	constructor(private AccountService: AccountService) { }
+	constructor(private AccountService: AccountService) {}
 
 	@Post('login')
 	@ApiBody({ type: AccountModels.LoginReqModel })
@@ -35,5 +35,11 @@ export class AccountController {
 		@Body() RefreshTokenReqModel: AccountModels.RefreshTokenReqModel
 	): Promise<AccountModels.RefreshTokenResModel> {
 		return this.AccountService.RefreshAccessToken(RefreshTokenReqModel.Id);
+	}
+
+	@Get('info')
+	@UseGuards(AuthenticatedGuard)
+	GetProfileInfo(@Body() RefreshTokenReqModel: AccountModels.RefreshTokenReqModel): any {
+		return this.AccountService.GetProfileInfo();
 	}
 }

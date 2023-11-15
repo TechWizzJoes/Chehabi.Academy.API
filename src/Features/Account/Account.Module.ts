@@ -13,4 +13,4 @@ import { User } from '@App/Data/TypeOrmEntities/User';
 	controllers: [AccountController],
 	providers: [AppConfig, AccountService, AccountRepository]
 })
-export class AccountModule { }
+export class AccountModule {}

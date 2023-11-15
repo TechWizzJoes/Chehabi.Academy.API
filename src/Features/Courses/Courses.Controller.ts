@@ -6,19 +6,18 @@ import { CoursesService } from './Courses.Service';
 @ApiTags('Courses')
 @Controller('courses')
 export class CoursesController {
-	constructor(private CoursesService: CoursesService) { }
+	constructor(private CoursesService: CoursesService) {}
 
 	@Get('/:id')
 	GetOne(@Param('id') id: number): Promise<CoursesModels.MasterModel> {
 		let courses = this.CoursesService.GetById(id);
-		return courses
+		return courses;
 	}
 
 	@Get('list/all')
 	async GetAll(): Promise<CoursesModels.MasterModel[]> {
 		let courses = await this.CoursesService.Getall();
-		return courses
-
+		return courses;
 	}
 
 	@Post('')

@@ -28,5 +28,9 @@ export default registerAs('Config', () => ({
 		Google: {
 			ClientID: process.env.AUTH_GOOGLE_CLIENT_ID
 		}
+	},
+	Notification: {
+		PublicKey: process.env.NOTIFICATION_PUBLIC_KEY,
+		PrivateKey: process.env.NOTIFICATION_PRIVATE_KEY
 	}
 }));

@@ -24,6 +24,8 @@ import { AccountModule } from '@App/Features/Account/Account.Module';
 import { CoursesModule } from '@App/Features/Courses/Courses.Module';
 import { ClassModule } from '@App/Features/Class/Class.Module';
 import { FeedbackModule } from '@App/Features/Feedback/Feedback.Module';
+import { RefreshJwtStrategy } from '@App/Common/Auth/RefreshToken-Strategy';
+import { NotificationsModule } from '@App/Features/-Notifications/Notifications.Module';
 
 @Module({
 	imports: [
@@ -42,12 +44,14 @@ import { FeedbackModule } from '@App/Features/Feedback/Feedback.Module';
 		AccountModule,
 		CoursesModule,
 		ClassModule,
-		FeedbackModule
+		FeedbackModule,
+		NotificationsModule
 	],
 	controllers: [AppController],
 	providers: [
 		AppConfig,
 		JwtStrategy,
+		RefreshJwtStrategy,
 		{
 			provide: APP_FILTER,
 			useClass: GlobalExceptionFilter

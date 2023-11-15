@@ -7,12 +7,13 @@ import { Feedback } from './TypeOrmEntities/Feedback';
 import { Class } from './TypeOrmEntities/Class';
 import { Course } from './TypeOrmEntities/Course';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { NotificationSubscriptions } from './TypeOrmEntities/NotificationSubscriptions';
 
-const Entities = [User, Feedback, Class, Course];
+const Entities = [User, Feedback, Class, Course, NotificationSubscriptions];
 
 @Module({
 	imports: [CommonModule, TypeOrmModule.forFeature(Entities)],
 	providers: [AppConfig],
-	exports: [TypeOrmModule.forFeature(Entities)]//to use entities outside of the module
+	exports: [TypeOrmModule.forFeature(Entities)] //to use entities outside of the module
 })
-export class DataModule { }
+export class DataModule {}

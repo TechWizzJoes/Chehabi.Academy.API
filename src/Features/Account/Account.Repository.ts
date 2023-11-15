@@ -8,9 +8,7 @@ import { AccountModels } from './Account.Models';
 export class AccountRepository {
 	Config: Config;
 
-	constructor(
-		@InjectRepository(User) private User: Repository<User>,
-	) { }
+	constructor(@InjectRepository(User) private User: Repository<User>) {}
 
 	async GetUserById(id: number): Promise<User> {
 		return this.User.findOne({
@@ -40,6 +38,6 @@ export class AccountRepository {
 			IsAdmin: false,
 			ProfilePicturePath: user.ProfilePicturePath
 		});
-		return await this.User.save(newUser)
+		return await this.User.save(newUser);
 	}
 }
