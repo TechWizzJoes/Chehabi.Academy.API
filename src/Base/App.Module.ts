@@ -24,6 +24,8 @@ import { AccountModule } from '@App/Features/Account/Account.Module';
 import { CoursesModule } from '@App/Features/Courses/Courses.Module';
 import { ClassModule } from '@App/Features/Class/Class.Module';
 import { FeedbackModule } from '@App/Features/Feedback/Feedback.Module';
+import { RefreshJwtStrategy } from '@App/Common/Auth/RefreshToken-Strategy';
+import { NotificationsModule } from '@App/Features/-Notifications/Notifications.Module';
 import { EmailSenderModule } from '@App/Features/EmailSender/EmailSender.Module';
 
 @Module({
@@ -44,12 +46,14 @@ import { EmailSenderModule } from '@App/Features/EmailSender/EmailSender.Module'
 		CoursesModule,
 		ClassModule,
 		FeedbackModule,
+		NotificationsModule,
 		EmailSenderModule
 	],
 	controllers: [AppController],
 	providers: [
 		AppConfig,
 		JwtStrategy,
+		RefreshJwtStrategy,
 		{
 			provide: APP_FILTER,
 			useClass: GlobalExceptionFilter
@@ -58,4 +62,4 @@ import { EmailSenderModule } from '@App/Features/EmailSender/EmailSender.Module'
 		{ provide: APP_INTERCEPTOR, useClass: CurrentUserInterceptor }
 	]
 })
-export class AppModule {}
+export class AppModule { }

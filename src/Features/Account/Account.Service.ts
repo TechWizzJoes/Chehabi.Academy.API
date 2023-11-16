@@ -35,8 +35,8 @@ export class AccountService {
 		return new AccountModels.LoginResModel(accessToken, refreshToken, currentUser);
 	}
 
-	async GoogleLogin(idToken: string,): Promise<AccountModels.LoginResModel> {
-		const payload = await this.verifyGoogleToken(idToken)
+	async GoogleLogin(idToken: string): Promise<AccountModels.LoginResModel> {
+		const payload = await this.verifyGoogleToken(idToken);
 
 		if (!payload) {
 			throw new AccountException(ErrorCodesEnum.FALSE_GOOGLE_LOGIN);
@@ -50,7 +50,7 @@ export class AccountService {
 				LastName: payload.family_name,
 				ProfilePicturePath: payload.picture,
 				Password: payload.email
-			} as AccountModels.RegisterReqModel)
+			} as AccountModels.RegisterReqModel);
 		}
 
 		const accessToken = this.GetAccessToken(user);
@@ -61,9 +61,7 @@ export class AccountService {
 	async verifyGoogleToken(idToken: string) {
 		const googleClientId = this.Config.Auth.Google.ClientID;
 		try {
-			const response = await axios.get(
-				`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${idToken}`
-			);
+			const response = await axios.get(`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${idToken}`);
 			const payload = response.data;
 
 			if (payload.aud === googleClientId) {
@@ -85,7 +83,7 @@ export class AccountService {
 		if (!RegisterResult.Success) {
 			throw new AccountException(RegisterResult.ErrorMsg);
 		}
-		const encryptedPassword = CryptoHelper.AES.Encrypt(registerReqModel.Password, this.Config.Auth.EncryptionKey)
+		const encryptedPassword = CryptoHelper.AES.Encrypt(registerReqModel.Password, this.Config.Auth.EncryptionKey);
 		registerReqModel.Password = encryptedPassword;
 		user = await this.AccountRepository.CreateUser(registerReqModel as AccountModels.User);
 		const accessToken = this.GetAccessToken(user);
@@ -147,7 +145,7 @@ export class AccountService {
 			'Bearer ' +
 			this.JwtService.sign({
 				UserId: user.Id,
-				IsAdmin: user.IsAdmin,
+				IsAdmin: user.IsAdmin
 			} as AccountModels.JwtModel);
 		return accessToken;
 	}
@@ -156,7 +154,7 @@ export class AccountService {
 		const refreshToken = this.JwtService.sign(
 			{
 				UserId: user.Id,
-				IsAdmin: user.IsAdmin,
+				IsAdmin: user.IsAdmin
 			} as AccountModels.JwtModel,
 			{
 				expiresIn: this.Config.Auth.Jwt.RefreshTokenSpan
@@ -177,5 +175,12 @@ export class AccountService {
 			ProfilePicturePath: user.ProfilePicturePath
 		} as AccountModels.CurrentUser;
 		return currentUser;
+	}
+
+	GetProfileInfo() {
+		let currentUser = this.UserHelper.GetCurrentUser();
+		return {
+			...currentUser
+		};
 	}
 }

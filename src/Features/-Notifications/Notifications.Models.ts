@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export namespace AccountModels {
+export namespace NotificationsModels {
 	export class User {
 		Id: number;
 		FirstName: string;

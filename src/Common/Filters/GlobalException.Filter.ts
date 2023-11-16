@@ -6,7 +6,7 @@ import { AccountException } from '../Exceptions/Account.Exception';
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
 	logError: boolean = true;
-	constructor(private readonly WinstonService: WinstonService) { }
+	constructor(private readonly WinstonService: WinstonService) {}
 
 	catch(exception: any, host: ArgumentsHost) {
 		const response = host.switchToHttp().getResponse();

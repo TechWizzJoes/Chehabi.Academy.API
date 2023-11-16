@@ -6,7 +6,7 @@ import { AccountModels } from '../../Features/Account/Account.Models';
 
 @Injectable()
 export class CurrentUserInterceptor implements NestInterceptor {
-	constructor(private readonly AsyncLocalStorage: AsyncLocalStorage<AccountModels.JwtModel>) { }
+	constructor(private readonly AsyncLocalStorage: AsyncLocalStorage<AccountModels.JwtModel>) {}
 
 	intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
 		// console.log('<CurrentUser.Interceptor>');

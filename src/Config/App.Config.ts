@@ -28,8 +28,12 @@ export interface Config {
 			Audience: string;
 		};
 		Google: {
-			ClientID: string
-		}
+			ClientID: string;
+		};
+	};
+	Notification: {
+		PublicKey: string;
+		PrivateKey: string;
 	};
 }
 
@@ -38,5 +42,5 @@ export class AppConfig {
 	constructor(
 		@Inject(Configuration.KEY)
 		public Config: ConfigType<typeof Configuration>
-	) { }
+	) {}
 }
