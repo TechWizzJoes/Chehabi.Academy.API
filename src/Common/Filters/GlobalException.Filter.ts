@@ -3,10 +3,11 @@ import sequelize, { ConnectionError, TimeoutError } from 'sequelize';
 
 import { WinstonService } from '@App/Common/Logs/Winston.Helper';
 import { AccountException } from '../Exceptions/Account.Exception';
+import { ErrorCodesEnum } from '../Enums/ErrorCodes.Enum';
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
 	logError: boolean = true;
-	constructor(private readonly WinstonService: WinstonService) { }
+	constructor(private readonly WinstonService: WinstonService) {}
 
 	catch(exception: any, host: ArgumentsHost) {
 		const response = host.switchToHttp().getResponse();
@@ -27,7 +28,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 			} else {
 				console.log(exception);
 				response.status(500).json({
-					message: 'Internal server error.'
+					message: ErrorCodesEnum.INTERNAL_SERVER_ERROR
 				});
 			}
 			if (this.logError) {
