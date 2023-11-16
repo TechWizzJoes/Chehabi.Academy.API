@@ -26,6 +26,7 @@ import { ClassModule } from '@App/Features/Class/Class.Module';
 import { FeedbackModule } from '@App/Features/Feedback/Feedback.Module';
 import { RefreshJwtStrategy } from '@App/Common/Auth/RefreshToken-Strategy';
 import { NotificationsModule } from '@App/Features/-Notifications/Notifications.Module';
+import { EmailSenderModule } from '@App/Features/EmailSender/EmailSender.Module';
 
 @Module({
 	imports: [
@@ -45,7 +46,8 @@ import { NotificationsModule } from '@App/Features/-Notifications/Notifications.
 		CoursesModule,
 		ClassModule,
 		FeedbackModule,
-		NotificationsModule
+		NotificationsModule,
+		EmailSenderModule
 	],
 	controllers: [AppController],
 	providers: [
@@ -60,4 +62,4 @@ import { NotificationsModule } from '@App/Features/-Notifications/Notifications.
 		{ provide: APP_INTERCEPTOR, useClass: CurrentUserInterceptor }
 	]
 })
-export class AppModule {}
+export class AppModule { }
