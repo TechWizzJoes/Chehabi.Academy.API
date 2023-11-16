@@ -12,11 +12,20 @@ export class NotificationsRepository {
 	constructor(
 		@InjectRepository(NotificationSubscriptions)
 		private NotificationSubscriptions: Repository<NotificationSubscriptions>
-	) {}
+	) { }
+
+	async GetBySubObject(subObject: string): Promise<NotificationSubscriptions[]> {
+		let sub = await this.NotificationSubscriptions.find({
+			where: {
+				Subscription: subObject
+			}
+		});
+		return sub
+	}
 
 	async AddSubscription(subObject: any): Promise<NotificationSubscriptions[]> {
-		let khara = await this.NotificationSubscriptions.create(subObject);
-		return await this.NotificationSubscriptions.save(khara);
+		let sub = await this.NotificationSubscriptions.create(subObject);
+		return await this.NotificationSubscriptions.save(sub);
 	}
 
 	async GetAll(): Promise<NotificationSubscriptions[]> {

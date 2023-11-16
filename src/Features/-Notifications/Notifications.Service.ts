@@ -26,7 +26,7 @@ export class NotificationsService {
 		notification: {
 			title: 'Chehaby Academy',
 			body: '',
-			icon: 'assets/Images/full-logo.png',
+			icon: 'assets/icons/favicon.png',
 			vibrate: [100, 50, 100],
 			data: {
 				dateOfArrival: Date.now(),
@@ -34,12 +34,8 @@ export class NotificationsService {
 			},
 			actions: [
 				{
-					action: 'explore',
+					action: 'go',
 					title: 'Go to the site'
-				},
-				{
-					action: 'openChat',
-					title: 'open conv'
 				}
 			]
 		}
@@ -47,10 +43,13 @@ export class NotificationsService {
 
 	async SubscribeClient(subObject: any) {
 		const currentUser = this.UserHelper.GetCurrentUser();
+		const subObj = JSON.stringify(subObject)
 		let newObj = {
 			UserId: currentUser.UserId ?? 1,
-			Subscription: JSON.stringify(subObject)
+			Subscription: subObj
 		};
+		let subs = await this.NotificationsRepository.GetBySubObject(subObj);
+		if (subs.length > 0) return
 		this.NotificationsRepository.AddSubscription(newObj);
 	}
 
