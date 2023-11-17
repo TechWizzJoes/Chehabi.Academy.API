@@ -27,6 +27,9 @@ import { FeedbackModule } from '@App/Features/Feedback/Feedback.Module';
 import { RefreshJwtStrategy } from '@App/Common/Auth/RefreshToken-Strategy';
 import { NotificationsModule } from '@App/Features/-Notifications/Notifications.Module';
 import { EmailSenderModule } from '@App/Features/EmailSender/EmailSender.Module';
+import { DatabaseExceptionFilter } from '@App/Common/Filters/DatabaseException.Filter';
+import { ValidationExceptionFilter } from '@App/Common/Filters/ValidationException.Filter';
+import { ApplicationExceptionFilter } from '@App/Common/Filters/ApplicationException.Filter';
 
 @Module({
 	imports: [
@@ -58,8 +61,20 @@ import { EmailSenderModule } from '@App/Features/EmailSender/EmailSender.Module'
 			provide: APP_FILTER,
 			useClass: GlobalExceptionFilter
 		},
+		{
+			provide: APP_FILTER,
+			useClass: DatabaseExceptionFilter
+		},
+		{
+			provide: APP_FILTER,
+			useClass: ApplicationExceptionFilter
+		},
+		{
+			provide: APP_FILTER,
+			useClass: ValidationExceptionFilter
+		},
 		{ provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
 		{ provide: APP_INTERCEPTOR, useClass: CurrentUserInterceptor }
 	]
 })
-export class AppModule { }
+export class AppModule {}
