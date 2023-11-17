@@ -22,6 +22,11 @@ async function bootstrap() {
 	});
 	app.setGlobalPrefix('api');
 
+	// Handle unhandled promise rejections globally
+	process.on('unhandledRejection', (reason, promise) => {
+		console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+	});
+
 	const configService = app.get(ConfigService);
 	const config = configService.get<Config>('Config');
 

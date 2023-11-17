@@ -6,7 +6,7 @@ import { EmailSenderModels } from './EmailSender.Models';
 import { RefreshTokenGuard } from '@App/Common/Auth/RefreshToken.Guard';
 
 @ApiTags('EmailSender')
-@Controller('EmailSender')
+@Controller('emailsender')
 export class EmailSenderController {
 	constructor(private EmailSenderService: EmailSenderService) {}
 
@@ -25,11 +25,11 @@ export class EmailSenderController {
 			<h3>${directedto.Description}</h3>	</div>`
 		};
 		// console.log(mailOptions);
-		try {
-			const result = await this.EmailSenderService.SendWelcomeMail(mailOptions);
-			return { result: result };
-		} catch (error) {
-			throw new Error(error);
-		}
+		// try {
+		const result = await this.EmailSenderService.SendWelcomeMail(mailOptions);
+		return { result: result };
+		// } catch (error) {
+		// 	throw new Error(error);
+		// }
 	}
 }

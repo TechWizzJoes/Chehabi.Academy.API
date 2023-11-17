@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards, Delete, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, UseGuards, Delete, Put, ParseIntPipe } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CoursesModels } from './Courses.Models';
 import { CoursesService } from './Courses.Service';
@@ -9,7 +9,7 @@ export class CoursesController {
 	constructor(private CoursesService: CoursesService) {}
 
 	@Get('/:id')
-	GetOne(@Param('id') id: number): Promise<CoursesModels.MasterModel> {
+	GetOne(@Param('id', ParseIntPipe) id: number): Promise<CoursesModels.MasterModel> {
 		let courses = this.CoursesService.GetById(id);
 		return courses;
 	}
@@ -23,7 +23,9 @@ export class CoursesController {
 	@Post('')
 	@ApiBody({ type: CoursesModels.ReqModel })
 	Create(@Body() course: CoursesModels.ReqModel): Promise<CoursesModels.MasterModel> {
-		return this.CoursesService.Create(course);
+		// return this.CoursesService.Create(course);
+		let x = this.CoursesService.Create(course);
+		return;
 	}
 
 	@Put('/:id')
