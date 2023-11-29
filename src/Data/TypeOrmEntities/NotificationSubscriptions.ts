@@ -8,6 +8,6 @@ export class NotificationSubscriptions {
 	@Column('int', { name: 'UserId', nullable: true })
 	UserId: number | null;
 
-	@Column('varchar', { name: 'Subscription', length: 100 })
+	@Column('longtext', { name: 'Subscription' })
 	Subscription: string;
 }

@@ -1,4 +1,5 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ClassOccurance } from './ClassOccurance';
 import { User } from './User';
 
 @Entity('Class', { schema: 'mydb' })
@@ -26,6 +27,9 @@ export class Class {
 
 	@Column('tinyint', { name: 'IsDeleted', nullable: true, width: 1 })
 	IsDeleted: boolean | null;
+
+	@OneToMany(() => ClassOccurance, (ClassOccurance) => ClassOccurance.Class)
+	ClassOccurances: ClassOccurance[];
 
 	@ManyToMany(() => User, (User) => User.Classes)
 	Users: User[];

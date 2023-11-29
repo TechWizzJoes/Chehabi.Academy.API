@@ -11,11 +11,20 @@ export class Course {
 	@Column('text', { name: 'Description', nullable: true })
 	Description: string | null;
 
+	@Column('varchar', { name: 'Instructor', nullable: true, length: 100 })
+	Instructor: string | null;
+
+	@Column('int', { name: 'Duration', nullable: true })
+	Duration: number | null;
+
 	@Column('varchar', { name: 'VideoPath', nullable: true, length: 255 })
 	VideoPath: string | null;
 
 	@Column('varchar', { name: 'FilePath', nullable: true, length: 255 })
 	FilePath: string | null;
+
+	@Column('datetime', { name: 'StartDate', nullable: true })
+	StartDate: Date | null;
 
 	@Column('tinyint', {
 		name: 'IsActive',
@@ -36,15 +45,18 @@ export class Course {
 	@Column('float', { name: 'Rating', nullable: true, precision: 12 })
 	Rating: number | null;
 
+	@Column('int', { name: 'Raters', nullable: true })
+	Raters: number | null;
+
 	@Column('varchar', { name: 'ImageUrl', nullable: true, length: 255 })
 	ImageUrl: string | null;
 
-	@Column('varchar', { name: 'Instructor', nullable: true, length: 100 })
-	Instructor: string | null;
+	@Column('varchar', { name: 'Prerequisite', nullable: true, length: 100 })
+	Prerequisite: string | null;
+
+	@Column('varchar', { name: 'ToBeLearned', nullable: true, length: 100 })
+	ToBeLearned: string | null;
 
 	@Column('float', { name: 'Price', nullable: true, precision: 12 })
 	Price: number | null;
-
-	@Column('int', { name: 'Raters', nullable: true })
-	Raters: number | null;
 }
