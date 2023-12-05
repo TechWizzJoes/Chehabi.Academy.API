@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Class } from './Class';
 
 @Entity('Course', { schema: 'mydb' })
 export class Course {
@@ -51,12 +52,15 @@ export class Course {
 	@Column('varchar', { name: 'ImageUrl', nullable: true, length: 255 })
 	ImageUrl: string | null;
 
-	@Column('varchar', { name: 'Prerequisite', nullable: true, length: 100 })
+	@Column('text', { name: 'Prerequisite', nullable: true })
 	Prerequisite: string | null;
 
-	@Column('varchar', { name: 'ToBeLearned', nullable: true, length: 100 })
+	@Column('text', { name: 'ToBeLearned', nullable: true })
 	ToBeLearned: string | null;
 
 	@Column('float', { name: 'Price', nullable: true, precision: 12 })
 	Price: number | null;
+
+	@OneToMany(() => Class, (Class) => Class.Course)
+	Classes: Class[];
 }

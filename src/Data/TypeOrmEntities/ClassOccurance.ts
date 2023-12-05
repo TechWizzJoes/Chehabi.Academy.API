@@ -1,12 +1,17 @@
-import { Column, Entity, JoinColumn, ManyToOne, RelationId } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { Class } from './Class';
 
+@Index('ClassOccurance_FK', ['ClassId'], {})
 @Entity('ClassOccurance', { schema: 'mydb' })
 export class ClassOccurance {
-	@Column('int', { primary: true, name: 'ClassId' })
+	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
+	Id: number;
+
+	@Column('int', { name: 'ClassId' })
+	@RelationId((ClassOccurance: ClassOccurance) => ClassOccurance.Class)
 	ClassId: number;
 
-	@Column('varchar', { primary: true, name: 'Occurance', length: 100 })
+	@Column('varchar', { name: 'Occurance', length: 100 })
 	Occurance: string;
 
 	@ManyToOne(() => Class, (Class) => Class.ClassOccurances, {
@@ -15,7 +20,4 @@ export class ClassOccurance {
 	})
 	@JoinColumn([{ name: 'ClassId', referencedColumnName: 'Id' }])
 	Class: Class;
-
-	@RelationId((ClassOccurance: ClassOccurance) => ClassOccurance.Class)
-	ClassId2: number;
 }

@@ -1,17 +1,23 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export namespace CoursesModels {
 	export class MasterModel {
 		Id: number;
 		Name: string;
 		Description: string | null;
+		Instructor: string | null;
+		Duration: number | null;
 		VideoPath: string | null;
 		FilePath: string | null;
+		StartDate: Date | null;
 		IsActive: boolean | null;
 		IsDeleted: boolean | null;
 		Rating: number | null;
-		ImageUrl: string | null;
-		Instructor: string | null;
-		Price: number | null;
 		Raters: number | null;
+		ImageUrl: string | null;
+		Prerequisite: string | null;
+		ToBeLearned: string | null;
+		Price: number | null;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;
@@ -20,12 +26,28 @@ export namespace CoursesModels {
 	// export type LookupResModel = Pick<MasterModel, 'Id' | 'Title' | 'CreatedBy'>;
 	// export type ReqModel = Pick<MasterModel, 'Title' | 'Description' | 'Script' | 'SharingOptionId'>;
 
-	export class ReqModel implements Partial<MasterModel> {
+	export class CoursesReqModel implements Partial<MasterModel> {
+		@ApiProperty()
 		Name: string;
+		@ApiProperty()
 		Description: string | null;
+		@ApiProperty()
+		Instructor: string | null;
+		@ApiProperty()
+		Duration: number | null;
+		@ApiProperty()
 		VideoPath: string | null;
+		@ApiProperty()
 		FilePath: string | null;
-		IsActive: boolean | null;
-		IsDeleted: boolean | null;
+		@ApiProperty()
+		StartDate: Date | null;
+		@ApiProperty()
+		ImageUrl: string | null;
+		@ApiProperty()
+		Prerequisite: string | null;
+		@ApiProperty()
+		ToBeLearned: string | null;
+		@ApiProperty()
+		Price: number | null;
 	}
 }

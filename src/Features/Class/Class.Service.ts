@@ -22,18 +22,19 @@ export class ClassService {
 		this.Config = this.appConfig.Config;
 	}
 
-	async GetById(id): Promise<ClassModels.MasterModel> {
-		return this.ClassRepository.GetById(id);
+	async GetallByClassId(id: number): Promise<ClassModels.MasterModel[]> {
+		return this.ClassRepository.GetallByClassId(id);
 	}
 
-	async Getall(): Promise<ClassModels.MasterModel[]> {
-		return this.ClassRepository.Getall();
-	}
-	async Create(course: ClassModels.ReqModel): Promise<ClassModels.MasterModel> {
+	// async Getall(): Promise<ClassModels.MasterModel[]> {
+	// 	return this.ClassRepository.GetAll();
+	// }
+
+	async Create(course: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
 		return await this.ClassRepository.Create(course);
 	}
 
-	async Update(id, course: ClassModels.ReqModel): Promise<ClassModels.MasterModel> {
+	async Update(id, course: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
 		return await this.ClassRepository.Update(id, course);
 	}
 	async Delete(id): Promise<ClassModels.MasterModel> {

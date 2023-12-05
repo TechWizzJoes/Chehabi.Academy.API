@@ -1,67 +1,87 @@
 import { Injectable } from '@nestjs/common';
-import { AppConfig, Config } from '@App/Config/App.Config';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Course } from '@App/Data/TypeOrmEntities/Course';
 import { CoursesModels } from './Courses.Models';
+import { Class } from '@App/Data/TypeOrmEntities/Class';
 
 @Injectable()
 export class CoursesRepository {
-	Config: Config;
+	constructor(
+		@InjectRepository(Course)
+		private courseRepository: Repository<Course>
+	) {}
 
-	constructor(@InjectRepository(Course) private Course: Repository<Course>) {}
-
-	async Getall(): Promise<Course[]> {
-		return this.Course.find();
+	async GetAll(): Promise<Course[]> {
+		return this.courseRepository.find({
+			where: {
+				IsDeleted: false
+			}
+		});
 	}
 
 	async GetById(id: number): Promise<Course> {
-		return this.Course.findOne({
+		return this.courseRepository.findOne({
 			where: {
 				Id: id
-			}
+			},
+			relations: ['Classes', 'Classes.ClassOccurances']
 		});
 	}
 
-	async Create(Course: CoursesModels.ReqModel): Promise<Course> {
-		const newCourse = this.Course.create({
-			Name: Course.Name,
-			Description: Course.Description,
-			VideoPath: Course.VideoPath,
-			FilePath: Course.FilePath,
+	async Create(courseData: CoursesModels.CoursesReqModel): Promise<Course> {
+		const newCourse = this.courseRepository.create({
+			...courseData,
 			IsActive: true,
 			IsDeleted: false
 		});
-		return await this.Course.save(newCourse);
+		return await this.courseRepository.save(newCourse);
 	}
 
-	async Update(id, course: CoursesModels.ReqModel): Promise<Course> {
-		let updateCourse: Course = await this.Course.findOne({
+	async Update(id: number, courseData: CoursesModels.CoursesReqModel): Promise<Course> {
+		let updateCourse: Course = await this.courseRepository.findOne({
 			where: {
 				Id: id
 			}
 		});
+		if (!updateCourse) {
+			// handle case where the course is not found
+			return null;
+		}
 
-		updateCourse.Name = course.Name;
-		updateCourse.Description = course.Description;
-		updateCourse.VideoPath = course.VideoPath;
-		updateCourse.FilePath = course.FilePath;
-		updateCourse.IsActive = course.IsActive;
-		updateCourse.IsDeleted = course.IsDeleted;
+		updateCourse = {
+			...updateCourse,
+			...courseData
+		};
 
-		return await this.Course.save(updateCourse);
+		return await this.courseRepository.save(updateCourse);
 	}
 
-	async Delete(id): Promise<Course> {
-		let updateCourse: Course = await this.Course.findOne({
+	async Delete(id: number): Promise<Course> {
+		let deleteCourse: Course = await this.courseRepository.findOne({
 			where: {
 				Id: id
 			}
 		});
+		if (!deleteCourse) {
+			// handle case where the course is not found
+			return null;
+		}
 
-		updateCourse.IsActive = false;
-		updateCourse.IsDeleted = true;
+		deleteCourse.IsActive = false;
+		deleteCourse.IsDeleted = true;
 
-		return await this.Course.save(updateCourse);
+		return await this.courseRepository.save(deleteCourse);
+	}
+
+	async GetClasses(courseId: number): Promise<Class[]> {
+		const courseEntity = await this.courseRepository.findOne({
+			where: {
+				Id: courseId
+			},
+			relations: ['Classes']
+		});
+
+		return courseEntity.Classes;
 	}
 }
