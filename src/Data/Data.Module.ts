@@ -8,8 +8,9 @@ import { Class } from './TypeOrmEntities/Class';
 import { Course } from './TypeOrmEntities/Course';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationSubscriptions } from './TypeOrmEntities/NotificationSubscriptions';
+import { ClassOccurance } from './TypeOrmEntities/ClassOccurance';
 
-const Entities = [User, Feedback, Class, Course, NotificationSubscriptions];
+const Entities = [User, Feedback, Class, Course, ClassOccurance, NotificationSubscriptions];
 
 @Module({
 	imports: [CommonModule, TypeOrmModule.forFeature(Entities)],

@@ -7,30 +7,30 @@ import { RefreshTokenGuard } from '@App/Common/Auth/RefreshToken.Guard';
 import { ClassService } from './Class.Service';
 
 @ApiTags('Class')
-@UseGuards(AuthenticatedGuard)
+// @UseGuards(AuthenticatedGuard)
 @Controller('Class')
 export class ClassController {
 	constructor(private ClassService: ClassService) {}
 
 	@Get('/:id')
-	GetOne(@Param('id') id: number): Promise<ClassModels.MasterModel> {
-		return this.ClassService.GetById(id);
+	GetallByClassId(@Param('id') id: number): Promise<ClassModels.MasterModel[]> {
+		return this.ClassService.GetallByClassId(id);
 	}
 
-	@Get('list/all')
-	GetAll(): Promise<ClassModels.MasterModel[]> {
-		return this.ClassService.Getall();
-	}
+	// @Get('list/all')
+	// GetAll(): Promise<ClassModels.MasterModel[]> {
+	// 	return this.ClassService.Getall();
+	// }
 
 	@Post('')
-	@ApiBody({ type: ClassModels.ReqModel })
-	Create(@Body() course: ClassModels.ReqModel): Promise<ClassModels.MasterModel> {
+	@ApiBody({ type: ClassModels.ClassReqModel })
+	Create(@Body() course: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
 		return this.ClassService.Create(course);
 	}
 
 	@Put('/:id')
-	@ApiBody({ type: ClassModels.ReqModel })
-	Update(@Param('id') id: number, @Body() course: ClassModels.ReqModel): Promise<ClassModels.MasterModel> {
+	@ApiBody({ type: ClassModels.ClassReqModel })
+	Update(@Param('id') id: number, @Body() course: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
 		return this.ClassService.Update(id, course);
 	}
 

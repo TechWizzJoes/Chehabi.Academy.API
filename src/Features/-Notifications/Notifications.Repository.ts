@@ -12,7 +12,7 @@ export class NotificationsRepository {
 	constructor(
 		@InjectRepository(NotificationSubscriptions)
 		private NotificationSubscriptions: Repository<NotificationSubscriptions>
-	) { }
+	) {}
 
 	async GetBySubObject(subObject: string): Promise<NotificationSubscriptions[]> {
 		let sub = await this.NotificationSubscriptions.find({
@@ -20,7 +20,7 @@ export class NotificationsRepository {
 				Subscription: subObject
 			}
 		});
-		return sub
+		return sub;
 	}
 
 	async AddSubscription(subObject: any): Promise<NotificationSubscriptions[]> {

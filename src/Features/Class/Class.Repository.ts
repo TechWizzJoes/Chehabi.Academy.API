@@ -1,71 +1,101 @@
+// ClassRepository
 import { Injectable } from '@nestjs/common';
-import { AppConfig, Config } from '@App/Config/App.Config';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Class } from '@App/Data/TypeOrmEntities/Class';
+import { ClassOccurance } from '@App/Data/TypeOrmEntities/ClassOccurance';
+import { User } from '@App/Data/TypeOrmEntities/User';
 import { ClassModels } from './Class.Models';
+import { Course } from '@App/Data/TypeOrmEntities/Course';
 
 @Injectable()
 export class ClassRepository {
-	Config: Config;
+	constructor(
+		@InjectRepository(Class)
+		private classRepository: Repository<Class>,
+		@InjectRepository(User)
+		private userRepository: Repository<User>
+	) {}
 
-	constructor(@InjectRepository(Class) private Class: Repository<Class>) {}
-
-	async Getall(): Promise<Class[]> {
-		return this.Class.find();
+	async GetallByClassId(courseId: number): Promise<Class[]> {
+		return this.classRepository.find({
+			where: {
+				CourseId: courseId
+			}
+		});
 	}
 
 	async GetById(id: number): Promise<Class> {
-		return this.Class.findOne({
+		return this.classRepository.findOne({
 			where: {
 				Id: id
 			}
 		});
 	}
 
-	async Create(Class: ClassModels.ReqModel): Promise<Class> {
-		const newClass = this.Class.create({
-			StartDate: Class.StartDate,
-			EndDate: Class.EndDate,
-			MaxCapacity: Class.MaxCapacity,
-			Period: Class.Period,
-			CurrentIndex: Class.CurrentIndex,
+	async Create(classData: ClassModels.ClassReqModel): Promise<Class> {
+		const newClass = this.classRepository.create({
+			...classData,
 			IsActive: true,
-			IsDeleted: false,
-			Users: Class.Users
+			IsDeleted: false
 		});
-		return await this.Class.save(newClass);
+		return await this.classRepository.save(newClass);
 	}
 
-	async Update(id, Class: ClassModels.ReqModel): Promise<Class> {
-		let updateClass: Class = await this.Class.findOne({
+	async Update(id: number, classData: ClassModels.ClassReqModel): Promise<Class> {
+		let updateClass: Class = await this.classRepository.findOne({
 			where: {
 				Id: id
 			}
 		});
+		if (!updateClass) {
+			// handle case where the class is not found
+			return null;
+		}
 
-		updateClass.StartDate = Class.StartDate;
-		updateClass.EndDate = Class.EndDate;
-		updateClass.MaxCapacity = Class.MaxCapacity;
-		updateClass.Period = Class.Period;
-		updateClass.CurrentIndex = Class.CurrentIndex;
-		updateClass.IsActive = Class.IsActive;
-		updateClass.IsDeleted = Class.IsDeleted;
-		updateClass.Users = Class.Users;
+		updateClass = {
+			...updateClass,
+			...classData
+		};
 
-		return await this.Class.save(updateClass);
+		return await this.classRepository.save(updateClass);
 	}
 
-	async Delete(id): Promise<Class> {
-		let updateClass: Class = await this.Class.findOne({
+	async Delete(id: number): Promise<Class> {
+		let deleteClass: Class = await this.classRepository.findOne({
 			where: {
 				Id: id
 			}
 		});
+		if (!deleteClass) {
+			// handle case where the class is not found
+			return null;
+		}
 
-		updateClass.IsActive = false;
-		updateClass.IsDeleted = true;
+		deleteClass.IsActive = false;
+		deleteClass.IsDeleted = true;
 
-		return await this.Class.save(updateClass);
+		return await this.classRepository.save(deleteClass);
+	}
+
+	async GetUsers(classId: number): Promise<User[]> {
+		const classEntity = await this.classRepository.findOne({
+			where: {
+				Id: classId
+			},
+			relations: ['Users']
+		});
+
+		return classEntity.Users;
+	}
+	async GetCourse(classId: number): Promise<Course> {
+		const classEntity = await this.classRepository.findOne({
+			where: {
+				Id: classId
+			},
+			relations: ['Course']
+		});
+
+		return classEntity.Course;
 	}
 }

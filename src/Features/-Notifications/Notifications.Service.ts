@@ -43,13 +43,13 @@ export class NotificationsService {
 
 	async SubscribeClient(subObject: any) {
 		const currentUser = this.UserHelper.GetCurrentUser();
-		const subObj = JSON.stringify(subObject)
+		const subObj = JSON.stringify(subObject);
 		let newObj = {
 			UserId: currentUser.UserId ?? 1,
 			Subscription: subObj
 		};
 		let subs = await this.NotificationsRepository.GetBySubObject(subObj);
-		if (subs.length > 0) return
+		if (subs.length > 0) return;
 		this.NotificationsRepository.AddSubscription(newObj);
 	}
 

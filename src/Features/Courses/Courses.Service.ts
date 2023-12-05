@@ -27,13 +27,13 @@ export class CoursesService {
 	}
 
 	async Getall(): Promise<CoursesModels.MasterModel[]> {
-		return this.CoursesRepository.Getall();
+		return this.CoursesRepository.GetAll();
 	}
-	async Create(course: CoursesModels.ReqModel): Promise<CoursesModels.MasterModel> {
+	async Create(course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
 		return await this.CoursesRepository.Create(course);
 	}
 
-	async Update(id, course: CoursesModels.ReqModel): Promise<CoursesModels.MasterModel> {
+	async Update(id, course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
 		return await this.CoursesRepository.Update(id, course);
 	}
 	async Delete(id): Promise<CoursesModels.MasterModel> {
