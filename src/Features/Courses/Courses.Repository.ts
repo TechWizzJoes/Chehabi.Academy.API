@@ -15,7 +15,8 @@ export class CoursesRepository {
 	async GetAll(): Promise<Course[]> {
 		return this.courseRepository.find({
 			where: {
-				IsDeleted: false
+				IsDeleted: false,
+				IsActive: true
 			}
 		});
 	}
