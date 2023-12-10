@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@App/Data/TypeOrmEntities/User';
 import { AccountModels } from './Account.Models';
+import { UserModels } from '../User/User.Models';
 @Injectable()
 export class AccountRepository {
 	Config: Config;
@@ -26,7 +27,7 @@ export class AccountRepository {
 		});
 	}
 
-	async CreateUser(user: AccountModels.User): Promise<User> {
+	async CreateUser(user: UserModels.MasterModel): Promise<User> {
 		const newUser = this.User.create({
 			FirstName: user.FirstName,
 			LastName: user.LastName,

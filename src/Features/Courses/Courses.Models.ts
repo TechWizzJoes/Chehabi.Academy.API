@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ClassModels } from '../Class/Class.Models';
 
 export namespace CoursesModels {
 	export class MasterModel {
@@ -18,6 +19,7 @@ export namespace CoursesModels {
 		Prerequisite: string | null;
 		ToBeLearned: string | null;
 		Price: number | null;
+		Classes: ClassModels.MasterModel[];
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;

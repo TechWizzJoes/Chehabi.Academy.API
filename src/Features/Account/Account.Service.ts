@@ -9,6 +9,7 @@ import { AccountRepository } from './Account.Repository';
 import { AccountModels } from './Account.Models';
 import { AccountException } from '@App/Common/Exceptions/Account.Exception';
 import axios from 'axios';
+import { UserModels } from '../User/User.Models';
 
 @Injectable()
 export class AccountService {
@@ -24,7 +25,7 @@ export class AccountService {
 	}
 
 	async Login(email: string, password: string): Promise<AccountModels.LoginResModel> {
-		const user: AccountModels.User = await this.AccountRepository.GetUserByEmail(email.toLowerCase().trim());
+		const user: UserModels.MasterModel = await this.AccountRepository.GetUserByEmail(email.toLowerCase().trim());
 		const loginResult = this.CanSignIn(user, password);
 		if (!loginResult.Success) {
 			throw new AccountException(loginResult.ErrorMsg);
@@ -42,7 +43,7 @@ export class AccountService {
 			throw new AccountException(ErrorCodesEnum.FALSE_GOOGLE_LOGIN);
 		}
 
-		const user: AccountModels.User = await this.AccountRepository.GetUserByEmail(payload.email);
+		const user: UserModels.MasterModel = await this.AccountRepository.GetUserByEmail(payload.email);
 		if (!user) {
 			return this.Register({
 				Email: payload.email,
@@ -85,7 +86,7 @@ export class AccountService {
 		}
 		const encryptedPassword = CryptoHelper.AES.Encrypt(registerReqModel.Password, this.Config.Auth.EncryptionKey);
 		registerReqModel.Password = encryptedPassword;
-		user = await this.AccountRepository.CreateUser(registerReqModel as AccountModels.User);
+		user = await this.AccountRepository.CreateUser(registerReqModel as UserModels.MasterModel);
 		const accessToken = this.GetAccessToken(user);
 		const refreshToken = this.GetRefreshToken(user);
 		const currentUser = this.GetCurrentUser(user);
@@ -102,7 +103,7 @@ export class AccountService {
 		return new AccountModels.RefreshTokenResModel(accessToken, refreshToken);
 	}
 
-	CanSignIn(user: AccountModels.User, password: string) {
+	CanSignIn(user: UserModels.MasterModel, password: string) {
 		const passwordEncrypted = CryptoHelper.AES.Encrypt(password, this.Config.Auth.EncryptionKey);
 		const dbpw = CryptoHelper.AES.Decrypt(user.Password, this.Config.Auth.EncryptionKey);
 
@@ -126,7 +127,7 @@ export class AccountService {
 		};
 	}
 
-	CanRegister(user: AccountModels.User) {
+	CanRegister(user: UserModels.MasterModel) {
 		if (user == null) {
 			return {
 				Success: true,
@@ -140,7 +141,7 @@ export class AccountService {
 		}
 	}
 
-	GetAccessToken(user: AccountModels.User): string {
+	GetAccessToken(user: UserModels.MasterModel): string {
 		const accessToken =
 			'Bearer ' +
 			this.JwtService.sign({
@@ -150,7 +151,7 @@ export class AccountService {
 		return accessToken;
 	}
 
-	GetRefreshToken(user: AccountModels.User): string {
+	GetRefreshToken(user: UserModels.MasterModel): string {
 		const refreshToken = this.JwtService.sign(
 			{
 				UserId: user.Id,
@@ -165,7 +166,7 @@ export class AccountService {
 		return refreshToken;
 	}
 
-	GetCurrentUser(user: AccountModels.User): AccountModels.CurrentUser {
+	GetCurrentUser(user: UserModels.MasterModel): AccountModels.CurrentUser {
 		const currentUser = {
 			Id: user.Id,
 			FirstName: user.FirstName,

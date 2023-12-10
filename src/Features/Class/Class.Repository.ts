@@ -20,13 +20,16 @@ export class ClassRepository {
 	async GetallByClassId(courseId: number): Promise<Class[]> {
 		return this.classRepository.find({
 			where: {
-				CourseId: courseId
+				CourseId: courseId,
+				IsActive: true,
+				IsDeleted: false
 			}
 		});
 	}
 
 	async GetById(id: number): Promise<Class> {
 		return this.classRepository.findOne({
+			relations: ['Users'],
 			where: {
 				Id: id
 			}
