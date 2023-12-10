@@ -23,7 +23,9 @@ export class CoursesService {
 	}
 
 	async GetById(id): Promise<CoursesModels.MasterModel> {
-		return this.CoursesRepository.GetById(id);
+		let course = await this.CoursesRepository.GetById(id);
+		course.Classes = course.Classes.filter((c) => c.IsActive);
+		return course;
 	}
 
 	async Getall(): Promise<CoursesModels.MasterModel[]> {

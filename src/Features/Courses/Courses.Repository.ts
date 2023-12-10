@@ -23,9 +23,10 @@ export class CoursesRepository {
 	async GetById(id: number): Promise<Course> {
 		return this.courseRepository.findOne({
 			where: {
-				Id: id
+				Id: id,
+				IsActive: true
 			},
-			relations: ['Classes', 'Classes.ClassOccurances']
+			relations: ['Classes', 'Classes.ClassOccurances', 'Classes.Users']
 		});
 	}
 

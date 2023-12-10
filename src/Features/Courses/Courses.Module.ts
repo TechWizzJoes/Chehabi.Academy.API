@@ -11,6 +11,7 @@ import { CoursesService } from './Courses.Service';
 @Module({
 	imports: [DataModule, CommonModule],
 	controllers: [CoursesController],
-	providers: [AppConfig, CoursesService, CoursesRepository]
+	providers: [AppConfig, CoursesService, CoursesRepository],
+	exports: [CoursesService, CoursesRepository]
 })
 export class CoursesModule {}

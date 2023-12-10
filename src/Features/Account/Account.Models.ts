@@ -1,19 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export namespace AccountModels {
-	export class User {
-		Id: number;
-		FirstName: string;
-		LastName: string;
-		Birthdate?: string;
-		IsActive?: boolean;
-		IsDeleted?: boolean;
-		Email: string;
-		Password: string;
-		IsAdmin: boolean;
-		ProfilePicturePath: string;
-	}
-
 	export class CurrentUser {
 		Id!: number;
 		FirstName!: string;

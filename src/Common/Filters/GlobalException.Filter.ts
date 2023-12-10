@@ -1,4 +1,11 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
+import {
+	ExceptionFilter,
+	Catch,
+	ArgumentsHost,
+	HttpException,
+	HttpStatus,
+	UnauthorizedException
+} from '@nestjs/common';
 import sequelize, { ConnectionError, TimeoutError } from 'sequelize';
 
 import { WinstonService } from '@App/Common/Logs/Winston.Helper';
@@ -17,6 +24,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
 		console.log(exception.name, '\n', exception);
 		if (exception instanceof AccountException) {
+			const statusCode = exception.getStatus();
+			this.WinstonService.LoginError(request, startTime, message);
+
+			response.status(statusCode).json(exception.getResponse());
+		} else if (exception instanceof UnauthorizedException) {
 			const statusCode = exception.getStatus();
 			this.WinstonService.LoginError(request, startTime, message);
 
