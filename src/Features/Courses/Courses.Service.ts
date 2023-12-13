@@ -32,6 +32,7 @@ export class CoursesService {
 		return this.CoursesRepository.GetAll();
 	}
 	async Create(course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
+		course.InstructorId = this.UserHelper.GetCurrentUser()?.UserId ?? course.InstructorId;
 		return await this.CoursesRepository.Create(course);
 	}
 
