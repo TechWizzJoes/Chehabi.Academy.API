@@ -1,12 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ClassModels } from '../Class/Class.Models';
+import { UserModels } from '../User/User.Models';
 
 export namespace CoursesModels {
 	export class MasterModel {
 		Id: number;
 		Name: string;
 		Description: string | null;
-		Instructor: string | null;
+		InstructorId: number | null;
 		Duration: number | null;
 		VideoPath: string | null;
 		FilePath: string | null;
@@ -20,6 +21,7 @@ export namespace CoursesModels {
 		ToBeLearned: string | null;
 		Price: number | null;
 		Classes: ClassModels.MasterModel[];
+		Instructor: UserModels.MasterModel;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;
@@ -34,7 +36,7 @@ export namespace CoursesModels {
 		@ApiProperty()
 		Description: string | null;
 		@ApiProperty()
-		Instructor: string | null;
+		InstructorId: number | null;
 		@ApiProperty()
 		Duration: number | null;
 		@ApiProperty()

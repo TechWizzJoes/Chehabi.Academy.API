@@ -4,30 +4,36 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Feedback } from '@App/Data/TypeOrmEntities/Feedback';
 import { FeedbackModels } from './Feedback.Models';
+import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
+import { CommonHelper } from '@App/Common/Helpers/Common.Helper';
 
 @Injectable()
 export class FeedbackRepository {
 	Config: Config;
 
-	constructor(@InjectRepository(Feedback) private Feedback: Repository<Feedback>) {}
+	constructor(@InjectRepository(Feedback) private Feedback: Repository<Feedback>, private UserHelper: UserHelper) {}
 
 	async Getall(): Promise<Feedback[]> {
-		return this.Feedback.find();
+		return this.Feedback.find({
+			relations: ['User']
+		});
 	}
 
 	async GetById(id: number): Promise<Feedback> {
 		return this.Feedback.findOne({
 			where: {
 				Id: id
-			}
+			},
+			relations: ['User']
 		});
 	}
 
 	async Create(Feedback: FeedbackModels.ReqModel): Promise<Feedback> {
 		const newFeedback = this.Feedback.create({
 			Text: Feedback.Text,
-			UserId: Feedback.UserId,
-			IsDeleted: false
+			UserId: this.UserHelper.GetCurrentUser()?.UserId ?? Feedback.UserId,
+			IsDeleted: false,
+			CreatedDate: CommonHelper.Now()
 		});
 		return await this.Feedback.save(newFeedback);
 	}

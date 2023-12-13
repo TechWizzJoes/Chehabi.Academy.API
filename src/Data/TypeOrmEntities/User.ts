@@ -1,4 +1,5 @@
 import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Course } from './Course';
 import { Feedback } from './Feedback';
 import { Class } from './Class';
 
@@ -38,6 +39,9 @@ export class User {
 		length: 100
 	})
 	ProfilePicturePath: string | null;
+
+	@OneToMany(() => Course, (Course) => Course.Instructor)
+	Courses: Course[];
 
 	@OneToMany(() => Feedback, (Feedback) => Feedback.User)
 	Feedbacks: Feedback[];

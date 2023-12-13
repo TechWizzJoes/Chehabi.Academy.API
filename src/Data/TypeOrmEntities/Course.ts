@@ -1,6 +1,8 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { Class } from './Class';
+import { User } from './User';
 
+@Index('Course_FK', ['InstructorId'], {})
 @Entity('Course', { schema: 'mydb' })
 export class Course {
 	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
@@ -12,8 +14,9 @@ export class Course {
 	@Column('text', { name: 'Description', nullable: true })
 	Description: string | null;
 
-	@Column('varchar', { name: 'Instructor', nullable: true, length: 100 })
-	Instructor: string | null;
+	@RelationId((Course: Course) => Course.Instructor)
+	@Column('int', { name: 'InstructorId' })
+	InstructorId: number;
 
 	@Column('int', { name: 'Duration', nullable: true })
 	Duration: number | null;
@@ -52,15 +55,22 @@ export class Course {
 	@Column('varchar', { name: 'ImageUrl', nullable: true, length: 255 })
 	ImageUrl: string | null;
 
-	@Column('text', { name: 'Prerequisite', nullable: true })
-	Prerequisite: string | null;
-
 	@Column('text', { name: 'ToBeLearned', nullable: true })
 	ToBeLearned: string | null;
 
 	@Column('float', { name: 'Price', nullable: true, precision: 12 })
 	Price: number | null;
 
+	@Column('text', { name: 'Prerequisite', nullable: true })
+	Prerequisite: string | null;
+
 	@OneToMany(() => Class, (Class) => Class.Course)
 	Classes: Class[];
+
+	@ManyToOne(() => User, (User) => User.Courses, {
+		onDelete: 'NO ACTION',
+		onUpdate: 'NO ACTION'
+	})
+	@JoinColumn([{ name: 'InstructorId', referencedColumnName: 'Id' }])
+	Instructor: User;
 }

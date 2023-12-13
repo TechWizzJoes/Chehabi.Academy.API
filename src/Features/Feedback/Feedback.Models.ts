@@ -1,5 +1,6 @@
 import { User } from '@App/Data/TypeOrmEntities/User';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserModels } from '../User/User.Models';
 
 export namespace FeedbackModels {
 	export class MasterModel {
@@ -7,6 +8,8 @@ export namespace FeedbackModels {
 		Text: string | null;
 		UserId: number | null;
 		IsDeleted: boolean | null;
+		CreatedDate: Date | null;
+		User: UserModels.MasterModel;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;

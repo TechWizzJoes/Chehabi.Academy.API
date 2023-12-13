@@ -31,6 +31,7 @@ import { DatabaseExceptionFilter } from '@App/Common/Filters/DatabaseException.F
 import { ValidationExceptionFilter } from '@App/Common/Filters/ValidationException.Filter';
 import { ApplicationExceptionFilter } from '@App/Common/Filters/ApplicationException.Filter';
 import { ClassOccuranceModule } from '@App/Features/ClassOccurance/ClassOccurance.Module';
+import { WhatsNewModule } from '@App/Features/WhatsNew/WhatsNew.Module';
 
 @Module({
 	imports: [
@@ -52,7 +53,8 @@ import { ClassOccuranceModule } from '@App/Features/ClassOccurance/ClassOccuranc
 		ClassOccuranceModule,
 		FeedbackModule,
 		NotificationsModule,
-		EmailSenderModule
+		EmailSenderModule,
+		WhatsNewModule
 	],
 	controllers: [AppController],
 	providers: [
