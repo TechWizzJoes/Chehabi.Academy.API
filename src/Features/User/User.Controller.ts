@@ -8,7 +8,13 @@ import { UserService } from './User.Service';
 
 @ApiTags('User')
 // @UseGuards(AuthenticatedGuard)
-@Controller('User')
+@Controller('user')
 export class UserController {
 	constructor(private UserService: UserService) {}
+
+	@Get('classes')
+	@UseGuards(AuthenticatedGuard)
+	GetProfileInfo(): any {
+		return this.UserService.GetClassesInfo();
+	}
 }

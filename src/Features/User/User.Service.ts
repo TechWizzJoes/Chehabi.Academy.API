@@ -29,4 +29,9 @@ export class UserService {
 	SaveUser(user: UserModels.MasterModel) {
 		return this.UserRepository.SaveUser(user);
 	}
+
+	GetClassesInfo() {
+		const CurrentUser = this.UserHelper.GetCurrentUser();
+		return this.UserRepository.GetClassesInfo(CurrentUser.UserId);
+	}
 }

@@ -10,7 +10,9 @@ import { User } from '@App/Data/TypeOrmEntities/User';
 export class UserRepository {
 	constructor(
 		@InjectRepository(User)
-		private userRepository: Repository<User>
+		private userRepository: Repository<User>,
+		@InjectRepository(Course)
+		private courseRepository: Repository<Course>
 	) {}
 
 	async GetById(id: number): Promise<User> {
@@ -24,5 +26,15 @@ export class UserRepository {
 
 	async SaveUser(user: UserModels.MasterModel): Promise<User> {
 		return await this.userRepository.save(user);
+	}
+
+	GetClassesInfo(UserId: number) {
+		return this.courseRepository.find({
+			where: {
+				InstructorId: UserId,
+				IsActive: true
+			},
+			relations: ['Classes', 'Classes.ClassOccurances', 'Classes.Users']
+		});
 	}
 }
