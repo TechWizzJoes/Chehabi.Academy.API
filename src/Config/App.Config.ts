@@ -18,6 +18,7 @@ export interface Config {
 		Idle: number;
 	};
 	StorageFolder: string;
+	FilesFolder: string;
 	Auth: {
 		EncryptionKey: string;
 		Jwt: {

@@ -1,14 +1,16 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards, Delete, Put, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, UseGuards, Delete, Put, ParseIntPipe, Res } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CoursesModels } from './Courses.Models';
 import { CoursesService } from './Courses.Service';
 import { AuthenticatedGuard } from '@App/Common/Auth/Authenticated.Guard';
-
+import * as path from 'path';
+import { Response } from 'express';
+import { AppConfig } from '@App/Config/App.Config';
 @ApiTags('Courses')
 // @UseGuards(AuthenticatedGuard)
 @Controller('courses')
 export class CoursesController {
-	constructor(private CoursesService: CoursesService) {}
+	constructor(private CoursesService: CoursesService, private AppConfig: AppConfig) {}
 
 	@Get('/:id')
 	GetOne(@Param('id', ParseIntPipe) id: number): Promise<CoursesModels.MasterModel> {
@@ -39,5 +41,18 @@ export class CoursesController {
 	@Delete('/:id')
 	Delete(@Param('id') id: number): Promise<CoursesModels.MasterModel> {
 		return this.CoursesService.Delete(id);
+	}
+
+	@Get('material/:id')
+	async downloadPdf(@Res() res: Response, @Param('id') id: number): Promise<void> {
+		console.log('dirname', path.join(__dirname));
+		console.log('this.AppConfig.Config.FilesFolder', this.AppConfig.Config.FilesFolder);
+
+		const pdfFilePath = path.join(this.AppConfig.Config.FilesFolder, 'test.pdf'); // Adjust the path to your PDF file
+		console.log('pdfFilePath', pdfFilePath);
+
+		res.setHeader('Content-Disposition', 'attachment; filename=test.pdf');
+		res.setHeader('Content-Type', 'application/pdf');
+		res.download(pdfFilePath);
 	}
 }
