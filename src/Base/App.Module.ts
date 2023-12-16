@@ -30,7 +30,6 @@ import { EmailSenderModule } from '@App/Features/EmailSender/EmailSender.Module'
 import { DatabaseExceptionFilter } from '@App/Common/Filters/DatabaseException.Filter';
 import { ValidationExceptionFilter } from '@App/Common/Filters/ValidationException.Filter';
 import { ApplicationExceptionFilter } from '@App/Common/Filters/ApplicationException.Filter';
-import { ClassOccuranceModule } from '@App/Features/ClassOccurance/ClassOccurance.Module';
 import { WhatsNewModule } from '@App/Features/WhatsNew/WhatsNew.Module';
 
 @Module({
@@ -50,7 +49,6 @@ import { WhatsNewModule } from '@App/Features/WhatsNew/WhatsNew.Module';
 		AccountModule,
 		CoursesModule,
 		ClassModule,
-		ClassOccuranceModule,
 		FeedbackModule,
 		NotificationsModule,
 		EmailSenderModule,
