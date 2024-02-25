@@ -16,7 +16,7 @@ export class CoursesController {
 		return courses;
 	}
 
-	@Get('list/all')
+	@Get('/list/all')
 	async GetAll(): Promise<CoursesModels.MasterModel[]> {
 		let courses = await this.CoursesService.Getall();
 		return courses;

@@ -39,7 +39,7 @@ export class AccountController {
 
 	@Get('info')
 	@UseGuards(AuthenticatedGuard)
-	GetProfileInfo(@Body() RefreshTokenReqModel: AccountModels.RefreshTokenReqModel): any {
+	GetProfileInfo(): Promise<AccountModels.CurrentUser> {
 		return this.AccountService.GetProfileInfo();
 	}
 }
