@@ -104,15 +104,13 @@ export class AccountService {
 	}
 
 	CanSignIn(user: UserModels.MasterModel, password: string) {
-		const passwordEncrypted = CryptoHelper.AES.Encrypt(password, this.Config.Auth.EncryptionKey);
-		const dbpw = CryptoHelper.AES.Decrypt(user.Password, this.Config.Auth.EncryptionKey);
-
 		if (user == null) {
 			return {
 				Success: false,
 				ErrorMsg: ErrorCodesEnum.USER_NOT_FOUND
 			};
 		}
+		const dbpw = CryptoHelper.AES.Decrypt(user.Password, this.Config.Auth.EncryptionKey);
 
 		if (password != dbpw) {
 			return {
