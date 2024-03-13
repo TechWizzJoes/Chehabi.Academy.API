@@ -36,10 +36,4 @@ export class AccountController {
 	): Promise<AccountModels.RefreshTokenResModel> {
 		return this.AccountService.RefreshAccessToken(RefreshTokenReqModel.Id);
 	}
-
-	@Get('info')
-	@UseGuards(AuthenticatedGuard)
-	GetProfileInfo(): Promise<AccountModels.CurrentUser> {
-		return this.AccountService.GetProfileInfo();
-	}
 }

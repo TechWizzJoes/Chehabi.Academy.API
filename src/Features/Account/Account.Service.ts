@@ -175,10 +175,4 @@ export class AccountService {
 		} as AccountModels.CurrentUser;
 		return currentUser;
 	}
-
-	async GetProfileInfo(): Promise<AccountModels.CurrentUser> {
-		let id = this.UserHelper.GetCurrentUser().UserId;
-		const user: UserModels.MasterModel = await this.AccountRepository.GetUserById(id);
-		return user;
-	}
 }

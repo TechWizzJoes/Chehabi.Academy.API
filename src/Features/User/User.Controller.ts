@@ -11,4 +11,16 @@ import { UserService } from './User.Service';
 @Controller('User')
 export class UserController {
 	constructor(private UserService: UserService) {}
+
+	@Get('/:id')
+	@UseGuards(AuthenticatedGuard)
+	GetProfileInfo(@Param('id') id: number): Promise<UserModels.UserResModel> {
+		return this.UserService.GetById(id);
+	}
+
+	@Put('')
+	@ApiBody({ type: UserModels.UserReqModel })
+	Update(@Body() user: UserModels.UserReqModel): Promise<UserModels.UserResModel> {
+		return this.UserService.SaveUser(user);
+	}
 }

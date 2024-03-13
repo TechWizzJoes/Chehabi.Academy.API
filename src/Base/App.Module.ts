@@ -32,6 +32,7 @@ import { ValidationExceptionFilter } from '@App/Common/Filters/ValidationExcepti
 import { ApplicationExceptionFilter } from '@App/Common/Filters/ApplicationException.Filter';
 import { ClassOccuranceModule } from '@App/Features/ClassOccurance/ClassOccurance.Module';
 import { WhatsNewModule } from '@App/Features/WhatsNew/WhatsNew.Module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
 	imports: [
