@@ -36,4 +36,12 @@ export class AccountController {
 	): Promise<AccountModels.RefreshTokenResModel> {
 		return this.AccountService.RefreshAccessToken(RefreshTokenReqModel.Id);
 	}
+
+	@Post('reset-password')
+	@ApiBody({ type: AccountModels.ResetPasswordReqModel })
+	ResetPassword(
+		@Body() ResetPasswrodReqModel: AccountModels.ResetPasswordReqModel
+	): Promise<AccountModels.LoginResModel> {
+		return this.AccountService.ResetPassowrd(ResetPasswrodReqModel);
+	}
 }

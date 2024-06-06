@@ -29,4 +29,8 @@ export class UserService {
 	SaveUser(user: UserModels.UserResModel) {
 		return this.UserRepository.SaveUser(user);
 	}
+
+	async Upload(filePath: string): Promise<{}> {
+		return { filePath };
+	}
 }

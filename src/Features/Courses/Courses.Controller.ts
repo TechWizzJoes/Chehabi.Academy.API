@@ -10,7 +10,8 @@ import {
 	Put,
 	ParseIntPipe,
 	UseInterceptors,
-	UploadedFile
+	UploadedFile,
+	Res
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CoursesModels } from './Courses.Models';
@@ -18,7 +19,7 @@ import { CoursesService } from './Courses.Service';
 import { AuthenticatedGuard } from '@App/Common/Auth/Authenticated.Guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { extname, join } from 'path';
 
 @ApiTags('Courses')
 // @UseGuards(AuthenticatedGuard)
@@ -43,14 +44,14 @@ export class CoursesController {
 	Create(@Body() course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
 		// return this.CoursesService.Create(course);
 		let x = this.CoursesService.Create(course);
-		return;
+		return x;
 	}
 
 	@Post('/upload/image/:id')
 	@UseInterceptors(
 		FileInterceptor('file', {
 			storage: diskStorage({
-				destination: `./images/courses`,
+				destination: `./uploads/images/courses`,
 				filename: (req, file, callback) => {
 					const uniquName = req.params.id;
 					const ext = extname(file.originalname);
@@ -60,7 +61,7 @@ export class CoursesController {
 			})
 		})
 	)
-	Upload(@UploadedFile() file: Express.Multer.File): Promise<{}> {
+	UploadImage(@UploadedFile() file: Express.Multer.File): Promise<{}> {
 		return this.CoursesService.Upload(file.path);
 	}
 
@@ -73,5 +74,28 @@ export class CoursesController {
 	@Delete('/:id')
 	Delete(@Param('id') id: number): Promise<CoursesModels.MasterModel> {
 		return this.CoursesService.Delete(id);
+	}
+
+	@Get('uploads/images/courses/:image')
+	GetCourseImage(@Param('image') imageName: any, @Res() res: any) {
+		return res.sendFile(join(process.cwd(), 'uploads/images/courses/' + imageName));
+	}
+
+	@Post('/upload/file/:id')
+	@UseInterceptors(
+		FileInterceptor('file', {
+			storage: diskStorage({
+				destination: `./uploads/files/courses`,
+				filename: (req, file, callback) => {
+					const uniquName = req.params.id;
+					const ext = extname(file.originalname);
+					const fileName = uniquName + ext;
+					callback(null, fileName);
+				}
+			})
+		})
+	)
+	UploadFile(@UploadedFile() file: Express.Multer.File): Promise<{}> {
+		return this.CoursesService.Upload(file.path);
 	}
 }

@@ -41,4 +41,8 @@ export class AccountRepository {
 		});
 		return await this.User.save(newUser);
 	}
+
+	async SaveUser(user: UserModels.MasterModel): Promise<User> {
+		return await this.User.save(user);
+	}
 }
