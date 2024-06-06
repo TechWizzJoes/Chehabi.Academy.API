@@ -176,10 +176,48 @@ export class AccountService {
 		return currentUser;
 	}
 
-	GetProfileInfo() {
-		let currentUser = this.UserHelper.GetCurrentUser();
+	CanResetPassword(user: UserModels.MasterModel, password: AccountModels.ResetPasswordReqModel) {
+		if (user == null) {
+			return {
+				Success: false,
+				ErrorMsg: ErrorCodesEnum.USER_NOT_FOUND
+			};
+		}
+		const dbpw = CryptoHelper.AES.Decrypt(user.Password, this.Config.Auth.EncryptionKey);
+
+		if (password.OldPassword != dbpw) {
+			return {
+				Success: false,
+				ErrorMsg: ErrorCodesEnum.WRONG_PASSWORD
+			};
+		}
+
+		if (password.NewPassword != password.ReNewPassword) {
+			return {
+				Success: false,
+				ErrorMsg: ErrorCodesEnum.PASSWORD_NOT_MATCH
+			};
+		}
+
 		return {
-			...currentUser
+			Success: true,
+			ErrorMsg: null
 		};
+	}
+
+	async ResetPassowrd(password: AccountModels.ResetPasswordReqModel): Promise<AccountModels.LoginResModel> {
+		let user: UserModels.MasterModel = await this.AccountRepository.GetUserById(password.Id);
+		const resetPasswordResult = this.CanResetPassword(user, password);
+		if (!resetPasswordResult.Success) {
+			throw new AccountException(resetPasswordResult.ErrorMsg);
+		}
+
+		const encryptedPassword = CryptoHelper.AES.Encrypt(password.NewPassword, this.Config.Auth.EncryptionKey);
+		user.Password = encryptedPassword;
+		user = await this.AccountRepository.SaveUser(user);
+		const accessToken = this.GetAccessToken(user);
+		const refreshToken = this.GetRefreshToken(user);
+		const currentUser = this.GetCurrentUser(user);
+		return new AccountModels.LoginResModel(accessToken, refreshToken, currentUser);
 	}
 }

@@ -22,7 +22,7 @@ export class UserRepository {
 		});
 	}
 
-	async SaveUser(user: UserModels.MasterModel): Promise<User> {
+	async SaveUser(user: UserModels.UserResModel): Promise<User> {
 		return await this.userRepository.save(user);
 	}
 }

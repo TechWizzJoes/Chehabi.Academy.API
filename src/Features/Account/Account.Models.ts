@@ -61,4 +61,15 @@ export namespace AccountModels {
 	export class RefreshTokenResModel {
 		constructor(public AccessToken: string, public RefreshToken: string) {}
 	}
+
+	export class ResetPasswordReqModel {
+		@ApiProperty()
+		Id!: number;
+		@ApiProperty()
+		OldPassword!: string;
+		@ApiProperty()
+		NewPassword!: string;
+		@ApiProperty()
+		ReNewPassword!: string;
+	}
 }

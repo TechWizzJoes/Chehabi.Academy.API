@@ -26,7 +26,11 @@ export class UserService {
 		return this.UserRepository.GetById(id);
 	}
 
-	SaveUser(user: UserModels.MasterModel) {
+	SaveUser(user: UserModels.UserResModel) {
 		return this.UserRepository.SaveUser(user);
+	}
+
+	async Upload(filePath: string): Promise<{}> {
+		return { filePath };
 	}
 }

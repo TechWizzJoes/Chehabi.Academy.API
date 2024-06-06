@@ -24,7 +24,8 @@ export class CoursesService {
 
 	async GetById(id): Promise<CoursesModels.MasterModel> {
 		let course = await this.CoursesRepository.GetById(id);
-		course.Classes = course.Classes.filter((c) => c.IsActive);
+		let user = this.UserHelper.GetCurrentUser();
+		course.Classes = course.Classes.filter((c) => c.IsActive || user.IsAdmin);
 		return course;
 	}
 
@@ -41,5 +42,9 @@ export class CoursesService {
 	}
 	async Delete(id): Promise<CoursesModels.MasterModel> {
 		return await this.CoursesRepository.Delete(id);
+	}
+
+	async Upload(filePath: string): Promise<{}> {
+		return { filePath };
 	}
 }

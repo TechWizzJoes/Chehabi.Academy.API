@@ -14,4 +14,22 @@ export namespace UserModels {
 		ProfilePicturePath: string;
 		Classes: ClassModels.MasterModel[];
 	}
+
+	export class UserResModel {
+		Id: number;
+		FirstName: string;
+		LastName: string;
+		Birthdate?: string;
+		Email: string;
+		ProfilePicturePath: string;
+	}
+
+	export class UserReqModel {
+		Id: number;
+		FirstName: string;
+		LastName: string;
+		Birthdate?: string;
+		Email: string;
+		ProfilePicturePath: string;
+	}
 }

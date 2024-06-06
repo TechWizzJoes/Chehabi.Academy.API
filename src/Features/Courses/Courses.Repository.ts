@@ -17,7 +17,8 @@ export class CoursesRepository {
 			where: {
 				IsDeleted: false,
 				IsActive: true
-			}
+			},
+			relations: ['Instructor']
 		});
 	}
 
