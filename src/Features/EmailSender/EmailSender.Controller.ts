@@ -14,7 +14,7 @@ export class EmailSenderController {
 	@ApiBody({ type: EmailSenderModels.DirectedTo })
 	async sendWelcomeEmail(@Body() directedto: EmailSenderModels.DirectedTo): Promise<any> {
 		const mailOptions = {
-			from: 'support@chehabi-academy.com',
+			from: 'info@chehabi-academy.com',
 			to: directedto.Email,
 			subject: 'Welcome to Our Website',
 			html: `<div style="display: flex; flex-direction: column; align-items: center; text-align: center;"> 

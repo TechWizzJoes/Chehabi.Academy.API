@@ -8,6 +8,7 @@ import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
 import { CoursesRepository } from './Courses.Repository';
 import { CoursesModels } from './Courses.Models';
 import { promises } from 'dns';
+import { ClassModels } from '../Class/Class.Models';
 
 @Injectable()
 export class CoursesService {
@@ -27,6 +28,11 @@ export class CoursesService {
 		let user = this.UserHelper.GetCurrentUser();
 		course.Classes = course.Classes.filter((c) => c.IsActive || user.IsAdmin);
 		return course;
+	}
+
+	async GetEnrolledClassesByUserId(userId): Promise<ClassModels.MasterModel[]> {
+		let courses = await this.CoursesRepository.GetEnrolledClassesByUserId(userId);
+		return courses;
 	}
 
 	async Getall(): Promise<CoursesModels.MasterModel[]> {

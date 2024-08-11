@@ -20,6 +20,7 @@ import { AuthenticatedGuard } from '@App/Common/Auth/Authenticated.Guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
+import { ClassModels } from '../Class/Class.Models';
 
 @ApiTags('Courses')
 // @UseGuards(AuthenticatedGuard)
@@ -29,7 +30,14 @@ export class CoursesController {
 
 	@Get('/:id')
 	GetOne(@Param('id', ParseIntPipe) id: number): Promise<CoursesModels.MasterModel> {
-		let courses = this.CoursesService.GetById(id);
+		return this.CoursesService.GetById(id);
+	}
+
+	@Get('/user/:id')
+	async GetEnrolledClassesByUserId(@Param('id', ParseIntPipe) userId: number): Promise<ClassModels.MasterModel[]> {
+		let courses = await this.CoursesService.GetEnrolledClassesByUserId(userId);
+		console.log(courses);
+
 		return courses;
 	}
 

@@ -4,12 +4,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Course } from '@App/Data/TypeOrmEntities/Course';
 import { CoursesModels } from './Courses.Models';
 import { Class } from '@App/Data/TypeOrmEntities/Class';
+import { User } from '@App/Data/TypeOrmEntities/User';
 
 @Injectable()
 export class CoursesRepository {
 	constructor(
 		@InjectRepository(Course)
-		private courseRepository: Repository<Course>
+		private courseRepository: Repository<Course>,
+		@InjectRepository(User)
+		private userRepository: Repository<User>
 	) {}
 
 	async GetAll(): Promise<Course[]> {
@@ -86,5 +89,19 @@ export class CoursesRepository {
 		});
 
 		return courseEntity.Classes;
+	}
+
+	async GetEnrolledClassesByUserId(userId: number): Promise<Class[]> {
+		const user = await this.userRepository.findOne({
+			where: {
+				Id: userId
+			},
+			select: {
+				Classes: true
+			},
+			relations: ['Classes']
+		});
+
+		return user.Classes;
 	}
 }

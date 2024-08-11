@@ -7,7 +7,7 @@ import { RefreshTokenGuard } from '@App/Common/Auth/RefreshToken.Guard';
 import { FeedbackService } from './Feedback.Service';
 
 @ApiTags('Feedback')
-@UseGuards(AuthenticatedGuard)
+// @UseGuards(AuthenticatedGuard)
 @Controller('Feedback')
 export class FeedbackController {
 	constructor(private FeedbackService: FeedbackService) {}
