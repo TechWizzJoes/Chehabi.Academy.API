@@ -30,7 +30,7 @@ export class User {
 	@Column('varchar', { name: 'Password', length: 255 })
 	Password: string;
 
-	@Column('tinyint', { name: 'IsAdmin', default: () => "'b'0''" })
+	@Column('tinyint', { name: 'IsAdmin', width: 1, default: () => "'0'" })
 	IsAdmin: boolean;
 
 	@Column('varchar', {

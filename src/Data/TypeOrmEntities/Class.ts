@@ -10,7 +10,7 @@ import {
 	RelationId
 } from 'typeorm';
 import { Course } from './Course';
-import { ClassOccurance } from './ClassOccurance';
+import { Session } from './Session';
 import { User } from './User';
 
 @Index('Class_FK', ['CourseId'], {})
@@ -38,11 +38,35 @@ export class Class {
 	@Column('int', { name: 'CurrentIndex', nullable: true })
 	CurrentIndex: number | null;
 
-	@Column('tinyint', { name: 'IsActive', nullable: true, width: 1 })
+	@Column('tinyint', {
+		name: 'IsActive',
+		nullable: true,
+		width: 1,
+		default: () => "'1'"
+	})
 	IsActive: boolean | null;
 
-	@Column('tinyint', { name: 'IsDeleted', nullable: true, width: 1 })
+	@Column('tinyint', {
+		name: 'IsDeleted',
+		nullable: true,
+		width: 1,
+		default: () => "'0'"
+	})
 	IsDeleted: boolean | null;
+
+	@Column('datetime', {
+		name: 'CreatedOn',
+		nullable: true,
+		default: () => 'CURRENT_TIMESTAMP'
+	})
+	CreatedOn: Date | null;
+
+	@Column('datetime', {
+		name: 'UpdatedOn',
+		nullable: true,
+		default: () => 'CURRENT_TIMESTAMP'
+	})
+	UpdatedOn: Date | null;
 
 	@ManyToOne(() => Course, (Course) => Course.Classes, {
 		onDelete: 'NO ACTION',
@@ -51,8 +75,8 @@ export class Class {
 	@JoinColumn([{ name: 'CourseId', referencedColumnName: 'Id' }])
 	Course: Course;
 
-	@OneToMany(() => ClassOccurance, (ClassOccurance) => ClassOccurance.Class)
-	ClassOccurances: ClassOccurance[];
+	@OneToMany(() => Session, (Session) => Session.Class)
+	Sessions: Session[];
 
 	@ManyToMany(() => User, (User) => User.Classes)
 	Users: User[];

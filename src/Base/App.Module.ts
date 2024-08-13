@@ -30,9 +30,9 @@ import { EmailSenderModule } from '@App/Features/EmailSender/EmailSender.Module'
 import { DatabaseExceptionFilter } from '@App/Common/Filters/DatabaseException.Filter';
 import { ValidationExceptionFilter } from '@App/Common/Filters/ValidationException.Filter';
 import { ApplicationExceptionFilter } from '@App/Common/Filters/ApplicationException.Filter';
-import { ClassOccuranceModule } from '@App/Features/ClassOccurance/ClassOccurance.Module';
 import { WhatsNewModule } from '@App/Features/WhatsNew/WhatsNew.Module';
 import { MulterModule } from '@nestjs/platform-express';
+import { SessionModule } from '@App/Features/Session/Session.Module';
 
 @Module({
 	imports: [
@@ -51,7 +51,7 @@ import { MulterModule } from '@nestjs/platform-express';
 		AccountModule,
 		CoursesModule,
 		ClassModule,
-		ClassOccuranceModule,
+		SessionModule,
 		FeedbackModule,
 		NotificationsModule,
 		EmailSenderModule,

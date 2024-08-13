@@ -31,7 +31,7 @@ export class CoursesRepository {
 				Id: id,
 				IsActive: true
 			},
-			relations: ['Instructor', 'Classes', 'Classes.ClassOccurances', 'Classes.Users']
+			relations: ['Instructor', 'Classes', 'Classes.Sessions', 'Classes.Users']
 		});
 	}
 

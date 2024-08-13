@@ -1,11 +1,11 @@
 import { User } from '@App/Data/TypeOrmEntities/User';
 import { ApiProperty } from '@nestjs/swagger';
 
-export namespace ClassOccuranceModels {
+export namespace SessionModels {
 	export class MasterModel {
 		Id: number;
 		ClassId: number;
-		Occurance: string;
+		Date: Date;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;
@@ -14,10 +14,10 @@ export namespace ClassOccuranceModels {
 	// export type LookupResModel = Pick<MasterModel, 'Id' | 'Title' | 'CreatedBy'>;
 	// export type ReqModel = Pick<MasterModel, 'Title' | 'Description' | 'Script' | 'SharingOptionId'>;
 
-	export class ClassOccuranceReqModel implements Partial<MasterModel> {
+	export class SessionReqModel implements Partial<MasterModel> {
 		@ApiProperty()
 		ClassId: number;
 		@ApiProperty()
-		Occurance: string;
+		Date: Date;
 	}
 }

@@ -22,6 +22,9 @@ export namespace CoursesModels {
 		Price: number | null;
 		Classes: ClassModels.MasterModel[];
 		Instructor: UserModels.MasterModel;
+		IsLive: boolean;
+		CreatedOn: Date;
+		UpdatedOn: Date;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;

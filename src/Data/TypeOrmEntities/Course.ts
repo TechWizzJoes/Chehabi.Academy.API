@@ -64,6 +64,15 @@ export class Course {
 	@Column('text', { name: 'Prerequisite', nullable: true })
 	Prerequisite: string | null;
 
+	@Column('tinyint', { name: 'IsLive', default: () => "'1'" })
+	IsLive: boolean;
+
+	@Column('datetime', { name: 'CreatedOn', default: () => 'CURRENT_TIMESTAMP' })
+	CreatedOn: Date;
+
+	@Column('datetime', { name: 'UpdatedOn', default: () => 'CURRENT_TIMESTAMP' })
+	UpdatedOn: Date;
+
 	@OneToMany(() => Class, (Class) => Class.Course)
 	Classes: Class[];
 

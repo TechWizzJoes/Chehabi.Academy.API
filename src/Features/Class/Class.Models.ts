@@ -1,6 +1,6 @@
 import { User } from '@App/Data/TypeOrmEntities/User';
 import { ApiProperty } from '@nestjs/swagger';
-import { ClassOccuranceModels } from '../ClassOccurance/ClassOccurance.Models';
+import { SessionModels } from '../Session/Session.Models';
 import { AccountModels } from '../Account/Account.Models';
 import { UserModels } from '../User/User.Models';
 
@@ -15,8 +15,10 @@ export namespace ClassModels {
 		CurrentIndex: number | null;
 		IsActive: boolean | null;
 		IsDeleted: boolean | null;
-		ClassOccurances: ClassOccuranceModels.MasterModel[];
+		Sessions: SessionModels.MasterModel[];
 		Users: UserModels.MasterModel[];
+		CreatedOn: Date | null;
+		UpdatedOn: Date | null;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;

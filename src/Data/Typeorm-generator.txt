@@ -1,1 +1,1 @@
-npx typeorm-model-generator -h 134.122.70.128 -u techwizzjoes -x '@Joes7wizz9' -d mydb -e mysql --cf pascal --ce pascal --cp pascal --noConfig true --relationIds true -o ./src/Data/TypeOrmEntities
+npx typeorm-model-generator -h 165.22.28.30 -u techwizzjoes -x '@Joes7wizz9' -d mydb -e mysql --cf pascal --ce pascal --cp pascal --noConfig true --relationIds true -o ./src/Data/TypeOrmEntities

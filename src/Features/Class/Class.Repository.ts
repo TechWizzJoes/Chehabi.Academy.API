@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Class } from '@App/Data/TypeOrmEntities/Class';
-import { ClassOccurance } from '@App/Data/TypeOrmEntities/ClassOccurance';
+import { Session } from '@App/Data/TypeOrmEntities/Session';
 import { User } from '@App/Data/TypeOrmEntities/User';
 import { ClassModels } from './Class.Models';
 import { Course } from '@App/Data/TypeOrmEntities/Course';
