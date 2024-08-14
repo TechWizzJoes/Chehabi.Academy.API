@@ -20,9 +20,9 @@ export namespace CoursesModels {
 		Prerequisite: string | null;
 		ToBeLearned: string | null;
 		Price: number | null;
+		IsLive: boolean;
 		Classes: ClassModels.MasterModel[];
 		Instructor: UserModels.MasterModel;
-		IsLive: boolean;
 		CreatedOn: Date;
 		UpdatedOn: Date;
 	}
@@ -56,5 +56,10 @@ export namespace CoursesModels {
 		ToBeLearned: string | null;
 		@ApiProperty()
 		Price: number | null;
+		@ApiProperty()
+		IsLive: boolean | null;
+		@ApiProperty()
+		IsActive: boolean | null;
+		IsDeleted: boolean | null;
 	}
 }

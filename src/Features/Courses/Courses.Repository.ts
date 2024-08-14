@@ -28,8 +28,8 @@ export class CoursesRepository {
 	async GetById(id: number): Promise<Course> {
 		return this.courseRepository.findOne({
 			where: {
-				Id: id,
-				IsActive: true
+				Id: id
+				// IsActive: true
 			},
 			relations: ['Instructor', 'Classes', 'Classes.Sessions', 'Classes.Users']
 		});
@@ -37,9 +37,7 @@ export class CoursesRepository {
 
 	async Create(courseData: CoursesModels.CoursesReqModel): Promise<Course> {
 		const newCourse = this.courseRepository.create({
-			...courseData,
-			IsActive: true,
-			IsDeleted: false
+			...courseData
 		});
 		return await this.courseRepository.save(newCourse);
 	}
@@ -89,6 +87,17 @@ export class CoursesRepository {
 		});
 
 		return courseEntity.Classes;
+	}
+
+	async GetAdminCoursesByUserId(userId: number): Promise<Course[]> {
+		const Classes = await this.courseRepository.find({
+			where: {
+				InstructorId: userId
+			},
+			relations: ['Instructor']
+		});
+
+		return Classes;
 	}
 
 	async GetEnrolledClassesByUserId(userId: number): Promise<Class[]> {

@@ -23,7 +23,7 @@ import { extname, join } from 'path';
 import { ClassModels } from '../Class/Class.Models';
 
 @ApiTags('Courses')
-// @UseGuards(AuthenticatedGuard)
+@UseGuards(AuthenticatedGuard)
 @Controller('courses')
 export class CoursesController {
 	constructor(private CoursesService: CoursesService) {}
@@ -33,11 +33,16 @@ export class CoursesController {
 		return this.CoursesService.GetById(id);
 	}
 
-	@Get('/user/:id')
-	async GetEnrolledClassesByUserId(@Param('id', ParseIntPipe) userId: number): Promise<ClassModels.MasterModel[]> {
-		let courses = await this.CoursesService.GetEnrolledClassesByUserId(userId);
-		console.log(courses);
+	@Get('/admin/courses')
+	async GetAdminCoursesByUserId(): Promise<CoursesModels.MasterModel[]> {
+		console.log('khod');
+		let courses = await this.CoursesService.GetAdminCoursesByUserId();
+		return courses;
+	}
 
+	@Get('/user/classes')
+	async GetEnrolledClassesByUserId(): Promise<ClassModels.MasterModel[]> {
+		let courses = await this.CoursesService.GetEnrolledClassesByUserId();
 		return courses;
 	}
 

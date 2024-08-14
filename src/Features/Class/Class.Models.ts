@@ -40,5 +40,8 @@ export namespace ClassModels {
 		Period: string | null;
 		@ApiProperty()
 		CurrentIndex: number | null;
+		@ApiProperty()
+		IsActive: boolean | null;
+		IsDeleted: boolean | null;
 	}
 }

@@ -36,8 +36,10 @@ export class ClassService {
 		return this.ClassRepository.GetById(id);
 	}
 
-	async Create(course: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
-		return await this.ClassRepository.Create(course);
+	async Create(newClass: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
+		newClass.IsActive = newClass.IsActive ?? true;
+		newClass.IsDeleted = false;
+		return await this.ClassRepository.Create(newClass);
 	}
 
 	async Update(id, course: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {

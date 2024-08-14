@@ -26,12 +26,19 @@ export class CoursesService {
 	async GetById(id): Promise<CoursesModels.MasterModel> {
 		let course = await this.CoursesRepository.GetById(id);
 		let user = this.UserHelper.GetCurrentUser();
-		course.Classes = course.Classes.filter((c) => c.IsActive || user.IsAdmin);
+		if (course.Classes) course.Classes = course.Classes?.filter((c) => c.IsActive || user.IsAdmin);
 		return course;
 	}
 
-	async GetEnrolledClassesByUserId(userId): Promise<ClassModels.MasterModel[]> {
-		let courses = await this.CoursesRepository.GetEnrolledClassesByUserId(userId);
+	async GetAdminCoursesByUserId(): Promise<CoursesModels.MasterModel[]> {
+		let user = this.UserHelper.GetCurrentUser();
+		let courses = await this.CoursesRepository.GetAdminCoursesByUserId(user.UserId);
+		return courses;
+	}
+
+	async GetEnrolledClassesByUserId(): Promise<ClassModels.MasterModel[]> {
+		let user = this.UserHelper.GetCurrentUser();
+		let courses = await this.CoursesRepository.GetEnrolledClassesByUserId(user.UserId);
 		return courses;
 	}
 
@@ -39,7 +46,9 @@ export class CoursesService {
 		return this.CoursesRepository.GetAll();
 	}
 	async Create(course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
-		course.InstructorId = this.UserHelper.GetCurrentUser()?.UserId ?? course.InstructorId;
+		course.InstructorId = this.UserHelper.GetCurrentUser()?.UserId;
+		course.IsActive = course.IsActive ?? true;
+		course.IsDeleted = false;
 		return await this.CoursesRepository.Create(course);
 	}
 

@@ -12,6 +12,7 @@ import {
 import { Course } from './Course';
 import { Session } from './Session';
 import { User } from './User';
+import { BooleanTransformer } from '@App/Common/Transformers/Boolean.Transformer';
 
 @Index('Class_FK', ['CourseId'], {})
 @Entity('Class', { schema: 'mydb' })
@@ -42,7 +43,8 @@ export class Class {
 		name: 'IsActive',
 		nullable: true,
 		width: 1,
-		default: () => "'1'"
+		default: () => "'1'",
+		transformer: new BooleanTransformer()
 	})
 	IsActive: boolean | null;
 
