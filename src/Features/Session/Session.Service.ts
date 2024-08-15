@@ -5,8 +5,8 @@ import { AppConfig, Config } from '@App/Config/App.Config';
 import { CryptoHelper } from '@App/Common/Helpers/Crypto.Helper';
 import { ErrorCodesEnum } from '@App/Common/Enums/ErrorCodes.Enum';
 import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
-import { SessionRepository } from './Session.Repository';
-import { SessionModels } from './Session.Models';
+import { LiveSessionRepository } from './Session.Repository';
+import { LiveSessionModels } from './Session.Models';
 import { promises } from 'dns';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class SessionService {
 
 	constructor(
 		private appConfig: AppConfig,
-		private SessionRepository: SessionRepository,
+		private LiveSessionRepository: LiveSessionRepository,
 		private JwtService: JwtService,
 		private UserHelper: UserHelper
 	) {
@@ -23,22 +23,22 @@ export class SessionService {
 	}
 
 	// async GetById(id): Promise<SessionModels.MasterModel> {
-	// 	return this.SessionRepository.GetById(id);
+	// 	return this.LiveSessionRepository.GetById(id);
 	// }
 
-	async GetallByClassId(classId: number): Promise<SessionModels.MasterModel[]> {
-		return this.SessionRepository.GetallByClassId(classId);
+	async GetallByClassId(classId: number): Promise<LiveSessionModels.MasterModel[]> {
+		return this.LiveSessionRepository.GetallByClassId(classId);
 	}
 
-	async Create(course: SessionModels.SessionReqModel): Promise<SessionModels.MasterModel> {
-		return await this.SessionRepository.Create(course);
+	async Create(course: LiveSessionModels.SessionReqModel): Promise<LiveSessionModels.MasterModel> {
+		return await this.LiveSessionRepository.Create(course);
 	}
 
-	async Update(id, course: SessionModels.SessionReqModel): Promise<SessionModels.MasterModel> {
-		return await this.SessionRepository.Update(id, course);
+	async Update(id, course: LiveSessionModels.SessionReqModel): Promise<LiveSessionModels.MasterModel> {
+		return await this.LiveSessionRepository.Update(id, course);
 	}
 
 	async Delete(id: number): Promise<void> {
-		return await this.SessionRepository.Delete(id);
+		return await this.LiveSessionRepository.Delete(id);
 	}
 }

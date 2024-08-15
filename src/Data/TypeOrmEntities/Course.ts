@@ -1,8 +1,12 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { Class } from './Class';
-import { User } from './User';
+import { CourseType } from './CourseType';
+import { Instructor } from './Instructor';
+import { Feedback } from './Feedback';
+import { RecordedSession } from './RecordedSession';
 
-@Index('Course_FK', ['InstructorId'], {})
+@Index('Course_CourseType_FK', ['Type'], {})
+@Index('Course_Instructor_FK', ['InstructorId'], {})
 @Entity('Course', { schema: 'mydb' })
 export class Course {
 	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
@@ -18,8 +22,9 @@ export class Course {
 	@Column('int', { name: 'InstructorId' })
 	InstructorId: number;
 
-	@Column('int', { name: 'Duration', nullable: true })
-	Duration: number | null;
+	@RelationId((Course: Course) => Course.Type)
+	@Column('int', { name: 'TypeId', nullable: true })
+	TypeId: number | null;
 
 	@Column('varchar', { name: 'VideoPath', nullable: true, length: 255 })
 	VideoPath: string | null;
@@ -76,10 +81,23 @@ export class Course {
 	@OneToMany(() => Class, (Class) => Class.Course)
 	Classes: Class[];
 
-	@ManyToOne(() => User, (User) => User.Courses, {
+	@ManyToOne(() => CourseType, (CourseType) => CourseType.Courses, {
+		onDelete: 'NO ACTION',
+		onUpdate: 'NO ACTION'
+	})
+	@JoinColumn([{ name: 'TypeId', referencedColumnName: 'Id' }])
+	Type: CourseType;
+
+	@ManyToOne(() => Instructor, (Instructor) => Instructor.Courses, {
 		onDelete: 'NO ACTION',
 		onUpdate: 'NO ACTION'
 	})
 	@JoinColumn([{ name: 'InstructorId', referencedColumnName: 'Id' }])
-	Instructor: User;
+	Instructor: Instructor;
+
+	@OneToMany(() => Feedback, (Feedback) => Feedback.Course)
+	Feedbacks: Feedback[];
+
+	@OneToMany(() => RecordedSession, (RecordedSession) => RecordedSession.Course)
+	RecordedSessions: RecordedSession[];
 }

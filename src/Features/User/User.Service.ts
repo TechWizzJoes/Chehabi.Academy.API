@@ -7,7 +7,8 @@ import { ErrorCodesEnum } from '@App/Common/Enums/ErrorCodes.Enum';
 import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
 import { UserRepository } from './User.Repository';
 import { UserModels } from './User.Models';
-import { promises } from 'dns';
+import { InstructorRepository } from './Instructor.Repository';
+import { InstructorModels } from './Instructor.Models';
 
 @Injectable()
 export class UserService {
@@ -16,6 +17,7 @@ export class UserService {
 	constructor(
 		private appConfig: AppConfig,
 		private UserRepository: UserRepository,
+		private InstructorRepository: InstructorRepository,
 		private JwtService: JwtService,
 		private UserHelper: UserHelper
 	) {
@@ -24,6 +26,10 @@ export class UserService {
 
 	async GetById(id: number): Promise<UserModels.MasterModel> {
 		return this.UserRepository.GetById(id);
+	}
+
+	async GetInstructorByUserId(id: number): Promise<InstructorModels.MasterModel> {
+		return this.InstructorRepository.GetByUserId(id);
 	}
 
 	SaveUser(user: UserModels.UserResModel) {

@@ -5,11 +5,12 @@ import { AppConfig } from '@App/Config/App.Config';
 import { UserRepository } from './User.Repository';
 import { UserController } from './User.Controller';
 import { UserService } from './User.Service';
+import { InstructorRepository } from './Instructor.Repository';
 
 @Module({
 	imports: [DataModule, CommonModule],
 	controllers: [UserController],
-	providers: [AppConfig, UserService, UserRepository],
+	providers: [AppConfig, UserService, UserRepository, InstructorRepository],
 	exports: [UserService, UserRepository]
 })
 export class UserModule {}

@@ -10,6 +10,8 @@ import { AccountModels } from './Account.Models';
 import { AccountException } from '@App/Common/Exceptions/Account.Exception';
 import axios from 'axios';
 import { UserModels } from '../User/User.Models';
+import { InstructorModels } from '../User/Instructor.Models';
+import { InstructorRepository } from '../User/Instructor.Repository';
 
 @Injectable()
 export class AccountService {
@@ -18,6 +20,7 @@ export class AccountService {
 	constructor(
 		private appConfig: AppConfig,
 		private AccountRepository: AccountRepository,
+		private InstructorRepository: InstructorRepository,
 		private JwtService: JwtService,
 		private UserHelper: UserHelper
 	) {
@@ -30,7 +33,7 @@ export class AccountService {
 		if (!loginResult.Success) {
 			throw new AccountException(loginResult.ErrorMsg);
 		}
-		const accessToken = this.GetAccessToken(user);
+		const accessToken = await this.GetAccessToken(user);
 		const refreshToken = this.GetRefreshToken(user);
 		const currentUser = this.GetCurrentUser(user);
 		return new AccountModels.LoginResModel(accessToken, refreshToken, currentUser);
@@ -54,7 +57,7 @@ export class AccountService {
 			} as AccountModels.RegisterReqModel);
 		}
 
-		const accessToken = this.GetAccessToken(user);
+		const accessToken = await this.GetAccessToken(user);
 		const refreshToken = this.GetRefreshToken(user);
 		const currentUser = this.GetCurrentUser(user);
 		return new AccountModels.LoginResModel(accessToken, refreshToken, currentUser);
@@ -87,7 +90,7 @@ export class AccountService {
 		const encryptedPassword = CryptoHelper.AES.Encrypt(registerReqModel.Password, this.Config.Auth.EncryptionKey);
 		registerReqModel.Password = encryptedPassword;
 		user = await this.AccountRepository.CreateUser(registerReqModel as UserModels.MasterModel);
-		const accessToken = this.GetAccessToken(user);
+		const accessToken = await this.GetAccessToken(user);
 		const refreshToken = this.GetRefreshToken(user);
 		const currentUser = this.GetCurrentUser(user);
 		return new AccountModels.LoginResModel(accessToken, refreshToken, currentUser);
@@ -98,7 +101,7 @@ export class AccountService {
 		if (!user) {
 			throw new AccountException(ErrorCodesEnum.USER_NOT_FOUND);
 		}
-		const accessToken = this.GetAccessToken(user);
+		const accessToken = await this.GetAccessToken(user);
 		const refreshToken = this.GetRefreshToken(user);
 		return new AccountModels.RefreshTokenResModel(accessToken, refreshToken);
 	}
@@ -139,12 +142,16 @@ export class AccountService {
 		}
 	}
 
-	GetAccessToken(user: UserModels.MasterModel): string {
+	async GetAccessToken(user: UserModels.MasterModel, instructor?: InstructorModels.MasterModel): Promise<string> {
+		if (user.IsAdmin) {
+			instructor = await this.InstructorRepository.GetByUserId(user.Id);
+		}
 		const accessToken =
 			'Bearer ' +
 			this.JwtService.sign({
 				UserId: user.Id,
-				IsAdmin: user.IsAdmin
+				IsAdmin: user.IsAdmin,
+				InstructorId: instructor?.Id
 			} as AccountModels.JwtModel);
 		return accessToken;
 	}
@@ -215,7 +222,7 @@ export class AccountService {
 		const encryptedPassword = CryptoHelper.AES.Encrypt(password.NewPassword, this.Config.Auth.EncryptionKey);
 		user.Password = encryptedPassword;
 		user = await this.AccountRepository.SaveUser(user);
-		const accessToken = this.GetAccessToken(user);
+		const accessToken = await this.GetAccessToken(user);
 		const refreshToken = this.GetRefreshToken(user);
 		const currentUser = this.GetCurrentUser(user);
 		return new AccountModels.LoginResModel(accessToken, refreshToken, currentUser);

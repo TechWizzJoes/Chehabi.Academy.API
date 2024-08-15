@@ -10,7 +10,7 @@ import {
 	RelationId
 } from 'typeorm';
 import { Course } from './Course';
-import { Session } from './Session';
+import { LiveSession } from './LiveSession';
 import { User } from './User';
 import { BooleanTransformer } from '@App/Common/Transformers/Boolean.Transformer';
 
@@ -19,6 +19,9 @@ import { BooleanTransformer } from '@App/Common/Transformers/Boolean.Transformer
 export class Class {
 	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
 	Id: number;
+
+	@Column('varchar', { name: 'Name', nullable: true, length: 100 })
+	Name: string | null;
 
 	@RelationId((Class: Class) => Class.Course)
 	@Column('int', { name: 'CourseId', nullable: true })
@@ -38,6 +41,9 @@ export class Class {
 
 	@Column('int', { name: 'CurrentIndex', nullable: true })
 	CurrentIndex: number | null;
+
+	@Column('int', { name: 'NumberOfSessions', nullable: true })
+	NumberOfSessions: number | null;
 
 	@Column('tinyint', {
 		name: 'IsActive',
@@ -77,8 +83,8 @@ export class Class {
 	@JoinColumn([{ name: 'CourseId', referencedColumnName: 'Id' }])
 	Course: Course;
 
-	@OneToMany(() => Session, (Session) => Session.Class)
-	Sessions: Session[];
+	@OneToMany(() => LiveSession, (LiveSession) => LiveSession.Class)
+	LiveSessions: LiveSession[];
 
 	@ManyToMany(() => User, (User) => User.Classes)
 	Users: User[];

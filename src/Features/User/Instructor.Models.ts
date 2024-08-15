@@ -2,20 +2,15 @@ import { User } from '@App/Data/TypeOrmEntities/User';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserModels } from '../User/User.Models';
 import { CoursesModels } from '../Courses/Courses.Models';
-import { InstructorModels } from '../User/Instructor.Models';
+import { FeedbackModels } from '../Feedback/Feedback.Models';
 
-export namespace FeedbackModels {
+export namespace InstructorModels {
 	export class MasterModel {
 		Id: number;
-		Text: string | null;
-		IsDeleted: boolean | null;
-		InstructorId: number | null;
-		CourseId: number | null;
-		CreatedBy: number | null;
-		CreatedOn: Date | null;
-		Course: CoursesModels.MasterModel;
-		Instructor: InstructorModels.MasterModel;
-		User: UserModels.MasterModel;
+		UserId: number;
+		Courses: CoursesModels.MasterModel[];
+		Feedbacks: FeedbackModels.MasterModel[];
+		User: User;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;
@@ -26,10 +21,6 @@ export namespace FeedbackModels {
 
 	export class ReqModel implements Partial<MasterModel> {
 		@ApiProperty()
-		Text: string | null;
-		@ApiProperty()
-		CreatedBy: number | null;
-		@ApiProperty()
-		IsDeleted: boolean | null;
+		UserId: number | null;
 	}
 }

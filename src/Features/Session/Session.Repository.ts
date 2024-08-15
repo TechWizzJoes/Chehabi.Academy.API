@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Session } from '@App/Data/TypeOrmEntities/Session';
-import { SessionModels } from './Session.Models';
+import { LiveSessionModels } from './Session.Models';
+import { LiveSession } from '@App/Data/TypeOrmEntities/LiveSession';
 
 @Injectable()
-export class SessionRepository {
+export class LiveSessionRepository {
 	constructor(
-		@InjectRepository(Session)
-		private SessionRepository: Repository<Session>
+		@InjectRepository(LiveSession)
+		private SessionRepository: Repository<LiveSession>
 	) {}
 
-	async GetallByClassId(classId: number): Promise<Session[]> {
+	async GetallByClassId(classId: number): Promise<LiveSession[]> {
 		return this.SessionRepository.find({
 			where: {
 				ClassId: classId
@@ -28,15 +28,15 @@ export class SessionRepository {
 	// 	});
 	// }
 
-	async Create(SessionData: Partial<Session>): Promise<Session> {
+	async Create(SessionData: Partial<LiveSession>): Promise<LiveSession> {
 		const newSession = this.SessionRepository.create({
 			...SessionData
 		});
 		return await this.SessionRepository.save(newSession);
 	}
 
-	async Update(id: number, classData: SessionModels.SessionReqModel): Promise<Session> {
-		let updateSession: Session = await this.SessionRepository.findOne({
+	async Update(id: number, classData: LiveSessionModels.SessionReqModel): Promise<LiveSession> {
+		let updateSession: LiveSession = await this.SessionRepository.findOne({
 			where: {
 				Id: id
 			}

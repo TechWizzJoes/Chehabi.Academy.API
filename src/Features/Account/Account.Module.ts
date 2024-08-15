@@ -7,10 +7,11 @@ import { AccountService } from '@App/Features/Account/Account.Service';
 import { AccountRepository } from './Account.Repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@App/Data/TypeOrmEntities/User';
+import { InstructorRepository } from '../User/Instructor.Repository';
 
 @Module({
 	imports: [DataModule, CommonModule],
 	controllers: [AccountController],
-	providers: [AppConfig, AccountService, AccountRepository]
+	providers: [AppConfig, AccountService, AccountRepository, InstructorRepository]
 })
 export class AccountModule {}

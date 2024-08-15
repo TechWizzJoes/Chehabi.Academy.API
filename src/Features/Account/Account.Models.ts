@@ -13,6 +13,7 @@ export namespace AccountModels {
 	export class JwtModel {
 		UserId!: number;
 		IsAdmin!: boolean;
+		InstructorId?: number;
 	}
 
 	export class LoginReqModel {

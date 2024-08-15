@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserModels } from './User.Models';
-import { Course } from '@App/Data/TypeOrmEntities/Course';
 import { User } from '@App/Data/TypeOrmEntities/User';
 
 @Injectable()

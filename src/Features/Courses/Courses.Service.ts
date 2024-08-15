@@ -9,6 +9,8 @@ import { CoursesRepository } from './Courses.Repository';
 import { CoursesModels } from './Courses.Models';
 import { promises } from 'dns';
 import { ClassModels } from '../Class/Class.Models';
+import { CourseTypeEnum } from '@App/Common/Enums/CourseType.Enum';
+import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
 
 @Injectable()
 export class CoursesService {
@@ -32,7 +34,7 @@ export class CoursesService {
 
 	async GetAdminCoursesByUserId(): Promise<CoursesModels.MasterModel[]> {
 		let user = this.UserHelper.GetCurrentUser();
-		let courses = await this.CoursesRepository.GetAdminCoursesByUserId(user.UserId);
+		let courses = await this.CoursesRepository.GetAdminCoursesByUserId(user.InstructorId);
 		return courses;
 	}
 
@@ -46,8 +48,11 @@ export class CoursesService {
 		return this.CoursesRepository.GetAll();
 	}
 	async Create(course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
-		course.InstructorId = this.UserHelper.GetCurrentUser()?.UserId;
-		course.IsActive = course.IsActive ?? true;
+		course.InstructorId = this.UserHelper.GetCurrentUser()?.InstructorId;
+		let courseType = CourseTypeEnum[+course.TypeIdString];
+		if (!courseType) throw new ApplicationException('invalid course type id', HttpStatus.BAD_REQUEST);
+		course.TypeId = CourseTypeEnum[courseType];
+		course.IsActive = course.IsActive;
 		course.IsDeleted = false;
 		return await this.CoursesRepository.Create(course);
 	}

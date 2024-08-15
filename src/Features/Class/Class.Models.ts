@@ -1,24 +1,30 @@
 import { User } from '@App/Data/TypeOrmEntities/User';
 import { ApiProperty } from '@nestjs/swagger';
-import { SessionModels } from '../Session/Session.Models';
+import { LiveSessionModels } from '../Session/Session.Models';
 import { AccountModels } from '../Account/Account.Models';
 import { UserModels } from '../User/User.Models';
+import { CoursesModels } from '../Courses/Courses.Models';
 
 export namespace ClassModels {
 	export class MasterModel {
 		Id: number;
+		Name: string | null;
 		CourseId: number | null;
 		StartDate: string;
 		EndDate: string;
 		MaxCapacity: number | null;
 		Period: string | null;
 		CurrentIndex: number | null;
+		NumberOfSessions: number | null;
+
 		IsActive: boolean | null;
 		IsDeleted: boolean | null;
-		Sessions: SessionModels.MasterModel[];
-		Users: UserModels.MasterModel[];
 		CreatedOn: Date | null;
 		UpdatedOn: Date | null;
+
+		Users: UserModels.MasterModel[];
+		Course: CoursesModels.MasterModel;
+		LiveSessions: LiveSessionModels.MasterModel[];
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;

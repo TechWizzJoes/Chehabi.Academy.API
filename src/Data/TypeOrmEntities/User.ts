@@ -1,7 +1,8 @@
 import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Course } from './Course';
 import { Feedback } from './Feedback';
+import { Instructor } from './Instructor';
 import { Class } from './Class';
+import { WhatsNew } from './WhatsNew';
 
 @Index('Email', ['Email'], { unique: true })
 @Entity('User', { schema: 'mydb' })
@@ -40,11 +41,11 @@ export class User {
 	})
 	ProfilePicturePath: string | null;
 
-	@OneToMany(() => Course, (Course) => Course.Instructor)
-	Courses: Course[];
-
-	@OneToMany(() => Feedback, (Feedback) => Feedback.User)
+	@OneToMany(() => Feedback, (Feedback) => Feedback.CreatedBy)
 	Feedbacks: Feedback[];
+
+	@OneToMany(() => Instructor, (Instructor) => Instructor.User)
+	Instructors: Instructor[];
 
 	@ManyToMany(() => Class, (Class) => Class.Users)
 	@JoinTable({
@@ -54,4 +55,7 @@ export class User {
 		schema: 'mydb'
 	})
 	Classes: Class[];
+
+	@OneToMany(() => WhatsNew, (WhatsNew) => WhatsNew.CreatedBy)
+	WhatsNews: WhatsNew[];
 }

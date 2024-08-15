@@ -8,10 +8,24 @@ import { Class } from './TypeOrmEntities/Class';
 import { Course } from './TypeOrmEntities/Course';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationSubscriptions } from './TypeOrmEntities/NotificationSubscriptions';
-import { Session } from './TypeOrmEntities/Session';
 import { WhatsNew } from './TypeOrmEntities/WhatsNew';
+import { LiveSession } from './TypeOrmEntities/LiveSession';
+import { RecordedSession } from './TypeOrmEntities/RecordedSession';
+import { CourseType } from './TypeOrmEntities/CourseType';
+import { Instructor } from './TypeOrmEntities/Instructor';
 
-const Entities = [User, Feedback, Class, Course, Session, WhatsNew, NotificationSubscriptions];
+const Entities = [
+	User,
+	Feedback,
+	Class,
+	Course,
+	LiveSession,
+	RecordedSession,
+	WhatsNew,
+	NotificationSubscriptions,
+	CourseType,
+	Instructor
+];
 
 @Module({
 	imports: [CommonModule, TypeOrmModule.forFeature(Entities)],

@@ -1,4 +1,7 @@
 import { ClassModels } from '../Class/Class.Models';
+import { FeedbackModels } from '../Feedback/Feedback.Models';
+import { WhatsNewModels } from '../WhatsNew/WhatsNew.Models';
+import { InstructorModels } from './Instructor.Models';
 
 export namespace UserModels {
 	export class MasterModel {
@@ -13,6 +16,9 @@ export namespace UserModels {
 		IsAdmin: boolean;
 		ProfilePicturePath: string;
 		Classes: ClassModels.MasterModel[];
+		Feedbacks: FeedbackModels.MasterModel[];
+		Instructors: InstructorModels.MasterModel[];
+		WhatsNews: WhatsNewModels.MasterModel[];
 	}
 
 	export class UserResModel {

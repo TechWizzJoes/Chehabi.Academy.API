@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ClassModels } from '../Class/Class.Models';
-import { UserModels } from '../User/User.Models';
+import { FeedbackModels } from '../Feedback/Feedback.Models';
+import { RecordedSessionModels } from '../Session/Session.Models';
+import { InstructorModels } from '../User/Instructor.Models';
+import { CourseTypeEnum } from '@App/Common/Enums/CourseType.Enum';
 
 export namespace CoursesModels {
 	export class MasterModel {
@@ -8,7 +11,7 @@ export namespace CoursesModels {
 		Name: string;
 		Description: string | null;
 		InstructorId: number | null;
-		Duration: number | null;
+		TypeId: number | null;
 		VideoPath: string | null;
 		FilePath: string | null;
 		StartDate: Date | null;
@@ -22,7 +25,10 @@ export namespace CoursesModels {
 		Price: number | null;
 		IsLive: boolean;
 		Classes: ClassModels.MasterModel[];
-		Instructor: UserModels.MasterModel;
+		Instructor: InstructorModels.MasterModel;
+		Type: CourseType;
+		Feedbacks: FeedbackModels.MasterModel[];
+		RecordedSessions: RecordedSessionModels.MasterModel[];
 		CreatedOn: Date;
 		UpdatedOn: Date;
 	}
@@ -39,8 +45,6 @@ export namespace CoursesModels {
 		@ApiProperty()
 		Description: string | null;
 		@ApiProperty()
-		InstructorId: number | null;
-		@ApiProperty()
 		Duration: number | null;
 		@ApiProperty()
 		VideoPath: string | null;
@@ -57,9 +61,18 @@ export namespace CoursesModels {
 		@ApiProperty()
 		Price: number | null;
 		@ApiProperty()
-		IsLive: boolean | null;
+		TypeIdString: string | null;
 		@ApiProperty()
 		IsActive: boolean | null;
+
+		TypeId: number;
 		IsDeleted: boolean | null;
+		InstructorId: number | null;
 	}
+}
+
+export class CourseType {
+	Id: number;
+	Code: number;
+	Text: string;
 }

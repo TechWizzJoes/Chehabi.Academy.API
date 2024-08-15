@@ -31,9 +31,8 @@ export class FeedbackRepository {
 	async Create(Feedback: FeedbackModels.ReqModel): Promise<Feedback> {
 		const newFeedback = this.Feedback.create({
 			Text: Feedback.Text,
-			UserId: this.UserHelper.GetCurrentUser()?.UserId ?? Feedback.UserId,
-			IsDeleted: false,
-			CreatedDate: CommonHelper.Now()
+			CreatedBy: this.UserHelper.GetCurrentUser()?.UserId ?? Feedback.CreatedBy,
+			IsDeleted: false
 		});
 		return await this.Feedback.save(newFeedback);
 	}
@@ -46,7 +45,7 @@ export class FeedbackRepository {
 		});
 
 		updateFeedback.Text = Feedback.Text;
-		updateFeedback.UserId = Feedback.UserId;
+		updateFeedback.CreatedBy = Feedback.CreatedBy;
 		updateFeedback.IsDeleted = Feedback.IsDeleted;
 		return await this.Feedback.save(updateFeedback);
 	}
