@@ -35,7 +35,7 @@ export class ClassRepository {
 		});
 	}
 
-	async Create(classData: ClassModels.ClassReqModel): Promise<Class> {
+	async Create(classData: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
 		const newClass = this.classRepository.create({
 			...classData,
 			IsActive: true,

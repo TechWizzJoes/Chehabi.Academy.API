@@ -25,9 +25,9 @@ export namespace LiveSessionModels {
 		@ApiProperty()
 		StartDate: Date;
 		@ApiProperty()
-		EndDate: Date;
-		@ApiProperty()
 		Link: string;
+
+		EndDate: Date;
 	}
 }
 

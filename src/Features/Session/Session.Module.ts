@@ -9,6 +9,7 @@ import { SessionService } from './Session.Service';
 @Module({
 	imports: [DataModule, CommonModule],
 	controllers: [SessionController],
-	providers: [AppConfig, SessionService, LiveSessionRepository]
+	providers: [AppConfig, SessionService, LiveSessionRepository],
+	exports: [SessionService, LiveSessionRepository]
 })
 export class SessionModule {}

@@ -27,17 +27,14 @@ export class Class {
 	@Column('int', { name: 'CourseId', nullable: true })
 	CourseId: number | null;
 
-	@Column('date', { name: 'StartDate' })
-	StartDate: string;
+	@Column('datetime', { name: 'StartDate' })
+	StartDate: Date;
 
-	@Column('date', { name: 'EndDate' })
-	EndDate: string;
+	@Column('datetime', { name: 'EndDate' })
+	EndDate: Date;
 
 	@Column('int', { name: 'MaxCapacity', nullable: true })
 	MaxCapacity: number | null;
-
-	@Column('varchar', { name: 'Period', nullable: true, length: 255 })
-	Period: string | null;
 
 	@Column('int', { name: 'CurrentIndex', nullable: true })
 	CurrentIndex: number | null;

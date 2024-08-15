@@ -35,6 +35,11 @@ export class LiveSessionRepository {
 		return await this.SessionRepository.save(newSession);
 	}
 
+	async BulkCreate(sessions: Partial<LiveSession>[]): Promise<LiveSession[]> {
+		const newSession = this.SessionRepository.create([...sessions]);
+		return await this.SessionRepository.save(newSession);
+	}
+
 	async Update(id: number, classData: LiveSessionModels.SessionReqModel): Promise<LiveSession> {
 		let updateSession: LiveSession = await this.SessionRepository.findOne({
 			where: {

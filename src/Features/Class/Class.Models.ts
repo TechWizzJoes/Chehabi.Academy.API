@@ -10,10 +10,9 @@ export namespace ClassModels {
 		Id: number;
 		Name: string | null;
 		CourseId: number | null;
-		StartDate: string;
-		EndDate: string;
+		StartDate: Date | null;
+		EndDate: Date | null;
 		MaxCapacity: number | null;
-		Period: string | null;
 		CurrentIndex: number | null;
 		NumberOfSessions: number | null;
 
@@ -37,17 +36,24 @@ export namespace ClassModels {
 		@ApiProperty()
 		CourseId: number;
 		@ApiProperty()
-		StartDate: string;
-		@ApiProperty()
-		EndDate: string;
+		StartDate: Date | null;
 		@ApiProperty()
 		MaxCapacity: number | null;
 		@ApiProperty()
-		Period: string | null;
+		Period: PeriodDto[] = [new PeriodDto()];
 		@ApiProperty()
 		CurrentIndex: number | null;
 		@ApiProperty()
 		IsActive: boolean | null;
+		@ApiProperty()
+		NumberOfSessions: number | null;
+
+		EndDate: Date | null;
 		IsDeleted: boolean | null;
+	}
+
+	export class PeriodDto {
+		Day: number = 0;
+		Time!: string;
 	}
 }

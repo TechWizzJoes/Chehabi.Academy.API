@@ -34,6 +34,10 @@ export class SessionService {
 		return await this.LiveSessionRepository.Create(course);
 	}
 
+	async BulkCreate(sessions: LiveSessionModels.SessionReqModel[]): Promise<LiveSessionModels.MasterModel[]> {
+		return await this.LiveSessionRepository.BulkCreate(sessions);
+	}
+
 	async Update(id, course: LiveSessionModels.SessionReqModel): Promise<LiveSessionModels.MasterModel> {
 		return await this.LiveSessionRepository.Update(id, course);
 	}
