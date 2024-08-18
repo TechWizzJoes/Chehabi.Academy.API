@@ -59,6 +59,8 @@ export class CoursesRepository {
 			...courseData
 		};
 
+		delete updateCourse.Classes; // to avoid overriding classes in edit course page
+
 		return await this.courseRepository.save(updateCourse);
 	}
 

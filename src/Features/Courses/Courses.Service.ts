@@ -28,7 +28,7 @@ export class CoursesService {
 	async GetById(id): Promise<CoursesModels.MasterModel> {
 		let course = await this.CoursesRepository.GetById(id);
 		let user = this.UserHelper.GetCurrentUser();
-		if (course.Classes) course.Classes = course.Classes?.filter((c) => c.IsActive || user.IsAdmin);
+		if (course.Classes) course.Classes = course.Classes?.filter((c) => !c.IsDeleted);
 		return course;
 	}
 
