@@ -75,4 +75,5 @@ export class CourseType {
 	Id: number;
 	Code: number;
 	Text: string;
+	Courses: CoursesModels.MasterModel[];
 }

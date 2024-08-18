@@ -59,6 +59,10 @@ export class LiveSessionRepository {
 		return await this.SessionRepository.save(updateSession);
 	}
 
+	async BulkUpdate(sessions: Partial<LiveSession>[]): Promise<LiveSession[]> {
+		return await this.SessionRepository.save(sessions);
+	}
+
 	async Delete(id: number): Promise<void> {
 		await this.SessionRepository.delete({
 			Id: id

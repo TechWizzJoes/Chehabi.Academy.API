@@ -47,6 +47,8 @@ export namespace ClassModels {
 		IsActive: boolean | null;
 		@ApiProperty()
 		NumberOfSessions: number | null;
+		@ApiProperty()
+		LiveSessions: LiveSessionModels.MasterModel[];
 
 		EndDate: Date | null;
 		IsDeleted: boolean | null;

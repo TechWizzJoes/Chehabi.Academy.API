@@ -65,8 +65,10 @@ export class ClassService {
 		return createdClass;
 	}
 
-	async Update(id, course: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
-		return await this.ClassRepository.Update(id, course);
+	async Update(id, newClass: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
+		let updatedsessions = await this.SessionService.BulkUpdate(newClass.LiveSessions);
+		let updatedClass = await this.ClassRepository.Update(id, newClass);
+		return updatedClass;
 	}
 
 	async Delete(id): Promise<ClassModels.MasterModel> {

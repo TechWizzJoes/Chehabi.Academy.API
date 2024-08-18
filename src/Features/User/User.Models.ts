@@ -8,9 +8,9 @@ export namespace UserModels {
 		Id: number;
 		FirstName: string;
 		LastName: string;
-		Birthdate?: string;
-		IsActive?: boolean;
-		IsDeleted?: boolean;
+		Birthdate: string;
+		IsActive: boolean;
+		IsDeleted: boolean;
 		Email: string;
 		Password: string;
 		IsAdmin: boolean;

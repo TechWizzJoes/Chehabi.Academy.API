@@ -42,6 +42,10 @@ export class SessionService {
 		return await this.LiveSessionRepository.Update(id, course);
 	}
 
+	async BulkUpdate(sessions: LiveSessionModels.MasterModel[]): Promise<LiveSessionModels.MasterModel[]> {
+		return await this.LiveSessionRepository.BulkUpdate(sessions);
+	}
+
 	async Delete(id: number): Promise<void> {
 		return await this.LiveSessionRepository.Delete(id);
 	}
