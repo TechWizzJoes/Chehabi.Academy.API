@@ -98,7 +98,7 @@ export class ClassService {
 
 		const user: UserModels.MasterModel = await this.UserService.GetById(CurrentUser.UserId);
 		user.Classes.push(selectedClass);
-		let updatedUser = await this.UserService.SaveUser(user);
+		let updatedUser = await this.UserService.UpdateUser(user);
 		return updatedUser;
 	}
 

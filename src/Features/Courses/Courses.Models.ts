@@ -69,6 +69,18 @@ export namespace CoursesModels {
 		IsDeleted: boolean | null;
 		InstructorId: number | null;
 	}
+
+	export class Filter {
+		SearchInput!: string;
+		Rating!: number;
+		Type!: string;
+		Level: Levels = new Levels();
+	}
+	export class Levels {
+		Beginner!: boolean;
+		Intermediate!: boolean;
+		Advanced!: boolean;
+	}
 }
 
 export class CourseType {

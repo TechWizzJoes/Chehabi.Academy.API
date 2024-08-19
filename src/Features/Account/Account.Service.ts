@@ -53,7 +53,8 @@ export class AccountService {
 				FirstName: payload.given_name,
 				LastName: payload.family_name,
 				ProfilePicturePath: payload.picture,
-				Password: payload.email
+				Password: payload.email,
+				IsSocial: true
 			} as AccountModels.RegisterReqModel);
 		}
 
@@ -103,7 +104,9 @@ export class AccountService {
 		}
 		const accessToken = await this.GetAccessToken(user);
 		const refreshToken = this.GetRefreshToken(user);
-		return new AccountModels.RefreshTokenResModel(accessToken, refreshToken);
+		const currentUser = this.GetCurrentUser(user);
+
+		return new AccountModels.RefreshTokenResModel(accessToken, refreshToken, currentUser);
 	}
 
 	CanSignIn(user: UserModels.MasterModel, password: string) {
@@ -150,6 +153,7 @@ export class AccountService {
 			'Bearer ' +
 			this.JwtService.sign({
 				UserId: user.Id,
+				Email: user.Email,
 				IsAdmin: user.IsAdmin,
 				InstructorId: instructor?.Id
 			} as AccountModels.JwtModel);
@@ -178,6 +182,7 @@ export class AccountService {
 			LastName: user.LastName,
 			Email: user.Email,
 			IsAdmin: user.IsAdmin,
+			IsSocial: user.IsSocial,
 			ProfilePicturePath: user.ProfilePicturePath
 		} as AccountModels.CurrentUser;
 		return currentUser;

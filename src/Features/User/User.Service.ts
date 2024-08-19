@@ -32,8 +32,11 @@ export class UserService {
 		return this.InstructorRepository.GetByUserId(id);
 	}
 
-	SaveUser(user: UserModels.UserResModel) {
-		return this.UserRepository.SaveUser(user);
+	UpdateUser(user: UserModels.UserResModel) {
+		const CurrentUser = this.UserHelper.GetCurrentUser();
+		// avoid changing mail fraud
+		user.Email = CurrentUser.Email;
+		return this.UserRepository.UpdateUser(user);
 	}
 
 	async Upload(filePath: string): Promise<{}> {

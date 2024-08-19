@@ -12,6 +12,7 @@ export namespace AccountModels {
 
 	export class JwtModel {
 		UserId!: number;
+		Email!: string;
 		IsAdmin!: boolean;
 		InstructorId?: number;
 	}
@@ -39,6 +40,7 @@ export namespace AccountModels {
 		LastName: string;
 		@ApiProperty()
 		Birthdate?: string;
+		IsSocial!: boolean;
 		ProfilePicturePath?: string;
 	}
 
@@ -60,7 +62,7 @@ export namespace AccountModels {
 	}
 
 	export class RefreshTokenResModel {
-		constructor(public AccessToken: string, public RefreshToken: string) {}
+		constructor(public AccessToken: string, public RefreshToken: string, public CurrentUser: CurrentUser) {}
 	}
 
 	export class ResetPasswordReqModel {

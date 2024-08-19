@@ -44,9 +44,10 @@ export class CoursesService {
 		return courses;
 	}
 
-	async Getall(): Promise<CoursesModels.MasterModel[]> {
-		return this.CoursesRepository.GetAll();
+	async Getall(filter: CoursesModels.Filter): Promise<CoursesModels.MasterModel[]> {
+		return this.CoursesRepository.GetAll(filter);
 	}
+
 	async Create(course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
 		course.InstructorId = this.UserHelper.GetCurrentUser()?.InstructorId;
 		let courseType = CourseTypeEnum[+course.TypeIdString];

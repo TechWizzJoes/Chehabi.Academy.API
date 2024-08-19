@@ -14,6 +14,7 @@ export namespace UserModels {
 		Email: string;
 		Password: string;
 		IsAdmin: boolean;
+		IsSocial: boolean;
 		ProfilePicturePath: string;
 		Classes: ClassModels.MasterModel[];
 		Feedbacks: FeedbackModels.MasterModel[];

@@ -23,7 +23,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
 @ApiTags('User')
-// @UseGuards(AuthenticatedGuard)
+@UseGuards(AuthenticatedGuard)
 @Controller('User')
 export class UserController {
 	constructor(private UserService: UserService) {}
@@ -37,7 +37,7 @@ export class UserController {
 	@Put('')
 	@ApiBody({ type: UserModels.UserReqModel })
 	Update(@Body() user: UserModels.UserReqModel): Promise<UserModels.UserResModel> {
-		return this.UserService.SaveUser(user);
+		return this.UserService.UpdateUser(user);
 	}
 
 	@Post('/upload/image/:id')

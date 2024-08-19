@@ -15,14 +15,49 @@ export class CoursesRepository {
 		private userRepository: Repository<User>
 	) {}
 
-	async GetAll(): Promise<Course[]> {
-		return this.courseRepository.find({
-			where: {
-				IsDeleted: false,
-				IsActive: true
-			},
-			relations: ['Instructor.User']
-		});
+	async GetAll(filter: CoursesModels.Filter): Promise<Course[]> {
+		// return this.courseRepository.find({
+		// 	where: {
+		// 		IsDeleted: false,
+		// 		IsActive: true
+		// 	},
+		// 	relations: ['Instructor.User']
+		// });
+
+		const query = this.courseRepository
+			.createQueryBuilder('course')
+			.leftJoinAndSelect('course.Instructor', 'instructor')
+			.leftJoinAndSelect('instructor.User', 'user')
+			.where('course.IsDeleted = :isDeleted', { isDeleted: false })
+			.andWhere('course.IsActive = :isActive', { isActive: true });
+
+		if (filter.Rating) {
+			query.andWhere('course.Rating >= :rating', { rating: filter.Rating });
+		}
+
+		if (filter.SearchInput) {
+			query.andWhere('(course.Name LIKE :search OR course.Description LIKE :search)', {
+				search: `%${filter.SearchInput.trim()}%`
+			});
+		}
+
+		if (filter.Type) {
+			query.andWhere('course.Type = :type', { type: filter.Type });
+		}
+
+		if (filter.Level) {
+			// const { Beginner, Intermediate, Advanced } = filter.Level;
+			// const levels = [];
+			// if (Beginner) levels.push('Beginner');
+			// if (Intermediate) levels.push('Intermediate');
+			// if (Advanced) levels.push('Advanced');
+			// if (levels.length > 0) {
+			// 	query.andWhere('course.Level IN (:...levels)', { levels });
+			// }
+		}
+
+		// console.log(query.getSql());
+		return query.getMany();
 	}
 
 	async GetById(id: number): Promise<Course> {

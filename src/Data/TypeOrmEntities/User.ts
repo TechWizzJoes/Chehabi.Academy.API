@@ -25,6 +25,14 @@ export class User {
 	@Column('tinyint', { name: 'IsDeleted', nullable: true, width: 1 })
 	IsDeleted: boolean | null;
 
+	@Column('tinyint', {
+		name: 'IsSocial',
+		nullable: true,
+		width: 1,
+		default: () => "'0'"
+	})
+	IsSocial: boolean | null;
+
 	@Column('varchar', { name: 'Email', unique: true, length: 255 })
 	Email: string;
 
