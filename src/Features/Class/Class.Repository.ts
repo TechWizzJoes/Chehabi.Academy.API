@@ -16,14 +16,26 @@ export class ClassRepository {
 		private userRepository: Repository<User>
 	) {}
 
-	async GetallByClassId(courseId: number): Promise<Class[]> {
-		return this.classRepository.find({
+	async GetEnrolledClassesByUserId(userId: number): Promise<Class[]> {
+		const user = await this.userRepository.findOne({
 			where: {
-				CourseId: courseId,
-				IsActive: true,
+				Id: userId,
 				IsDeleted: false
-			}
+			},
+			select: {
+				Classes: true
+			},
+			relations: [
+				'Classes',
+				'Classes.Users',
+				'Classes.Course',
+				'Classes.LiveSessions',
+				'Classes.Course.Instructor.User'
+			]
+			// relations: ['Users', 'Course','LiveSessions', 'Course.Instructor']
 		});
+
+		return user.Classes;
 	}
 
 	async GetById(id: number): Promise<Class> {

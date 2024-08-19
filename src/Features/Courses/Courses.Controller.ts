@@ -35,15 +35,7 @@ export class CoursesController {
 	@UseGuards(AuthenticatedGuard)
 	@Get('/admin/courses')
 	async GetAdminCoursesByUserId(): Promise<CoursesModels.MasterModel[]> {
-		console.log('khod');
 		let courses = await this.CoursesService.GetAdminCoursesByUserId();
-		return courses;
-	}
-
-	@UseGuards(AuthenticatedGuard)
-	@Get('/user/classes')
-	async GetEnrolledClassesByUserId(): Promise<ClassModels.MasterModel[]> {
-		let courses = await this.CoursesService.GetEnrolledClassesByUserId();
 		return courses;
 	}
 

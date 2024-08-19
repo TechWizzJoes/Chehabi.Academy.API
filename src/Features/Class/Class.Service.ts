@@ -31,8 +31,10 @@ export class ClassService {
 		this.Config = this.appConfig.Config;
 	}
 
-	async GetallByClassId(id: number): Promise<ClassModels.MasterModel[]> {
-		return this.ClassRepository.GetallByClassId(id);
+	async GetEnrolledClassesByUserId(): Promise<ClassModels.MasterModel[]> {
+		let user = this.UserHelper.GetCurrentUser();
+		let courses = await this.ClassRepository.GetEnrolledClassesByUserId(user.UserId);
+		return courses;
 	}
 
 	async GetById(id: number): Promise<ClassModels.MasterModel> {

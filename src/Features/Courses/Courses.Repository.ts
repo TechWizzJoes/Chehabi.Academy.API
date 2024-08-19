@@ -139,19 +139,4 @@ export class CoursesRepository {
 
 		return Classes;
 	}
-
-	async GetEnrolledClassesByUserId(userId: number): Promise<Class[]> {
-		const user = await this.userRepository.findOne({
-			where: {
-				Id: userId,
-				IsDeleted: false
-			},
-			select: {
-				Classes: true
-			},
-			relations: ['Classes']
-		});
-
-		return user.Classes;
-	}
 }

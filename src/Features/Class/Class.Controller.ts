@@ -12,15 +12,12 @@ import { ClassService } from './Class.Service';
 export class ClassController {
 	constructor(private ClassService: ClassService) {}
 
-	@Get('/:id')
-	GetallByClassId(@Param('id') id: number): Promise<ClassModels.MasterModel[]> {
-		return this.ClassService.GetallByClassId(id);
+	@UseGuards(AuthenticatedGuard)
+	@Get('/user/classes')
+	async GetEnrolledClassesByUserId(): Promise<ClassModels.MasterModel[]> {
+		let courses = await this.ClassService.GetEnrolledClassesByUserId();
+		return courses;
 	}
-
-	// @Get('list/all')
-	// GetAll(): Promise<ClassModels.MasterModel[]> {
-	// 	return this.ClassService.Getall();
-	// }
 
 	@Post('')
 	@ApiBody({ type: ClassModels.ClassReqModel })

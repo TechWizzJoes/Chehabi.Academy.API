@@ -38,12 +38,6 @@ export class CoursesService {
 		return courses;
 	}
 
-	async GetEnrolledClassesByUserId(): Promise<ClassModels.MasterModel[]> {
-		let user = this.UserHelper.GetCurrentUser();
-		let courses = await this.CoursesRepository.GetEnrolledClassesByUserId(user.UserId);
-		return courses;
-	}
-
 	async Getall(filter: CoursesModels.Filter): Promise<CoursesModels.MasterModel[]> {
 		return this.CoursesRepository.GetAll(filter);
 	}
