@@ -40,7 +40,7 @@ export class ClassRepository {
 
 	async GetById(id: number): Promise<Class> {
 		return this.classRepository.findOne({
-			relations: ['Users'],
+			relations: ['Users', 'Course', 'Course.Classes', 'LiveSessions'],
 			where: {
 				Id: id
 			}

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards, Delete, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, UseGuards, Delete, Put, ParseIntPipe } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import {} from '@App/Features/Account/Account.Service';
 import { AuthenticatedGuard } from '@App/Common/Auth/Authenticated.Guard';
@@ -11,6 +11,12 @@ import { ClassService } from './Class.Service';
 @Controller('Class')
 export class ClassController {
 	constructor(private ClassService: ClassService) {}
+
+	// @UseGuards(AuthenticatedGuard) // must be admin only also must be the exact user of created by
+	@Get('/:id')
+	GetOne(@Param('id', ParseIntPipe) id: number): Promise<ClassModels.MasterModel> {
+		return this.ClassService.GetById(id);
+	}
 
 	@UseGuards(AuthenticatedGuard)
 	@Get('/user/classes')
