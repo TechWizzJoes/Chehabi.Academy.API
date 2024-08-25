@@ -2,11 +2,13 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGenerat
 import { Class } from './Class';
 import { CourseType } from './CourseType';
 import { Instructor } from './Instructor';
+import { User } from './User';
 import { Feedback } from './Feedback';
 import { RecordedSession } from './RecordedSession';
 
 @Index('Course_CourseType_FK', ['Type'], {})
 @Index('Course_Instructor_FK', ['InstructorId'], {})
+@Index('fk_Course_created_by', ['CreatedBy'], {})
 @Entity('Course', { schema: 'mydb' })
 export class Course {
 	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
@@ -78,6 +80,10 @@ export class Course {
 	@Column('datetime', { name: 'UpdatedOn', default: () => 'CURRENT_TIMESTAMP' })
 	UpdatedOn: Date;
 
+	@RelationId((Course: Course) => Course.Creator)
+	@Column('int', { name: 'CreatedBy', nullable: true })
+	CreatedBy: number | null;
+
 	@OneToMany(() => Class, (Class) => Class.Course)
 	Classes: Class[];
 
@@ -94,6 +100,13 @@ export class Course {
 	})
 	@JoinColumn([{ name: 'InstructorId', referencedColumnName: 'Id' }])
 	Instructor: Instructor;
+
+	@ManyToOne(() => User, (User) => User.Courses, {
+		onDelete: 'NO ACTION',
+		onUpdate: 'NO ACTION'
+	})
+	@JoinColumn([{ name: 'CreatedBy', referencedColumnName: 'Id' }])
+	Creator: User;
 
 	@OneToMany(() => Feedback, (Feedback) => Feedback.Course)
 	Feedbacks: Feedback[];

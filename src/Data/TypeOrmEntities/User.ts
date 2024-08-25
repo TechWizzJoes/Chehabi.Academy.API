@@ -1,7 +1,13 @@
 import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Class } from './Class';
+import { Course } from './Course';
+import { CourseType } from './CourseType';
 import { Feedback } from './Feedback';
 import { Instructor } from './Instructor';
-import { Class } from './Class';
+import { LiveSession } from './LiveSession';
+import { NotificationSubscriptions } from './NotificationSubscriptions';
+import { NotificationTemplate } from './NotificationTemplate';
+import { RecordedSession } from './RecordedSession';
 import { WhatsNew } from './WhatsNew';
 
 @Index('Email', ['Email'], { unique: true })
@@ -49,11 +55,35 @@ export class User {
 	})
 	ProfilePicturePath: string | null;
 
+	@OneToMany(() => Class, (Class) => Class.CreatedBy)
+	CreatedClasses: Class[];
+
+	@OneToMany(() => Course, (Course) => Course.CreatedBy)
+	Courses: Course[];
+
+	@OneToMany(() => CourseType, (CourseType) => CourseType.CreatedBy)
+	CourseTypes: CourseType[];
+
 	@OneToMany(() => Feedback, (Feedback) => Feedback.CreatedBy)
 	Feedbacks: Feedback[];
 
 	@OneToMany(() => Instructor, (Instructor) => Instructor.User)
 	Instructors: Instructor[];
+
+	@OneToMany(() => Instructor, (Instructor) => Instructor.CreatedBy)
+	CreayedInstractor: Instructor[];
+
+	@OneToMany(() => LiveSession, (LiveSession) => LiveSession.CreatedBy)
+	LiveSessions: LiveSession[];
+
+	@OneToMany(() => NotificationSubscriptions, (NotificationSubscriptions) => NotificationSubscriptions.CreatedBy)
+	NotificationSubscriptions: NotificationSubscriptions[];
+
+	@OneToMany(() => NotificationTemplate, (NotificationTemplate) => NotificationTemplate.CreatedBy)
+	NotificationTemplates: NotificationTemplate[];
+
+	@OneToMany(() => RecordedSession, (RecordedSession) => RecordedSession.CreatedBy)
+	RecordedSessions: RecordedSession[];
 
 	@ManyToMany(() => Class, (Class) => Class.Users)
 	@JoinTable({
