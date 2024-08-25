@@ -15,6 +15,7 @@ import { User } from './User';
 import { BooleanTransformer } from '@App/Common/Transformers/Boolean.Transformer';
 
 @Index('Class_FK', ['CourseId'], {})
+@Index('fk_Class_created_by', ['CreatedBy'], {})
 @Entity('Class', { schema: 'mydb' })
 export class Class {
 	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
@@ -73,12 +74,23 @@ export class Class {
 	})
 	UpdatedOn: Date | null;
 
+	@RelationId((Class: Class) => Class.Creator)
+	@Column('int', { name: 'CreatedBy', nullable: true })
+	CreatedBy: number | null;
+
 	@ManyToOne(() => Course, (Course) => Course.Classes, {
 		onDelete: 'NO ACTION',
 		onUpdate: 'NO ACTION'
 	})
 	@JoinColumn([{ name: 'CourseId', referencedColumnName: 'Id' }])
 	Course: Course;
+
+	@ManyToOne(() => User, (User) => User.Classes, {
+		onDelete: 'NO ACTION',
+		onUpdate: 'NO ACTION'
+	})
+	@JoinColumn([{ name: 'CreatedBy', referencedColumnName: 'Id' }])
+	Creator: User;
 
 	@OneToMany(() => LiveSession, (LiveSession) => LiveSession.Class)
 	LiveSessions: LiveSession[];

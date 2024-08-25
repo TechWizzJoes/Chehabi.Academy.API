@@ -4,6 +4,7 @@ import { Feedback } from './Feedback';
 import { User } from './User';
 
 @Index('Instructor_FK', ['UserId'], {})
+@Index('fk_Instructor_created_by', ['CreatedBy'], {})
 @Entity('Instructor', { schema: 'mydb' })
 export class Instructor {
 	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
@@ -12,6 +13,10 @@ export class Instructor {
 	@RelationId((Instructor: Instructor) => Instructor.User)
 	@Column('int', { name: 'UserId' })
 	UserId: number;
+
+	@RelationId((Instructor: Instructor) => Instructor.Creator)
+	@Column('int', { name: 'CreatedBy', nullable: true })
+	CreatedBy: number | null;
 
 	@OneToMany(() => Course, (Course) => Course.Instructor)
 	Courses: Course[];
@@ -25,4 +30,11 @@ export class Instructor {
 	})
 	@JoinColumn([{ name: 'UserId', referencedColumnName: 'Id' }])
 	User: User;
+
+	@ManyToOne(() => User, (User) => User.Instructors, {
+		onDelete: 'NO ACTION',
+		onUpdate: 'NO ACTION'
+	})
+	@JoinColumn([{ name: 'CreatedBy', referencedColumnName: 'Id' }])
+	Creator: User;
 }
