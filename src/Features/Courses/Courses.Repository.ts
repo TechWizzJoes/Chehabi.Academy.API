@@ -61,7 +61,7 @@ export class CoursesRepository {
 	}
 
 	async GetById(id: number): Promise<Course> {
-		return this.courseRepository.findOne({
+		let dbCourse = await this.courseRepository.findOne({
 			where: {
 				Id: id,
 				IsDeleted: false
@@ -69,6 +69,7 @@ export class CoursesRepository {
 			},
 			relations: ['Instructor.User', 'Classes', 'Classes.LiveSessions', 'Classes.Users']
 		});
+		return dbCourse;
 	}
 
 	async Create(courseData: CoursesModels.CoursesReqModel): Promise<Course> {
@@ -116,22 +117,10 @@ export class CoursesRepository {
 		return await this.courseRepository.save(deleteCourse);
 	}
 
-	async GetClasses(courseId: number): Promise<Class[]> {
-		const courseEntity = await this.courseRepository.findOne({
-			where: {
-				Id: courseId,
-				IsDeleted: false
-			},
-			relations: ['Classes']
-		});
-
-		return courseEntity.Classes;
-	}
-
-	async GetAdminCoursesByUserId(userId: number): Promise<Course[]> {
+	async GetAdminCoursesByUserId(InstructorId: number): Promise<Course[]> {
 		const Classes = await this.courseRepository.find({
 			where: {
-				InstructorId: userId,
+				InstructorId: InstructorId,
 				IsDeleted: false
 			},
 			relations: ['Instructor.User']

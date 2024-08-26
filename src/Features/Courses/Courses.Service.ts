@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { AppConfig, Config } from '@App/Config/App.Config';
@@ -49,17 +49,62 @@ export class CoursesService {
 		course.TypeId = CourseTypeEnum[courseType];
 		course.IsActive = course.IsActive;
 		course.IsDeleted = false;
+
+		this.ValidateTodaysDate(course);
 		return await this.CoursesRepository.Create(course);
 	}
 
 	async Update(id, course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
+		let dbcourse = await this.CoursesRepository.GetById(id);
+		this.ValidateClassesDates(course, dbcourse);
+		this.ValidateTodaysDate(course);
 		return await this.CoursesRepository.Update(id, course);
 	}
+
 	async Delete(id): Promise<CoursesModels.MasterModel> {
 		return await this.CoursesRepository.Delete(id);
 	}
 
 	async Upload(filePath: string): Promise<{}> {
 		return { filePath };
+	}
+
+	private ValidateClassesDates(course: CoursesModels.CoursesReqModel, dbcourse: CoursesModels.MasterModel): boolean {
+		let newStartDate: Date = new Date(course.StartDate);
+		newStartDate.setHours(0, 0, 0, 0); // Set time to 00:00:00 to compare days only
+		let oldStartDate: Date = new Date(dbcourse.StartDate);
+		if (newStartDate !== oldStartDate) {
+			// Find the earliest start date in dbcourse.Classes
+			const earliestClassStartDate = dbcourse.Classes.filter(
+				(classItem) => classItem.IsActive == true && classItem.IsDeleted == false
+			).reduce((earliest, currentClass) => {
+				if (!earliest || new Date(currentClass.StartDate) < new Date(earliest)) {
+					return currentClass.StartDate;
+				}
+				return earliest;
+			}, null as Date | null);
+
+			// Validate if course.StartDate is greater than the earliest class start date
+			if (earliestClassStartDate) {
+				let earliestDate = new Date(earliestClassStartDate);
+				if (newStartDate > earliestDate)
+					//doesnot work if you want the new date to be the same as the earliest date
+					throw new ApplicationException(ErrorCodesEnum.COURSE_STARTDATE_EXCEEDED, HttpStatus.BAD_REQUEST);
+			}
+		}
+		return true;
+	}
+
+	private ValidateTodaysDate(course: CoursesModels.CoursesReqModel): boolean {
+		let newStartDate: Date = new Date(course.StartDate);
+		newStartDate.setHours(0, 0, 0, 0); // Set time to 00:00:00 to compare days only
+
+		const todaysDate = new Date();
+		todaysDate.setHours(0, 0, 0, 0);
+
+		if (newStartDate < todaysDate) {
+			throw new ApplicationException(ErrorCodesEnum.COURSE_STARTDATE_BEFORE_TODAY, HttpStatus.BAD_REQUEST);
+		}
+		return true;
 	}
 }

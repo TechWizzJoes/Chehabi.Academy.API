@@ -46,6 +46,7 @@ export class CoursesController {
 	}
 
 	@Post('')
+	@UseGuards(AuthenticatedGuard)
 	@ApiBody({ type: CoursesModels.CoursesReqModel })
 	Create(@Body() course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
 		// return this.CoursesService.Create(course);

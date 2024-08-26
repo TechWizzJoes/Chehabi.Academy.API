@@ -14,6 +14,7 @@ import { CoursesModels } from '../Courses/Courses.Models';
 import { CoursesService } from '../Courses/Courses.Service';
 import { SessionService } from '../Session/Session.Service';
 import { LiveSessionModels } from '../Session/Session.Models';
+import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
 
 @Injectable()
 export class ClassService {
@@ -45,8 +46,12 @@ export class ClassService {
 		newClass.IsActive = newClass.IsActive ?? true;
 		newClass.IsDeleted = false;
 
+		let dbcourse = await this.CoursesService.GetById(newClass.CourseId);
+		this.ValidateTodaysDate(newClass);
+		this.ValidateCourseDate(dbcourse, newClass);
+
 		// get session dates from the periodDto
-		const sessionDates = this.generateSessionDates(newClass.StartDate, newClass.Period, newClass.NumberOfSessions);
+		const sessionDates = this.GenerateSessionDates(newClass.StartDate, newClass.Period, newClass.NumberOfSessions);
 		newClass.EndDate = sessionDates[sessionDates.length - 1];
 
 		let createdClass = await this.ClassRepository.Create(newClass);
@@ -68,6 +73,11 @@ export class ClassService {
 	}
 
 	async Update(id, newClass: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
+		let dbcourse = (await this.ClassRepository.GetById(id)).Course;
+		this.ValidateCourseDate(dbcourse, newClass);
+		this.ValidateSessionDates(newClass);
+		this.ValidateTodaysDate(newClass);
+
 		let updatedsessions = await this.SessionService.BulkUpdate(newClass.LiveSessions);
 		let updatedClass = await this.ClassRepository.Update(id, newClass);
 		return updatedClass;
@@ -104,32 +114,7 @@ export class ClassService {
 		return updatedUser;
 	}
 
-	generateSchedule(startDate: Date, daysOfWeek: number[], totalSessions: number): Date[] {
-		const dates: Date[] = [];
-		let currentDate = new Date(startDate);
-		let sessionsScheduled = 0;
-
-		while (sessionsScheduled < totalSessions) {
-			// Loop through the specified days of the week
-			for (const dayOfWeek of daysOfWeek) {
-				// Adjust currentDate to the next occurrence of the specified dayOfWeek
-				while (currentDate.getDay() !== dayOfWeek) {
-					currentDate.setDate(currentDate.getDate() + 1);
-				}
-
-				if (sessionsScheduled < totalSessions) {
-					dates.push(new Date(currentDate));
-					sessionsScheduled++;
-				}
-
-				currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
-			}
-		}
-
-		return dates;
-	}
-
-	generateSessionDates(
+	private GenerateSessionDates(
 		startDate: Date, // Starting date in "YYYY-MM-DD" format
 		periodDto: ClassModels.PeriodDto[], // PeriodDto array (Day of week and time)
 		numberOfSessions: number // Number of sessions to generate
@@ -168,5 +153,53 @@ export class ClassService {
 		}
 
 		return sessions;
+	}
+
+	private ValidateSessionDates(reqModel: ClassModels.ClassReqModel): boolean {
+		const liveSessions = reqModel.LiveSessions;
+
+		// check if the first session is before class start date
+		if (new Date(liveSessions[0].StartDate) < new Date(reqModel.StartDate)) {
+			throw new ApplicationException(ErrorCodesEnum.SESSION_BEFORE_CLASS, HttpStatus.BAD_REQUEST);
+		}
+
+		if (liveSessions.length < 2) {
+			return true;
+		}
+
+		for (let i = 0; i < liveSessions.length - 1; i++) {
+			const currentSession = liveSessions[i];
+			const nextSession = liveSessions[i + 1];
+
+			// check if sessions order is persisted in its dates
+			if (new Date(currentSession.StartDate) > new Date(nextSession.StartDate)) {
+				throw new ApplicationException(
+					`Session ${i + 2} starts before session ${i + 1}.`,
+					HttpStatus.BAD_REQUEST
+				);
+			}
+		}
+
+		return true;
+	}
+
+	private ValidateCourseDate(dbcourse: CoursesModels.MasterModel, newClass: ClassModels.ClassReqModel): boolean {
+		if (new Date(newClass.StartDate) < new Date(dbcourse.StartDate)) {
+			throw new ApplicationException(ErrorCodesEnum.CLASS_BEFORE_COURSE, HttpStatus.BAD_REQUEST);
+		}
+		return true;
+	}
+
+	private ValidateTodaysDate(newClass: ClassModels.ClassReqModel): boolean {
+		let newStartDate: Date = new Date(newClass.StartDate);
+		newStartDate.setHours(0, 0, 0, 0); // Set time to 00:00:00 to compare days only
+
+		const todaysDate = new Date();
+		todaysDate.setHours(0, 0, 0, 0);
+
+		if (newStartDate < todaysDate) {
+			throw new ApplicationException(ErrorCodesEnum.Class_STARTDATE_BEFORE_TODAY, HttpStatus.BAD_REQUEST);
+		}
+		return true;
 	}
 }
