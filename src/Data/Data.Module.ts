@@ -13,6 +13,7 @@ import { LiveSession } from './TypeOrmEntities/LiveSession';
 import { RecordedSession } from './TypeOrmEntities/RecordedSession';
 import { CourseType } from './TypeOrmEntities/CourseType';
 import { Instructor } from './TypeOrmEntities/Instructor';
+import { NotificationTemplate } from './TypeOrmEntities/NotificationTemplate';
 
 const Entities = [
 	User,
@@ -24,7 +25,8 @@ const Entities = [
 	WhatsNew,
 	NotificationSubscriptions,
 	CourseType,
-	Instructor
+	Instructor,
+	NotificationTemplate
 ];
 
 @Module({

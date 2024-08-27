@@ -4,6 +4,7 @@ import { FeedbackModels } from '../Feedback/Feedback.Models';
 import { RecordedSessionModels } from '../Session/Session.Models';
 import { InstructorModels } from '../User/Instructor.Models';
 import { CourseTypeEnum } from '@App/Common/Enums/CourseType.Enum';
+import { UserModels } from '../User/User.Models';
 
 export namespace CoursesModels {
 	export class MasterModel {
@@ -31,6 +32,8 @@ export namespace CoursesModels {
 		RecordedSessions: RecordedSessionModels.MasterModel[];
 		CreatedOn: Date;
 		UpdatedOn: Date;
+		CreatedBy: number | null;
+		Creator: UserModels.MasterModel;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;
@@ -88,4 +91,6 @@ export class CourseType {
 	Code: number;
 	Text: string;
 	Courses: CoursesModels.MasterModel[];
+	CreatedBy: number | null;
+	Creator: UserModels.MasterModel;
 }

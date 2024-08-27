@@ -11,6 +11,8 @@ export namespace InstructorModels {
 		Courses: CoursesModels.MasterModel[];
 		Feedbacks: FeedbackModels.MasterModel[];
 		User: User;
+		CreatedBy: number | null;
+		Creator: UserModels.MasterModel;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;

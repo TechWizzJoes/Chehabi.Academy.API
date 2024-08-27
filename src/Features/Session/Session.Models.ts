@@ -1,7 +1,7 @@
-import { User } from '@App/Data/TypeOrmEntities/User';
 import { ApiProperty } from '@nestjs/swagger';
 import { ClassModels } from '../Class/Class.Models';
 import { CoursesModels } from '../Courses/Courses.Models';
+import { UserModels } from '../User/User.Models';
 
 export namespace LiveSessionModels {
 	export class MasterModel {
@@ -11,6 +11,8 @@ export namespace LiveSessionModels {
 		EndDate: Date;
 		Link: string | null;
 		Class: ClassModels.MasterModel;
+		CreatedBy: number | null;
+		Creator: UserModels.MasterModel;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;
@@ -37,6 +39,8 @@ export namespace RecordedSessionModels {
 		CourseId: number;
 		Link: string | null;
 		Course: CoursesModels.MasterModel;
+		CreatedBy: number | null;
+		Creator: UserModels.MasterModel;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;

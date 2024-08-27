@@ -5,6 +5,7 @@ import { Course } from '@App/Data/TypeOrmEntities/Course';
 import { CoursesModels } from './Courses.Models';
 import { Class } from '@App/Data/TypeOrmEntities/Class';
 import { User } from '@App/Data/TypeOrmEntities/User';
+import { CourseMapper } from '@App/Data/Mappers/Course.Mapper';
 
 @Injectable()
 export class CoursesRepository {
@@ -60,7 +61,7 @@ export class CoursesRepository {
 		return query.getMany();
 	}
 
-	async GetById(id: number): Promise<Course> {
+	async GetById(id: number): Promise<CoursesModels.MasterModel> {
 		let dbCourse = await this.courseRepository.findOne({
 			where: {
 				Id: id,
@@ -69,7 +70,8 @@ export class CoursesRepository {
 			},
 			relations: ['Instructor.User', 'Classes', 'Classes.LiveSessions', 'Classes.Users']
 		});
-		return dbCourse;
+
+		return CourseMapper.toDomainModel(dbCourse);
 	}
 
 	async Create(courseData: CoursesModels.CoursesReqModel): Promise<Course> {

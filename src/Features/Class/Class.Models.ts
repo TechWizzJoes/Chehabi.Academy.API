@@ -1,7 +1,5 @@
-import { User } from '@App/Data/TypeOrmEntities/User';
 import { ApiProperty } from '@nestjs/swagger';
 import { LiveSessionModels } from '../Session/Session.Models';
-import { AccountModels } from '../Account/Account.Models';
 import { UserModels } from '../User/User.Models';
 import { CoursesModels } from '../Courses/Courses.Models';
 
@@ -20,6 +18,9 @@ export namespace ClassModels {
 		IsDeleted: boolean | null;
 		CreatedOn: Date | null;
 		UpdatedOn: Date | null;
+
+		CreatedBy: number | null;
+		Creator: UserModels.MasterModel;
 
 		Users: UserModels.MasterModel[];
 		Course: CoursesModels.MasterModel;
@@ -55,7 +56,13 @@ export namespace ClassModels {
 	}
 
 	export class PeriodDto {
-		Day: number = 0;
-		Time!: string;
+		Day: number;
+		Time: string;
+		DurationInMins: number;
+	}
+
+	export class SessionDates {
+		Date: Date;
+		DurationInMins: number;
 	}
 }

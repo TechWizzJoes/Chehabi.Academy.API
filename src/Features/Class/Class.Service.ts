@@ -52,17 +52,17 @@ export class ClassService {
 
 		// get session dates from the periodDto
 		const sessionDates = this.GenerateSessionDates(newClass.StartDate, newClass.Period, newClass.NumberOfSessions);
-		newClass.EndDate = sessionDates[sessionDates.length - 1];
+		newClass.EndDate = sessionDates[sessionDates.length - 1].Date;
 
 		let createdClass = await this.ClassRepository.Create(newClass);
 
-		let sessionsReqModel = sessionDates.map((date) => {
+		let sessionsReqModel = sessionDates.map((sess) => {
 			let newSession = new LiveSessionModels.SessionReqModel();
 			newSession.ClassId = createdClass.Id;
-			newSession.StartDate = date;
+			newSession.StartDate = sess.Date;
 
-			let endDate = new Date(date);
-			endDate.setHours(endDate.getHours() + 2);
+			let endDate = new Date(sess.Date);
+			endDate.setMinutes(endDate.getMinutes() + sess.DurationInMins);
 
 			newSession.EndDate = endDate;
 			return newSession;
@@ -118,8 +118,8 @@ export class ClassService {
 		startDate: Date, // Starting date in "YYYY-MM-DD" format
 		periodDto: ClassModels.PeriodDto[], // PeriodDto array (Day of week and time)
 		numberOfSessions: number // Number of sessions to generate
-	): Date[] {
-		const sessions: Date[] = [];
+	): ClassModels.SessionDates[] {
+		const sessions: ClassModels.SessionDates[] = [];
 		let currentDate = new Date(startDate); // Convert start date to Date object
 		let sessionCount = 0;
 
@@ -142,7 +142,7 @@ export class ClassService {
 				sessionDate.setHours(hours, minutes);
 
 				// Add this session to the sessions array
-				sessions.push(new Date(sessionDate));
+				sessions.push({ Date: new Date(sessionDate), DurationInMins: matchingPeriod.DurationInMins });
 
 				// Increment session count
 				sessionCount++;
