@@ -1,67 +1,66 @@
-// CartRepository
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cart } from '@App/Data/TypeOrmEntities/Cart';
-import { User } from '@App/Data/TypeOrmEntities/User';
 import { CartModels } from './Cart.Models';
-import { Course } from '@App/Data/TypeOrmEntities/Course';
+import { CartItem } from '@App/Data/TypeOrmEntities/CartItem';
 
 @Injectable()
 export class CartRepository {
 	constructor(
 		@InjectRepository(Cart)
-		private classRepository: Repository<Cart>,
-		@InjectRepository(User)
-		private userRepository: Repository<User>
+		private cartRepository: Repository<Cart>,
+		@InjectRepository(CartItem)
+		private cartItemRepository: Repository<CartItem>
 	) {}
 
-	async GetById(id: number): Promise<Cart> {
-		return this.classRepository.findOne({
-			relations: ['Users', 'Course', 'Course.Cartes', 'LiveSessions'],
+	async GetByUserId(userId: number): Promise<Cart> {
+		return this.cartRepository.findOne({
+			relations: ['CartItems.Class', 'CartItems.Course'],
 			where: {
-				Id: id
+				UserId: userId
 			}
 		});
 	}
 
 	async Create(classData: CartModels.CartReqModel): Promise<CartModels.MasterModel> {
-		const newCart = this.classRepository.create({
+		const newCart = this.cartRepository.create({
 			...classData
 		});
-		return await this.classRepository.save(newCart);
+		return await this.cartRepository.save(newCart);
 	}
 
-	async Update(id: number, classData: CartModels.CartReqModel): Promise<Cart> {
-		let updateCart: Cart = await this.classRepository.findOne({
+	async Update(id: number, cartData: CartModels.CartReqModel): Promise<Cart> {
+		let updateCart: Cart = await this.cartRepository.findOne({
 			where: {
 				Id: id
 			}
 		});
 		if (!updateCart) {
-			// handle case where the class is not found
 			return null;
 		}
 
 		updateCart = {
 			...updateCart,
-			...classData
+			...cartData
 		};
 
-		return await this.classRepository.save(updateCart);
+		delete updateCart.CartItems;
+		return await this.cartRepository.save(updateCart);
 	}
 
-	async Delete(id: number): Promise<Cart> {
-		let deleteCart: Cart = await this.classRepository.findOne({
-			where: {
-				Id: id
-			}
-		});
-		if (!deleteCart) {
-			// handle case where the class is not found
-			return null;
-		}
+	async AddItem(cartItem: CartModels.CartItem): Promise<CartItem> {
+		return await this.cartItemRepository.save(cartItem);
+	}
 
-		return await this.classRepository.save(deleteCart);
+	async UpdateItem(cartItem: CartModels.CartItem): Promise<CartItem> {
+		return await this.cartItemRepository.save(cartItem);
+	}
+
+	async DeleteItem(cartItem: CartModels.CartItem): Promise<boolean> {
+		const result = await this.cartItemRepository.delete({
+			Id: cartItem.Id
+		});
+		return result.affected > 0;
 	}
 }

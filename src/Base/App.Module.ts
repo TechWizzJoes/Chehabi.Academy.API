@@ -33,6 +33,8 @@ import { ApplicationExceptionFilter } from '@App/Common/Filters/ApplicationExcep
 import { WhatsNewModule } from '@App/Features/WhatsNew/WhatsNew.Module';
 import { MulterModule } from '@nestjs/platform-express';
 import { SessionModule } from '@App/Features/Session/Session.Module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { CartModule } from '@App/Features/Cart/Cart.Module';
 
 @Module({
 	imports: [
@@ -47,6 +49,7 @@ import { SessionModule } from '@App/Features/Session/Session.Module';
 			global: true // to register only once and be accessed across the whole app
 		},
 		TypeOrmModule.forRootAsync(TypeOrmOptions),
+		EventEmitterModule.forRoot(),
 		CommonModule,
 		AccountModule,
 		CoursesModule,
@@ -55,7 +58,8 @@ import { SessionModule } from '@App/Features/Session/Session.Module';
 		FeedbackModule,
 		NotificationsModule,
 		EmailSenderModule,
-		WhatsNewModule
+		WhatsNewModule,
+		CartModule
 	],
 	controllers: [AppController],
 	providers: [

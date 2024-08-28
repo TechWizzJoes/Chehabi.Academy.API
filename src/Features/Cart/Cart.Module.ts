@@ -5,9 +5,11 @@ import { AppConfig } from '@App/Config/App.Config';
 import { CartRepository } from './Cart.Repository';
 import { CartController } from './Cart.Controller';
 import { CartService } from './Cart.Service';
+import { ClassModule } from '../Class/Class.Module';
+import { CoursesModule } from '../Courses/Courses.Module';
 
 @Module({
-	imports: [DataModule, CommonModule],
+	imports: [DataModule, CommonModule, ClassModule, CoursesModule],
 	controllers: [CartController],
 	providers: [AppConfig, CartService, CartRepository]
 })

@@ -13,6 +13,7 @@ import { SessionModule } from '../Session/Session.Module';
 @Module({
 	imports: [DataModule, CommonModule, UserModule, CoursesModule, SessionModule],
 	controllers: [ClassController],
-	providers: [AppConfig, ClassService, ClassRepository]
+	providers: [AppConfig, ClassService, ClassRepository],
+	exports: [ClassService]
 })
 export class ClassModule {}
