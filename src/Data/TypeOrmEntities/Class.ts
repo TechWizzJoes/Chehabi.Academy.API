@@ -1,16 +1,8 @@
-import {
-	Column,
-	Entity,
-	Index,
-	JoinColumn,
-	ManyToMany,
-	ManyToOne,
-	OneToMany,
-	PrimaryGeneratedColumn,
-	RelationId
-} from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import { CartItem } from './CartItem';
 import { Course } from './Course';
 import { LiveSession } from './LiveSession';
+import { UserClass } from './UserClass';
 import { User } from './User';
 import { BooleanTransformer } from '@App/Common/Transformers/Boolean.Transformer';
 
@@ -78,6 +70,9 @@ export class Class {
 	@Column('int', { name: 'CreatedBy', nullable: true })
 	CreatedBy: number | null;
 
+	@OneToMany(() => CartItem, (CartItem) => CartItem.Class)
+	CartItems: CartItem[];
+
 	@ManyToOne(() => Course, (Course) => Course.Classes, {
 		onDelete: 'NO ACTION',
 		onUpdate: 'NO ACTION'
@@ -85,7 +80,7 @@ export class Class {
 	@JoinColumn([{ name: 'CourseId', referencedColumnName: 'Id' }])
 	Course: Course;
 
-	@ManyToOne(() => User, (User) => User.Classes, {
+	@ManyToOne(() => User, (User) => User.CreatedClasses, {
 		onDelete: 'NO ACTION',
 		onUpdate: 'NO ACTION'
 	})
@@ -95,6 +90,6 @@ export class Class {
 	@OneToMany(() => LiveSession, (LiveSession) => LiveSession.Class)
 	LiveSessions: LiveSession[];
 
-	@ManyToMany(() => User, (User) => User.Classes)
-	Users: User[];
+	@OneToMany(() => UserClass, (UserClass) => UserClass.Class)
+	UserClasses: UserClass[];
 }

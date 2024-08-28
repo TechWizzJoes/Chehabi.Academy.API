@@ -14,7 +14,6 @@ export class UserRepository {
 
 	async GetById(id: number): Promise<User> {
 		return this.userRepository.findOne({
-			relations: ['Classes'],
 			where: {
 				Id: id
 			}

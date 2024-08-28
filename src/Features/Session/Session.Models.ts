@@ -11,8 +11,6 @@ export namespace LiveSessionModels {
 		EndDate: Date;
 		Link: string | null;
 		Class: ClassModels.MasterModel;
-		CreatedBy: number | null;
-		Creator: UserModels.MasterModel;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;
@@ -39,8 +37,6 @@ export namespace RecordedSessionModels {
 		CourseId: number;
 		Link: string | null;
 		Course: CoursesModels.MasterModel;
-		CreatedBy: number | null;
-		Creator: UserModels.MasterModel;
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;

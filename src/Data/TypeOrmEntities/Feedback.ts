@@ -3,9 +3,9 @@ import { Course } from './Course';
 import { User } from './User';
 import { Instructor } from './Instructor';
 
-@Index('Feedback_Course_FK', ['CourseId'], {})
-@Index('Feedback_Instructor_FK', ['InstructorId'], {})
 @Index('UserId', ['CreatedBy'], {})
+@Index('Feedback_Instructor_FK', ['InstructorId'], {})
+@Index('Feedback_Course_FK', ['CourseId'], {})
 @Entity('Feedback', { schema: 'mydb' })
 export class Feedback {
 	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
@@ -29,7 +29,11 @@ export class Feedback {
 	@Column('int', { name: 'CreatedBy', nullable: true })
 	CreatedBy: number | null;
 
-	@Column('datetime', { name: 'CreatedOn', nullable: true })
+	@Column('datetime', {
+		name: 'CreatedOn',
+		nullable: true,
+		default: () => 'CURRENT_TIMESTAMP'
+	})
 	CreatedOn: Date | null;
 
 	@ManyToOne(() => Course, (Course) => Course.Feedbacks, {

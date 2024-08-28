@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { LiveSessionModels } from '../Session/Session.Models';
 import { UserModels } from '../User/User.Models';
 import { CoursesModels } from '../Courses/Courses.Models';
+import { CartModels } from '../Cart/Cart.Models';
 
 export namespace ClassModels {
 	export class MasterModel {
@@ -22,9 +23,11 @@ export namespace ClassModels {
 		CreatedBy: number | null;
 		Creator: UserModels.MasterModel;
 
-		Users: UserModels.MasterModel[];
+		CartItems: CartModels.CartItem[];
+
 		Course: CoursesModels.MasterModel;
 		LiveSessions: LiveSessionModels.MasterModel[];
+		UserClasses: UserModels.UserClass[];
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;

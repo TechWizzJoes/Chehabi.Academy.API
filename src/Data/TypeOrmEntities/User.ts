@@ -1,13 +1,14 @@
-import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Cart } from './Cart';
 import { Class } from './Class';
 import { Course } from './Course';
-import { CourseType } from './CourseType';
 import { Feedback } from './Feedback';
 import { Instructor } from './Instructor';
-import { LiveSession } from './LiveSession';
 import { NotificationSubscriptions } from './NotificationSubscriptions';
 import { NotificationTemplate } from './NotificationTemplate';
-import { RecordedSession } from './RecordedSession';
+import { Rating } from './Rating';
+import { UserClass } from './UserClass';
+import { UserCourse } from './UserCourse';
 import { WhatsNew } from './WhatsNew';
 
 @Index('Email', ['Email'], { unique: true })
@@ -55,14 +56,14 @@ export class User {
 	})
 	ProfilePicturePath: string | null;
 
+	@OneToMany(() => Cart, (Cart) => Cart.User)
+	Carts: Cart[];
+
 	@OneToMany(() => Class, (Class) => Class.CreatedBy)
 	CreatedClasses: Class[];
 
 	@OneToMany(() => Course, (Course) => Course.CreatedBy)
 	Courses: Course[];
-
-	@OneToMany(() => CourseType, (CourseType) => CourseType.CreatedBy)
-	CourseTypes: CourseType[];
 
 	@OneToMany(() => Feedback, (Feedback) => Feedback.CreatedBy)
 	Feedbacks: Feedback[];
@@ -73,26 +74,20 @@ export class User {
 	@OneToMany(() => Instructor, (Instructor) => Instructor.CreatedBy)
 	CreayedInstractor: Instructor[];
 
-	@OneToMany(() => LiveSession, (LiveSession) => LiveSession.CreatedBy)
-	LiveSessions: LiveSession[];
-
-	@OneToMany(() => NotificationSubscriptions, (NotificationSubscriptions) => NotificationSubscriptions.CreatedBy)
+	@OneToMany(() => NotificationSubscriptions, (NotificationSubscriptions) => NotificationSubscriptions.User)
 	NotificationSubscriptions: NotificationSubscriptions[];
 
 	@OneToMany(() => NotificationTemplate, (NotificationTemplate) => NotificationTemplate.CreatedBy)
 	NotificationTemplates: NotificationTemplate[];
 
-	@OneToMany(() => RecordedSession, (RecordedSession) => RecordedSession.CreatedBy)
-	RecordedSessions: RecordedSession[];
+	@OneToMany(() => Rating, (Rating) => Rating.User)
+	Ratings: Rating[];
 
-	@ManyToMany(() => Class, (Class) => Class.Users)
-	@JoinTable({
-		name: 'User_Class',
-		joinColumns: [{ name: 'UserId', referencedColumnName: 'Id' }],
-		inverseJoinColumns: [{ name: 'ClassId', referencedColumnName: 'Id' }],
-		schema: 'mydb'
-	})
-	Classes: Class[];
+	@OneToMany(() => UserClass, (UserClass) => UserClass.User)
+	UserClasses: UserClass[];
+
+	@OneToMany(() => UserCourse, (UserCourse) => UserCourse.User)
+	UserCourses: UserCourse[];
 
 	@OneToMany(() => WhatsNew, (WhatsNew) => WhatsNew.CreatedBy)
 	WhatsNews: WhatsNew[];

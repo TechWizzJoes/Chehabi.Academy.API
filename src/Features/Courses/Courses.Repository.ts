@@ -5,7 +5,6 @@ import { Course } from '@App/Data/TypeOrmEntities/Course';
 import { CoursesModels } from './Courses.Models';
 import { Class } from '@App/Data/TypeOrmEntities/Class';
 import { User } from '@App/Data/TypeOrmEntities/User';
-import { CourseMapper } from '@App/Data/Mappers/Course.Mapper';
 
 @Injectable()
 export class CoursesRepository {
@@ -68,10 +67,11 @@ export class CoursesRepository {
 				IsDeleted: false
 				// IsActive: true
 			},
-			relations: ['Instructor.User', 'Classes', 'Classes.LiveSessions', 'Classes.Users']
+			relations: ['Instructor.User', 'Classes.LiveSessions', 'Classes.UserClasses.User']
 		});
 
-		return CourseMapper.toDomainModel(dbCourse);
+		// return CourseMapper.toDomainModel(dbCourse);
+		return dbCourse;
 	}
 
 	async Create(courseData: CoursesModels.CoursesReqModel): Promise<Course> {

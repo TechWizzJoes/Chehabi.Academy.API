@@ -6,41 +6,37 @@ import { Class } from '@App/Data/TypeOrmEntities/Class';
 import { User } from '@App/Data/TypeOrmEntities/User';
 import { ClassModels } from './Class.Models';
 import { Course } from '@App/Data/TypeOrmEntities/Course';
+import { UserClass } from '@App/Data/TypeOrmEntities/UserClass';
 
 @Injectable()
 export class ClassRepository {
 	constructor(
 		@InjectRepository(Class)
 		private classRepository: Repository<Class>,
-		@InjectRepository(User)
-		private userRepository: Repository<User>
+		@InjectRepository(UserClass)
+		private userClassRepository: Repository<UserClass>
 	) {}
 
 	async GetEnrolledClassesByUserId(userId: number): Promise<Class[]> {
-		const user = await this.userRepository.findOne({
+		const userClasses = await this.userClassRepository.find({
 			where: {
-				Id: userId,
-				IsDeleted: false
-			},
-			select: {
-				Classes: true
+				UserId: userId
 			},
 			relations: [
-				'Classes',
-				'Classes.Users',
-				'Classes.Course',
-				'Classes.LiveSessions',
-				'Classes.Course.Instructor.User'
+				'Class',
+				// 'Class.Users',
+				'Class.LiveSessions',
+				'Class.Course',
+				'Class.Course.Instructor.User'
 			]
-			// relations: ['Users', 'Course','LiveSessions', 'Course.Instructor']
 		});
 
-		return user.Classes;
+		return userClasses.map((userclass) => userclass.Class);
 	}
 
 	async GetById(id: number): Promise<Class> {
 		return this.classRepository.findOne({
-			relations: ['Users', 'Course', 'Course.Classes', 'LiveSessions'],
+			relations: ['UserClasses', 'UserClasses.User', 'LiveSessions', 'Course', 'Course.Classes'],
 			where: {
 				Id: id
 			}
@@ -93,15 +89,16 @@ export class ClassRepository {
 	}
 
 	async GetUsers(classId: number): Promise<User[]> {
-		const classEntity = await this.classRepository.findOne({
+		const userClasses = await this.userClassRepository.find({
 			where: {
-				Id: classId
+				ClassId: classId
 			},
-			relations: ['Users']
+			relations: ['User']
 		});
 
-		return classEntity.Users;
+		return userClasses.map((userclass) => userclass.User);
 	}
+
 	async GetCourse(classId: number): Promise<Course> {
 		const classEntity = await this.classRepository.findOne({
 			where: {

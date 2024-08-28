@@ -92,26 +92,26 @@ export class ClassService {
 		const selectedClass: ClassModels.MasterModel = await this.GetById(classId);
 		const selectedCourse: CoursesModels.MasterModel = await this.CoursesService.GetById(selectedClass.CourseId);
 
-		const userExistsInClass =
-			selectedCourse.Classes.filter((c) => {
-				let userIdsInClass = [];
-				if (c.IsActive) {
-					userIdsInClass = c.Users?.map((u) => u.Id);
-				}
-				return userIdsInClass.includes(CurrentUser.UserId);
-			}).length > 0;
+		// const userExistsInClass =
+		// 	selectedCourse.Classes.filter((c) => {
+		// 		let userIdsInClass = [];
+		// 		if (c.IsActive) {
+		// 			userIdsInClass = c.Users?.map((u) => u.Id);
+		// 		}
+		// 		return userIdsInClass.includes(CurrentUser.UserId);
+		// 	}).length > 0;
 
-		if (!selectedClass) throw new NotFoundException();
-		if (selectedClass.Users.length >= selectedClass.MaxCapacity)
-			throw new HttpException(ErrorCodesEnum.MAX_CLASS_USERS, HttpStatus.BAD_REQUEST);
-		if (selectedClass.Users.find((c) => c.Id == CurrentUser.UserId))
-			throw new HttpException(ErrorCodesEnum.USER_EXISTS_CLASS, HttpStatus.BAD_REQUEST);
-		if (userExistsInClass) throw new HttpException(ErrorCodesEnum.USER_EXISTS_COURSE, HttpStatus.BAD_REQUEST);
+		// if (!selectedClass) throw new NotFoundException();
+		// if (selectedClass.Users.length >= selectedClass.MaxCapacity)
+		// 	throw new HttpException(ErrorCodesEnum.MAX_CLASS_USERS, HttpStatus.BAD_REQUEST);
+		// if (selectedClass.Users.find((c) => c.Id == CurrentUser.UserId))
+		// 	throw new HttpException(ErrorCodesEnum.USER_EXISTS_CLASS, HttpStatus.BAD_REQUEST);
+		// if (userExistsInClass) throw new HttpException(ErrorCodesEnum.USER_EXISTS_COURSE, HttpStatus.BAD_REQUEST);
 
-		const user: UserModels.MasterModel = await this.UserService.GetById(CurrentUser.UserId);
-		user.Classes.push(selectedClass);
-		let updatedUser = await this.UserService.UpdateUser(user);
-		return updatedUser;
+		// const user: UserModels.MasterModel = await this.UserService.GetById(CurrentUser.UserId);
+		// user.Classes.push(selectedClass);
+		// let updatedUser = await this.UserService.UpdateUser(user);
+		// return updatedUser;
 	}
 
 	private GenerateSessionDates(

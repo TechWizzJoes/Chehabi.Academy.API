@@ -14,6 +14,11 @@ import { RecordedSession } from './TypeOrmEntities/RecordedSession';
 import { CourseType } from './TypeOrmEntities/CourseType';
 import { Instructor } from './TypeOrmEntities/Instructor';
 import { NotificationTemplate } from './TypeOrmEntities/NotificationTemplate';
+import { Cart } from './TypeOrmEntities/Cart';
+import { CartItem } from './TypeOrmEntities/CartItem';
+import { UserClass } from './TypeOrmEntities/UserClass';
+import { UserCourse } from './TypeOrmEntities/UserCourse';
+import { Rating } from './TypeOrmEntities/Rating';
 
 const Entities = [
 	User,
@@ -26,7 +31,12 @@ const Entities = [
 	NotificationSubscriptions,
 	CourseType,
 	Instructor,
-	NotificationTemplate
+	NotificationTemplate,
+	Cart,
+	CartItem,
+	UserCourse,
+	UserClass,
+	Rating
 ];
 
 @Module({

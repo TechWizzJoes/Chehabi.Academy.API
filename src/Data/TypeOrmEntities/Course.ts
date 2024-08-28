@@ -1,13 +1,16 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import { CartItem } from './CartItem';
 import { Class } from './Class';
 import { CourseType } from './CourseType';
 import { Instructor } from './Instructor';
 import { User } from './User';
 import { Feedback } from './Feedback';
+import { Rating } from './Rating';
 import { RecordedSession } from './RecordedSession';
+import { UserCourse } from './UserCourse';
 
-@Index('Course_CourseType_FK', ['Type'], {})
 @Index('Course_Instructor_FK', ['InstructorId'], {})
+@Index('Course_CourseType_FK', ['TypeId'], {})
 @Index('fk_Course_created_by', ['CreatedBy'], {})
 @Entity('Course', { schema: 'mydb' })
 export class Course {
@@ -84,6 +87,9 @@ export class Course {
 	@Column('int', { name: 'CreatedBy', nullable: true })
 	CreatedBy: number | null;
 
+	@OneToMany(() => CartItem, (CartItem) => CartItem.Course)
+	CartItems: CartItem[];
+
 	@OneToMany(() => Class, (Class) => Class.Course)
 	Classes: Class[];
 
@@ -111,6 +117,12 @@ export class Course {
 	@OneToMany(() => Feedback, (Feedback) => Feedback.Course)
 	Feedbacks: Feedback[];
 
+	@OneToMany(() => Rating, (Rating) => Rating.Course)
+	Ratings: Rating[];
+
 	@OneToMany(() => RecordedSession, (RecordedSession) => RecordedSession.Course)
 	RecordedSessions: RecordedSession[];
+
+	@OneToMany(() => UserCourse, (UserCourse) => UserCourse.User)
+	UserCourses: UserCourse[];
 }

@@ -14,7 +14,6 @@ export namespace NotificationModels {
 		Id: number;
 		UserId: number | null;
 		Subscription: string;
-		CreatedBy: number | null;
-		Creator: UserModels.MasterModel;
+		User: UserModels.MasterModel;
 	}
 }

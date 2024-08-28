@@ -1,4 +1,5 @@
 import { NotificationModels } from '../-Notifications/Notifications2.Models';
+import { CartModels } from '../Cart/Cart.Models';
 import { ClassModels } from '../Class/Class.Models';
 import { CoursesModels, CourseType } from '../Courses/Courses.Models';
 import { FeedbackModels } from '../Feedback/Feedback.Models';
@@ -20,19 +21,20 @@ export namespace UserModels {
 		IsSocial: boolean;
 		ProfilePicturePath: string;
 
-		Classes: ClassModels.MasterModel[];
+		Carts: CartModels.MasterModel[];
+		CreatedClasses: ClassModels.MasterModel[];
+		Courses: CoursesModels.MasterModel[];
+
 		Feedbacks: FeedbackModels.MasterModel[];
 		Instructors: InstructorModels.MasterModel[];
-		WhatsNews: WhatsNewModels.MasterModel[];
-
-		RecordedSessions: RecordedSessionModels.MasterModel[];
-		NotificationTemplates: NotificationModels.NotificationTemplate[];
-		NotificationSubscriptions: NotificationModels.NotificationSubscriptions[];
-		LiveSessions: LiveSessionModels.MasterModel[];
 		CreayedInstractor: InstructorModels.MasterModel[];
-		CourseTypes: CourseType[];
-		Courses: CoursesModels.MasterModel[];
-		CreatedClasses: ClassModels.MasterModel[];
+		NotificationSubscriptions: NotificationModels.NotificationSubscriptions[];
+		NotificationTemplates: NotificationModels.NotificationTemplate[];
+		Ratings: any[]; //youssef fix this when you add the rating
+		UserClasses: UserClass[];
+		UserCourses: UserCourse[];
+
+		WhatsNews: WhatsNewModels.MasterModel[];
 	}
 
 	export class UserResModel {
@@ -51,5 +53,21 @@ export namespace UserModels {
 		Birthdate?: string;
 		Email: string;
 		ProfilePicturePath: string;
+	}
+
+	export class UserClass {
+		UserId: number;
+		ClassId: number;
+		CreatedAt: Date | null;
+		User: UserModels.MasterModel;
+		Class: ClassModels.MasterModel;
+	}
+
+	export class UserCourse {
+		UserId: number;
+		CourseId: number;
+		CreatedAt: Date | null;
+		Course: CoursesModels.MasterModel;
+		User: UserModels.MasterModel;
 	}
 }
