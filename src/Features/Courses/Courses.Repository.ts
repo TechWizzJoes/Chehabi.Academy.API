@@ -130,4 +130,18 @@ export class CoursesRepository {
 
 		return Classes;
 	}
+	async UpdateCourseRating(id: number, Rating: number, Raters: number): Promise<Course> {
+		let updateCourse: Course = await this.courseRepository.findOne({
+			where: {
+				Id: id
+			}
+		});
+		if (!updateCourse) {
+			// handle case where the course is not found
+			return null;
+		}
+		updateCourse.Rating = Rating;
+		updateCourse.Raters = Raters;
+		return await this.courseRepository.save(updateCourse);
+	}
 }

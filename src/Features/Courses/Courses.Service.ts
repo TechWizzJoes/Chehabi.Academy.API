@@ -107,4 +107,9 @@ export class CoursesService {
 		}
 		return true;
 	}
+
+	async UpdateCourseRating(id: number, Rating: number, Raters: number): Promise<CoursesModels.MasterModel> {
+		let dbcourse = await this.CoursesRepository.GetById(id);
+		return await this.CoursesRepository.UpdateCourseRating(id, Rating, Raters);
+	}
 }

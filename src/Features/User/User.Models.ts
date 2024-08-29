@@ -3,6 +3,7 @@ import { CartModels } from '../Cart/Cart.Models';
 import { ClassModels } from '../Class/Class.Models';
 import { CoursesModels, CourseType } from '../Courses/Courses.Models';
 import { FeedbackModels } from '../Feedback/Feedback.Models';
+import { RatingModels } from '../Rating/Rating.Models';
 import { LiveSessionModels, RecordedSessionModels } from '../Session/Session.Models';
 import { WhatsNewModels } from '../WhatsNew/WhatsNew.Models';
 import { InstructorModels } from './Instructor.Models';
@@ -30,7 +31,7 @@ export namespace UserModels {
 		CreayedInstractor: InstructorModels.MasterModel[];
 		NotificationSubscriptions: NotificationModels.NotificationSubscriptions[];
 		NotificationTemplates: NotificationModels.NotificationTemplate[];
-		Ratings: any[]; //youssef fix this when you add the rating
+		Ratings: RatingModels.MasterModel[]; //youssef fix this when you add the rating
 		UserClasses: UserClass[];
 		UserCourses: UserCourse[];
 
