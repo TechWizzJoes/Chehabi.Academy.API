@@ -23,6 +23,15 @@ export class CartItem {
 	@Column('int', { name: 'ClassId', nullable: true })
 	ClassId: number | null;
 
+	@Column('int', { name: 'Quantity', nullable: true })
+	Quantity: number | null;
+
+	@Column('float', { name: 'Price', nullable: true, precision: 12 })
+	Price: number | null;
+
+	@Column('float', { name: 'SubTotal', nullable: true, precision: 12 })
+	SubTotal: number | null;
+
 	@ManyToOne(() => Cart, (Cart) => Cart.CartItems, {
 		onDelete: 'NO ACTION',
 		onUpdate: 'NO ACTION'

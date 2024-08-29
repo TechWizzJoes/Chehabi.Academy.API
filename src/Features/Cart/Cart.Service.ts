@@ -1,20 +1,15 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { Injectable } from '@nestjs/common';
 
 import { AppConfig, Config } from '@App/Config/App.Config';
-import { CryptoHelper } from '@App/Common/Helpers/Crypto.Helper';
-import { ErrorCodesEnum } from '@App/Common/Enums/ErrorCodes.Enum';
 import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
 import { CartRepository } from './Cart.Repository';
 import { CartModels } from './Cart.Models';
-import { promises } from 'dns';
-import { UserService } from '../User/User.Service';
 import { UserModels } from '../User/User.Models';
-import { CoursesModels } from '../Courses/Courses.Models';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Events } from '@App/Common/Events/Events';
+import { ClassService } from '../Class/Class.Service';
 import { CoursesService } from '../Courses/Courses.Service';
-import { SessionService } from '../Session/Session.Service';
-import { LiveSessionModels } from '../Session/Session.Models';
-import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
+import { Constants } from '@App/Common/Constants';
 
 @Injectable()
 export class CartService {
@@ -23,30 +18,95 @@ export class CartService {
 	constructor(
 		private appConfig: AppConfig,
 		private CartRepository: CartRepository,
-		private UserService: UserService,
-		private CoursesService: CoursesService,
-		private SessionService: SessionService,
-		private JwtService: JwtService,
-		private UserHelper: UserHelper
+		private UserHelper: UserHelper,
+		private ClassService: ClassService,
+		private CoursesService: CoursesService
 	) {
 		this.Config = this.appConfig.Config;
 	}
 
-	async GetById(id: number): Promise<CartModels.MasterModel> {
-		return this.CartRepository.GetById(id);
+	@OnEvent(Events.USER_CREATED)
+	handleEvent(user: UserModels.MasterModel) {
+		this.Create(user.Id);
 	}
 
-	async Create(newCart: CartModels.CartReqModel): Promise<CartModels.MasterModel> {
-		let createdCart = await this.CartRepository.Update(1, newCart);
+	async GetByUserId(): Promise<CartModels.MasterModel> {
+		const CurrentUser = this.UserHelper.GetCurrentUser();
+
+		return this.CartRepository.GetByUserId(CurrentUser.UserId);
+	}
+
+	async Create(userId: number): Promise<CartModels.MasterModel> {
+		const cartReq: CartModels.CartReqModel = new CartModels.CartReqModel();
+		cartReq.UserId = userId;
+		cartReq.Currency = 'usd';
+		let createdCart = await this.CartRepository.Create(cartReq);
 		return createdCart;
 	}
 
-	async Update(id, newCart: CartModels.CartReqModel): Promise<CartModels.MasterModel> {
-		let updatedCart = await this.CartRepository.Update(id, newCart);
-		return updatedCart;
+	async AddToCart(cartItemReqModel: CartModels.CartItemReqModel): Promise<CartModels.MasterModel> {
+		let cart: CartModels.MasterModel = await this.GetByUserId();
+		const existingItemIndex = cart.CartItems.findIndex(
+			(item) =>
+				(item.ClassId && item.ClassId == cartItemReqModel.ClassId) ||
+				(item.CourseId && item.CourseId == cartItemReqModel.CourseId)
+		);
+
+		let newItem = new CartModels.CartItem();
+		if (existingItemIndex !== -1) {
+			const currentCartItem = cart.CartItems[existingItemIndex];
+			currentCartItem.Quantity!++;
+			currentCartItem.SubTotal = currentCartItem.Price * currentCartItem.Quantity;
+			newItem.Price = currentCartItem.Price;
+			await this.CartRepository.UpdateItem(currentCartItem);
+		} else {
+			if (cartItemReqModel.CourseId) {
+				const selectedCourse = await this.CoursesService.GetById(cartItemReqModel.CourseId);
+				newItem = {
+					...newItem,
+					...cartItemReqModel,
+					CartId: cart.Id,
+					CourseId: selectedCourse.Id,
+					Price: selectedCourse.Price,
+					Quantity: 1,
+					SubTotal: selectedCourse.Price
+				};
+			}
+			if (cartItemReqModel.ClassId) {
+				const selectedclass = await this.ClassService.GetById(cartItemReqModel.ClassId);
+				newItem = {
+					...newItem,
+					...cartItemReqModel,
+					CartId: cart.Id,
+					ClassId: selectedclass.Id,
+					Price: selectedclass.Course.Price,
+					Quantity: 1,
+					SubTotal: selectedclass.Course.Price
+				};
+			}
+			await this.CartRepository.AddItem(newItem);
+		}
+
+		cart.Total = (cart.Total ?? 0) + newItem.Price;
+		cart.UpdatedAt = Constants.Now();
+		await this.CartRepository.Update(cart.Id, cart);
+		return this.GetByUserId();
 	}
 
-	async Delete(id): Promise<CartModels.MasterModel> {
-		return await this.CartRepository.Delete(id);
+	async RemoveFromCart(itemId: number): Promise<CartModels.MasterModel> {
+		let cart: CartModels.MasterModel = await this.GetByUserId();
+		const existingItemIndex = cart.CartItems.findIndex((item) => item.Id == itemId);
+
+		if (existingItemIndex !== -1) {
+			const currentCartItem = cart.CartItems[existingItemIndex];
+
+			await this.CartRepository.DeleteItem(currentCartItem);
+
+			cart.Total = (cart.Total ?? 0) - currentCartItem.SubTotal;
+			cart.UpdatedAt = Constants.Now();
+			await this.CartRepository.Update(cart.Id, cart);
+			return this.GetByUserId();
+		}
+		return cart;
 	}
 }

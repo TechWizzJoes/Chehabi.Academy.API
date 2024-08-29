@@ -28,6 +28,9 @@ export class Cart {
 	@Column('varchar', { name: 'PromoCode', nullable: true, length: 100 })
 	PromoCode: string | null;
 
+	@Column('float', { name: 'Total', nullable: true, precision: 12 })
+	Total: number | null;
+
 	@ManyToOne(() => User, (User) => User.Carts, {
 		onDelete: 'NO ACTION',
 		onUpdate: 'NO ACTION'

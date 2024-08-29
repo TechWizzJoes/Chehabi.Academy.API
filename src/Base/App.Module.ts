@@ -2,17 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { APP_FILTER } from '@nestjs/core';
-
 import { WinstonModule } from 'nest-winston';
 import { JwtModule } from '@nestjs/jwt';
-
 import { AppController } from './App.Controller';
 import { AppConfig } from '@App/Config/App.Config';
 import Configuration from '@App/Config/Configuration';
-
 import { CurrentUserInterceptor } from '@App/Common/Interceptors/CurrentUser.Interceptor';
 import { LoggingInterceptor } from '@App/Common/Interceptors/Logging.Interceptor';
-
 import { GlobalExceptionFilter } from '@App/Common/Filters/GlobalException.Filter';
 import { WinstonOptions } from '@App/Common/Logs/Winston.Helper';
 import { CommonModule } from '@App/Common/Common.Module';
@@ -34,6 +30,8 @@ import { WhatsNewModule } from '@App/Features/WhatsNew/WhatsNew.Module';
 import { MulterModule } from '@nestjs/platform-express';
 import { SessionModule } from '@App/Features/Session/Session.Module';
 import { RatingModule } from '@App/Features/Rating/Rating.Module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { CartModule } from '@App/Features/Cart/Cart.Module';
 
 @Module({
 	imports: [
@@ -48,6 +46,7 @@ import { RatingModule } from '@App/Features/Rating/Rating.Module';
 			global: true // to register only once and be accessed across the whole app
 		},
 		TypeOrmModule.forRootAsync(TypeOrmOptions),
+		EventEmitterModule.forRoot(),
 		CommonModule,
 		AccountModule,
 		CoursesModule,
@@ -57,7 +56,8 @@ import { RatingModule } from '@App/Features/Rating/Rating.Module';
 		NotificationsModule,
 		EmailSenderModule,
 		WhatsNewModule,
-		RatingModule
+		RatingModule,
+		CartModule
 	],
 	controllers: [AppController],
 	providers: [

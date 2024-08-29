@@ -4,7 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import { AppConfig, Config } from '@App/Config/App.Config';
 import { CryptoHelper } from '@App/Common/Helpers/Crypto.Helper';
 import { ErrorCodesEnum } from '@App/Common/Enums/ErrorCodes.Enum';
-import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
 import { AccountRepository } from './Account.Repository';
 import { AccountModels } from './Account.Models';
 import { AccountException } from '@App/Common/Exceptions/Account.Exception';
@@ -12,6 +11,8 @@ import axios from 'axios';
 import { UserModels } from '../User/User.Models';
 import { InstructorModels } from '../User/Instructor.Models';
 import { InstructorRepository } from '../User/Instructor.Repository';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Events } from '@App/Common/Events/Events';
 
 @Injectable()
 export class AccountService {
@@ -22,7 +23,7 @@ export class AccountService {
 		private AccountRepository: AccountRepository,
 		private InstructorRepository: InstructorRepository,
 		private JwtService: JwtService,
-		private UserHelper: UserHelper
+		private eventEmitter: EventEmitter2
 	) {
 		this.Config = this.appConfig.Config;
 	}
@@ -91,6 +92,7 @@ export class AccountService {
 		const encryptedPassword = CryptoHelper.AES.Encrypt(registerReqModel.Password, this.Config.Auth.EncryptionKey);
 		registerReqModel.Password = encryptedPassword;
 		user = await this.AccountRepository.CreateUser(registerReqModel as UserModels.MasterModel);
+		this.eventEmitter.emit(Events.USER_CREATED, user);
 		const accessToken = await this.GetAccessToken(user);
 		const refreshToken = this.GetRefreshToken(user);
 		const currentUser = this.GetCurrentUser(user);
