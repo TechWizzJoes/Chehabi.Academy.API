@@ -6,6 +6,7 @@ import { InstructorModels } from '../User/Instructor.Models';
 import { CourseTypeEnum } from '@App/Common/Enums/CourseType.Enum';
 import { UserModels } from '../User/User.Models';
 import { CartModels } from '../Cart/Cart.Models';
+import { RatingModels } from '../Rating/Rating.Models';
 
 export namespace CoursesModels {
 	export class MasterModel {
@@ -37,7 +38,7 @@ export namespace CoursesModels {
 		Creator: UserModels.MasterModel;
 		UserCourses: UserModels.UserCourse[];
 		CartItems: CartModels.CartItem[];
-		Ratings: any[]; //youssef fix this when you add the ratings
+		Ratings: RatingModels.MasterModel[]; //youssef fix this when you add the ratings
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;

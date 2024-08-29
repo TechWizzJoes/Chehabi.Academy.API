@@ -59,7 +59,7 @@ export class LiveSessionRepository {
 		return await this.SessionRepository.save(updateSession);
 	}
 
-	async BulkUpdate(sessions: Partial<LiveSession>[]): Promise<LiveSession[]> {
+	async BulkUpdate(sessions: LiveSessionModels.MasterModel[]): Promise<LiveSession[]> {
 		return await this.SessionRepository.save(sessions);
 	}
 

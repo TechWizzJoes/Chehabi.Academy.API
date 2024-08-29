@@ -33,6 +33,7 @@ import { ApplicationExceptionFilter } from '@App/Common/Filters/ApplicationExcep
 import { WhatsNewModule } from '@App/Features/WhatsNew/WhatsNew.Module';
 import { MulterModule } from '@nestjs/platform-express';
 import { SessionModule } from '@App/Features/Session/Session.Module';
+import { RatingModule } from '@App/Features/Rating/Rating.Module';
 
 @Module({
 	imports: [
@@ -55,7 +56,8 @@ import { SessionModule } from '@App/Features/Session/Session.Module';
 		FeedbackModule,
 		NotificationsModule,
 		EmailSenderModule,
-		WhatsNewModule
+		WhatsNewModule,
+		RatingModule
 	],
 	controllers: [AppController],
 	providers: [
