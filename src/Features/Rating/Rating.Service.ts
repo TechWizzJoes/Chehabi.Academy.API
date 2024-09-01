@@ -26,20 +26,31 @@ export class RatingService {
 
 	async addRating(ratingData: RatingModels.RatingReqModel): Promise<RatingModels.RatingResModel> {
 		const { CourseId, UserId, Rating: rating } = ratingData;
-
+		let newRating;
 		// Check if course exists
 		const course = await this.courseService.GetById(CourseId);
 		if (!course) {
 			throw new ApplicationException(ErrorCodesEnum.COURSE_NOT_FOUND, HttpStatus.BAD_REQUEST);
 		}
 
-		// Create new rating
-		const newRating = await this.ratingRepository.createRating({
-			CourseId,
-			UserId,
-			Rating: rating,
-			CreatedOn: new Date()
-		});
+		const oldRating = await this.ratingRepository.findOneByUserAndCourse(UserId, CourseId);
+
+		if (!oldRating) {
+			// Create new rating
+			newRating = await this.ratingRepository.createRating({
+				CourseId,
+				UserId,
+				Rating: rating,
+				CreatedOn: new Date()
+			});
+		} else {
+			newRating = await this.ratingRepository.updateRating({
+				CourseId,
+				UserId,
+				Rating: rating,
+				CreatedOn: new Date()
+			});
+		}
 
 		// Update course rating
 		const ratings = await this.ratingRepository.getRatingsByCourseId(CourseId);
