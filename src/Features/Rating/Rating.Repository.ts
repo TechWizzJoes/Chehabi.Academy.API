@@ -36,4 +36,21 @@ export class RatingRepository {
 			relations: ['Course', 'User']
 		});
 	}
+
+	async updateRating(ratingData: RatingModels.RatingReqModel): Promise<Rating> {
+		const existingRating = await this.ratingRepository.findOne({
+			where: {
+				CourseId: ratingData.CourseId,
+				UserId: ratingData.UserId
+			}
+		});
+
+		if (existingRating) {
+			existingRating.Rating = ratingData.Rating;
+			existingRating.CreatedOn = ratingData.CreatedOn;
+			return await this.ratingRepository.save(existingRating);
+		} else {
+			return await this.createRating(ratingData);
+		}
+	}
 }
