@@ -39,4 +39,19 @@ export namespace CartModels {
 		CourseId: number | null;
 		ClassId: number | null;
 	}
+
+	export class StripeProduct {
+		id: string;
+		metadata: meta_data;
+
+		constructor() {
+			this.metadata = new meta_data();
+		}
+	}
+	class meta_data {
+		ClassId: number;
+		CourseId: number;
+		UserId: number;
+		CartItemId: number;
+	}
 }

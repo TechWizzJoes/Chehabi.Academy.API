@@ -87,31 +87,27 @@ export class ClassService {
 		return await this.ClassRepository.Delete(id);
 	}
 
-	async JoinClass(classId: number): Promise<any> {
-		const CurrentUser = this.UserHelper.GetCurrentUser();
+	async JoinClass(userId: number, classId: number): Promise<UserModels.UserClass> {
+		await this.ValidateUserJoiningClass(userId, classId);
+
+		const userClass: UserModels.UserClass = await this.UserService.AddUserToClass(userId, classId);
+		return userClass;
+	}
+
+	async ValidateUserJoiningClass(userId: number, classId: number) {
 		const selectedClass: ClassModels.MasterModel = await this.GetById(classId);
-		const selectedCourse: CoursesModels.MasterModel = await this.CoursesService.GetById(selectedClass.CourseId);
+		// const selectedCourse: CoursesModels.MasterModel = await this.CoursesService.GetById(selectedClass.CourseId);
+		const classUsers: UserModels.MasterModel[] = await this.ClassRepository.GetUsers(classId);
+		// const userExistsInCourse:UserModels.UserCourse = await this.UserService.GetUserCourseByUserId(userId);
 
-		// const userExistsInClass =
-		// 	selectedCourse.Classes.filter((c) => {
-		// 		let userIdsInClass = [];
-		// 		if (c.IsActive) {
-		// 			userIdsInClass = c.Users?.map((u) => u.Id);
-		// 		}
-		// 		return userIdsInClass.includes(CurrentUser.UserId);
-		// 	}).length > 0;
-
-		// if (!selectedClass) throw new NotFoundException();
-		// if (selectedClass.Users.length >= selectedClass.MaxCapacity)
-		// 	throw new HttpException(ErrorCodesEnum.MAX_CLASS_USERS, HttpStatus.BAD_REQUEST);
-		// if (selectedClass.Users.find((c) => c.Id == CurrentUser.UserId))
-		// 	throw new HttpException(ErrorCodesEnum.USER_EXISTS_CLASS, HttpStatus.BAD_REQUEST);
-		// if (userExistsInClass) throw new HttpException(ErrorCodesEnum.USER_EXISTS_COURSE, HttpStatus.BAD_REQUEST);
-
-		// const user: UserModels.MasterModel = await this.UserService.GetById(CurrentUser.UserId);
-		// user.Classes.push(selectedClass);
-		// let updatedUser = await this.UserService.UpdateUser(user);
-		// return updatedUser;
+		if (!selectedClass) throw new NotFoundException();
+		if (!selectedClass.IsActive) throw new HttpException(ErrorCodesEnum.CLASS_INACTIVE, HttpStatus.BAD_REQUEST);
+		if (selectedClass.IsDeleted) throw new HttpException(ErrorCodesEnum.CLASS_DELETED, HttpStatus.BAD_REQUEST);
+		if (classUsers.length >= selectedClass.MaxCapacity)
+			throw new HttpException(ErrorCodesEnum.MAX_CLASS_USERS, HttpStatus.BAD_REQUEST);
+		if (classUsers.find((c) => c.Id == userId))
+			throw new HttpException(ErrorCodesEnum.USER_EXISTS_CLASS, HttpStatus.BAD_REQUEST);
+		// if (userExistsInCourse) throw new HttpException(ErrorCodesEnum.USER_EXISTS_COURSE, HttpStatus.BAD_REQUEST);
 	}
 
 	private GenerateSessionDates(

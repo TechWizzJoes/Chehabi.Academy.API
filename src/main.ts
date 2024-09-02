@@ -18,7 +18,8 @@ async function bootstrap() {
 	}
 
 	const app = await NestFactory.create(AppModule, {
-		httpsOptions
+		httpsOptions,
+		rawBody: true
 	});
 	app.setGlobalPrefix('api');
 

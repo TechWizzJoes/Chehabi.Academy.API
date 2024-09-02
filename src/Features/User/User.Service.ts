@@ -42,4 +42,8 @@ export class UserService {
 	async Upload(filePath: string): Promise<{}> {
 		return { filePath };
 	}
+
+	async AddUserToClass(userId: number, classId: number): Promise<UserModels.UserClass> {
+		return this.UserRepository.AddUserToClass(userId, classId);
+	}
 }

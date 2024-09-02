@@ -42,10 +42,10 @@ export class ClassController {
 		return this.ClassService.Delete(id);
 	}
 
-	@UseGuards(AuthenticatedGuard)
-	@Post('join/:classId')
-	@ApiBody({ type: ClassModels.ClassReqModel })
-	JoinClass(@Param('classId') classId: number): Promise<ClassModels.MasterModel> {
-		return this.ClassService.JoinClass(classId);
-	}
+	// @UseGuards(AuthenticatedGuard)
+	// @Post('join/:classId')
+	// @ApiBody({ type: ClassModels.ClassReqModel })
+	// JoinClass(@Param('classId') classId: number): Promise<ClassModels.MasterModel> {
+	// 	return this.ClassService.JoinClass(classId);
+	// }
 }

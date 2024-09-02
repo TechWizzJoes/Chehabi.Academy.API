@@ -4,12 +4,18 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserModels } from './User.Models';
 import { User } from '@App/Data/TypeOrmEntities/User';
+import { UserCourse } from '@App/Data/TypeOrmEntities/UserCourse';
+import { UserClass } from '@App/Data/TypeOrmEntities/UserClass';
 
 @Injectable()
 export class UserRepository {
 	constructor(
 		@InjectRepository(User)
-		private userRepository: Repository<User>
+		private userRepository: Repository<User>,
+		@InjectRepository(UserCourse)
+		private userCourseRepository: Repository<UserCourse>,
+		@InjectRepository(UserClass)
+		private userClassRepository: Repository<UserClass>
 	) {}
 
 	async GetById(id: number): Promise<User> {
@@ -22,5 +28,14 @@ export class UserRepository {
 
 	async UpdateUser(user: UserModels.UserResModel): Promise<User> {
 		return await this.userRepository.save(user);
+	}
+
+	async AddUserToClass(userId: number, classId: number): Promise<UserClass> {
+		const newUserClass = new UserClass();
+		newUserClass.UserId = userId;
+		newUserClass.ClassId = classId;
+		const userClassEntity = await this.userClassRepository.save(newUserClass);
+
+		return userClassEntity;
 	}
 }
