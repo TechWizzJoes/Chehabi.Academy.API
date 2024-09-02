@@ -35,6 +35,10 @@ export interface Config {
 		PublicKey: string;
 		PrivateKey: string;
 	};
+	Stripe: {
+		Secret: string;
+		EndpointSecret: string;
+	};
 }
 
 @Injectable()

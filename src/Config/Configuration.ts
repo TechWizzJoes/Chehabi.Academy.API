@@ -32,5 +32,9 @@ export default registerAs('Config', () => ({
 	Notification: {
 		PublicKey: process.env.NOTIFICATION_PUBLIC_KEY,
 		PrivateKey: process.env.NOTIFICATION_PRIVATE_KEY
+	},
+	Stripe: {
+		Secret: process.env.STRIPE_SECRET,
+		EndpointSecret: process.env.STRIPE_ENDPOINT_SECRET
 	}
 }));

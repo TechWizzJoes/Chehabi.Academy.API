@@ -3,13 +3,14 @@ import { ApplicationException } from '@App/Common/Exceptions/Application.Excepti
 import { HttpStatus, Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
 import { CartModels } from './Cart.Models';
+import { AppConfig } from '@App/Config/App.Config';
 
 @Injectable()
 export class StripeService {
 	stripe!: Stripe;
 	currentCustomer!: Stripe.Customer | Stripe.DeletedCustomer;
-	endpointSecret = 'whsec_d76eb9c8a15754a5897624b4d9f20eb9d66dda408654f6da49b8f740db2398c5';
-	constructor() {
+	endpointSecret = this.AppConfig.Config.Stripe.EndpointSecret;
+	constructor(private AppConfig: AppConfig) {
 		this.initStripe();
 	}
 	// test cards
@@ -19,9 +20,7 @@ export class StripeService {
 	// // 4242 4242 4242 4242  success
 	// // 4000 0000 0000 9995  failure
 	initStripe() {
-		this.stripe = new Stripe(
-			'sk_test_51PWE3b07M0CitDXtuZA4W4UmhrdfLPncjGuC0UTMUmm6thvsbyahPwqPHlDdoDJIWEFEl04znvAal96hXyJC5VyX00mHUUN47e'
-		);
+		this.stripe = new Stripe(this.AppConfig.Config.Stripe.Secret);
 	}
 
 	async getSessionLink(products) {
