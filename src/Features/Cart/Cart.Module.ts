@@ -8,9 +8,10 @@ import { CartService } from './Cart.Service';
 import { ClassModule } from '../Class/Class.Module';
 import { CoursesModule } from '../Courses/Courses.Module';
 import { StripeService } from './stripe.service';
+import { NotificationsModule } from '../-Notifications/Notifications.Module';
 
 @Module({
-	imports: [DataModule, CommonModule, ClassModule, CoursesModule],
+	imports: [DataModule, CommonModule, ClassModule, CoursesModule, NotificationsModule],
 	controllers: [CartController],
 	providers: [AppConfig, CartService, CartRepository, StripeService]
 })
