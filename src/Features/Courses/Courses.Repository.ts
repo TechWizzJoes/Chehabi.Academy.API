@@ -65,12 +65,30 @@ export class CoursesRepository {
 			where: {
 				Id: id,
 				IsDeleted: false
-				// IsActive: true
 			},
 			relations: ['Instructor.User', 'Classes.LiveSessions', 'Classes.UserClasses.User']
 		});
 
 		// return CourseMapper.toDomainModel(dbCourse);
+		return dbCourse;
+	}
+
+	async GetByIdPublic(id: number): Promise<CoursesModels.MasterModel> {
+		const dbCourse = await this.courseRepository
+			.createQueryBuilder('course')
+			.leftJoinAndSelect('course.Instructor', 'instructor')
+			.leftJoinAndSelect('instructor.User', 'user')
+			.leftJoinAndSelect('course.Classes', 'classes')
+			.leftJoinAndSelect('classes.LiveSessions', 'liveSessions')
+			.leftJoinAndSelect('classes.UserClasses', 'userClasses')
+			.leftJoinAndSelect('userClasses.User', 'userInClass')
+			.where('course.Id = :id', { id })
+			.andWhere('course.IsDeleted = false')
+			.andWhere('course.IsActive = true')
+			.andWhere('classes.IsDeleted = false')
+			.andWhere('classes.IsActive = true')
+			.getOne();
+
 		return dbCourse;
 	}
 

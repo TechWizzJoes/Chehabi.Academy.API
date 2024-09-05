@@ -103,6 +103,7 @@ export class ClassService {
 		if (!selectedClass) throw new NotFoundException();
 		if (!selectedClass.IsActive) throw new HttpException(ErrorCodesEnum.CLASS_INACTIVE, HttpStatus.BAD_REQUEST);
 		if (selectedClass.IsDeleted) throw new HttpException(ErrorCodesEnum.CLASS_DELETED, HttpStatus.BAD_REQUEST);
+		if (selectedClass.CurrentIndex) throw new HttpException(ErrorCodesEnum.CLASS_Started, HttpStatus.BAD_REQUEST);
 		if (classUsers.length >= selectedClass.MaxCapacity)
 			throw new HttpException(ErrorCodesEnum.MAX_CLASS_USERS, HttpStatus.BAD_REQUEST);
 		if (classUsers.find((c) => c.Id == userId))

@@ -32,6 +32,11 @@ export class CoursesController {
 		return this.CoursesService.GetById(id);
 	}
 
+	@Get('/public/:id')
+	GetOnePublic(@Param('id', ParseIntPipe) id: number): Promise<CoursesModels.MasterModel> {
+		return this.CoursesService.GetByIdPublic(id);
+	}
+
 	@UseGuards(AuthenticatedGuard)
 	@Get('/admin/courses')
 	async GetAdminCoursesByUserId(): Promise<CoursesModels.MasterModel[]> {

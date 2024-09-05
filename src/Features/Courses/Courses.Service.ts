@@ -32,6 +32,11 @@ export class CoursesService {
 		return course;
 	}
 
+	async GetByIdPublic(id): Promise<CoursesModels.MasterModel> {
+		let course = await this.CoursesRepository.GetByIdPublic(id);
+		return course;
+	}
+
 	async GetAdminCoursesByUserId(): Promise<CoursesModels.MasterModel[]> {
 		let user = this.UserHelper.GetCurrentUser();
 		let courses = await this.CoursesRepository.GetAdminCoursesByUserId(user.InstructorId);
