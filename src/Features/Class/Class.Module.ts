@@ -14,6 +14,6 @@ import { SessionModule } from '../Session/Session.Module';
 	imports: [DataModule, CommonModule, UserModule, CoursesModule, SessionModule],
 	controllers: [ClassController],
 	providers: [AppConfig, ClassService, ClassRepository],
-	exports: [ClassService]
+	exports: [ClassService, ClassRepository]
 })
 export class ClassModule {}

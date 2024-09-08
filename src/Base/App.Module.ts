@@ -32,6 +32,7 @@ import { SessionModule } from '@App/Features/Session/Session.Module';
 import { RatingModule } from '@App/Features/Rating/Rating.Module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { CartModule } from '@App/Features/Cart/Cart.Module';
+import { JobsModule } from '@App/Features/Jobs/Jobs.Module';
 
 @Module({
 	imports: [
@@ -57,7 +58,8 @@ import { CartModule } from '@App/Features/Cart/Cart.Module';
 		EmailSenderModule,
 		WhatsNewModule,
 		RatingModule,
-		CartModule
+		CartModule,
+		JobsModule
 	],
 	controllers: [AppController],
 	providers: [

@@ -10,6 +10,7 @@ export namespace LiveSessionModels {
 		StartDate: Date;
 		EndDate: Date;
 		Link: string | null;
+		IsCompleted: boolean;
 		Class: ClassModels.MasterModel;
 	}
 

@@ -1,13 +1,13 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { CartItem } from './CartItem';
 import { Course } from './Course';
+import { User } from './User';
 import { LiveSession } from './LiveSession';
 import { UserClass } from './UserClass';
-import { User } from './User';
 import { BooleanTransformer } from '@App/Common/Transformers/Boolean.Transformer';
 
 @Index('Class_FK', ['CourseId'], {})
-@Index('fk_Class_created_by', ['CreatedBy'], {})
+@Index('Class_User_FK', ['CreatedBy'], {})
 @Entity('Class', { schema: 'mydb' })
 export class Class {
 	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
@@ -29,7 +29,7 @@ export class Class {
 	@Column('int', { name: 'MaxCapacity', nullable: true })
 	MaxCapacity: number | null;
 
-	@Column('int', { name: 'CurrentIndex', nullable: true })
+	@Column('int', { name: 'CurrentIndex', nullable: true, default: () => "'0'" })
 	CurrentIndex: number | null;
 
 	@Column('int', { name: 'NumberOfSessions', nullable: true })

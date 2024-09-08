@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LiveSessionModels } from './Session.Models';
 import { LiveSession } from '@App/Data/TypeOrmEntities/LiveSession';
@@ -66,6 +66,15 @@ export class LiveSessionRepository {
 	async Delete(id: number): Promise<void> {
 		await this.SessionRepository.delete({
 			Id: id
+		});
+	}
+
+	async GetCustomHourSessions(startOfHour: Date, endOfHour: Date): Promise<LiveSession[]> {
+		return this.SessionRepository.find({
+			where: {
+				StartDate: Between(startOfHour, endOfHour)
+			},
+			relations: ['Class', 'Class.UserClasses.User']
 		});
 	}
 }

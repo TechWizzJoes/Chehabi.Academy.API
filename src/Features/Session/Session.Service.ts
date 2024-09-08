@@ -49,4 +49,35 @@ export class SessionService {
 	async Delete(id: number): Promise<void> {
 		return await this.LiveSessionRepository.Delete(id);
 	}
+
+	async GetCurrentHourSessions(): Promise<LiveSessionModels.MasterModel[]> {
+		// Get the start and end of today's date in local time
+		const today = new Date();
+		const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+		const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+		// const todaysSessions = sessions.filter(s => s.StartDate >= startOfDay && s.StartDate <= endOfDay);
+
+		// Get the start and end of the current hour in local time
+		const now = new Date();
+		const startOfHour = new Date(now.setMinutes(0, 0, 0));
+		const endOfHour = new Date(now.setMinutes(61, 59, 999));
+		// Get the start and end of the current hour in UTC
+		// const startOfHour = new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),now.getUTCHours(),0, 0, 0 ));
+		// const endOfHour = new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),now.getUTCHours(),59, 59, 999);
+
+		return await this.LiveSessionRepository.GetCustomHourSessions(startOfHour, endOfHour);
+	}
+
+	async GetPreviousHourSessions(): Promise<LiveSessionModels.MasterModel[]> {
+		const now = new Date();
+		const startOfCurrentHour = new Date(now.setMinutes(0, 0, 0));
+		// Calculate the start of the previous hour
+		// const previousMonth = 30 * 24 * 60 * 60 * 1000; // for local testing
+		const previousHour = 60 * 60 * 1000;
+		const startOfPreviousHour = new Date(startOfCurrentHour.getTime() - previousHour); // Subtract one hour
+		// Calculate the end of the previous hour
+		const endOfPreviousHour = new Date(startOfCurrentHour.getTime() - 1); // End of previous hour is the last moment of the previous hour
+
+		return await this.LiveSessionRepository.GetCustomHourSessions(startOfPreviousHour, endOfPreviousHour);
+	}
 }

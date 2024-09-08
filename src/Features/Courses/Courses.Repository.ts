@@ -78,15 +78,13 @@ export class CoursesRepository {
 			.createQueryBuilder('course')
 			.leftJoinAndSelect('course.Instructor', 'instructor')
 			.leftJoinAndSelect('instructor.User', 'user')
-			.leftJoinAndSelect('course.Classes', 'classes')
+			.leftJoinAndSelect('course.Classes', 'classes', 'classes.IsDeleted = false AND classes.IsActive = true')
 			.leftJoinAndSelect('classes.LiveSessions', 'liveSessions')
 			.leftJoinAndSelect('classes.UserClasses', 'userClasses')
 			.leftJoinAndSelect('userClasses.User', 'userInClass')
 			.where('course.Id = :id', { id })
 			.andWhere('course.IsDeleted = false')
 			.andWhere('course.IsActive = true')
-			.andWhere('classes.IsDeleted = false')
-			.andWhere('classes.IsActive = true')
 			.getOne();
 
 		return dbCourse;

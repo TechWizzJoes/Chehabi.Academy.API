@@ -199,4 +199,14 @@ export class ClassService {
 		}
 		return true;
 	}
+
+	async GetByIds(ids: number[]): Promise<ClassModels.MasterModel[]> {
+		return this.ClassRepository.GetByIds(ids);
+	}
+
+	async BulkUpdate(classes: ClassModels.MasterModel[]): Promise<ClassModels.MasterModel[]> {
+		classes.forEach((c) => delete c.LiveSessions);
+		let updatedClasses = await this.ClassRepository.BulkUpdate(classes);
+		return updatedClasses;
+	}
 }

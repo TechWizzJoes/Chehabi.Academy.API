@@ -1,6 +1,6 @@
 // ClassRepository
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Class } from '@App/Data/TypeOrmEntities/Class';
 import { User } from '@App/Data/TypeOrmEntities/User';
@@ -108,5 +108,19 @@ export class ClassRepository {
 		});
 
 		return classEntity.Course;
+	}
+
+	async GetByIds(ids: number[]): Promise<Class[]> {
+		return this.classRepository.find({
+			relations: ['LiveSessions'],
+			where: {
+				Id: In(ids)
+			}
+		});
+	}
+
+	async BulkUpdate(classes: ClassModels.MasterModel[]): Promise<Class[]> {
+		let updateClasses: Class[] = await this.classRepository.save(classes);
+		return updateClasses;
 	}
 }

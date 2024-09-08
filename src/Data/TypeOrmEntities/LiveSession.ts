@@ -20,6 +20,9 @@ export class LiveSession {
 	@Column('varchar', { name: 'Link', nullable: true, length: 100 })
 	Link: string | null;
 
+	@Column('tinyint', { name: 'IsCompleted', width: 1, default: () => "'0'" })
+	IsCompleted: boolean;
+
 	@ManyToOne(() => Class, (Class) => Class.LiveSessions, {
 		onDelete: 'NO ACTION',
 		onUpdate: 'NO ACTION'
