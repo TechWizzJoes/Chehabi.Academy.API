@@ -63,6 +63,13 @@ export namespace NotificationsModels {
 		AccessToken!: string;
 	}
 
+	export class NotificationPayload {
+		@ApiProperty()
+		Email!: string;
+
+		@ApiProperty()
+		Placeholders: { [key: string]: string }; // e.g., { FirstName: 'John', LastName: 'Doe', Amount: '100' }
+	}
 	export class LoginResModel {
 		constructor(public AccessToken: string, public RefreshToken: string, public CurrentUser: CurrentUser) {}
 	}
