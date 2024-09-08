@@ -17,8 +17,8 @@ export class JobsService {
 	}
 
 	@Cron(CronExpression.EVERY_HOUR)
-	ClassCurrentIndexCron() {
-		console.log('ClassCurrentIndexCron');
-		this.ClassCurrentIndexJobService.ClassCurrentIndexCron();
+	ClassCurrentIndexJob() {
+		console.log('ClassCurrentIndexJob');
+		this.ClassCurrentIndexJobService.ClassCurrentIndexJob();
 	}
 }

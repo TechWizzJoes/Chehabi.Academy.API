@@ -1,4 +1,5 @@
 import { ClassService } from '@App/Features/Class/Class.Service';
+import { LiveSessionModels } from '@App/Features/Session/Session.Models';
 import { SessionService } from '@App/Features/Session/Session.Service';
 import { Injectable } from '@nestjs/common';
 
@@ -6,13 +7,21 @@ import { Injectable } from '@nestjs/common';
 export class ClassCurrentIndexJobService {
 	constructor(private SessionService: SessionService, private ClassService: ClassService) {}
 
-	async ClassCurrentIndexCron() {
+	async ClassCurrentIndexJob() {
 		console.log('ClassCurrentIndexCron');
 
+		const sessions = await this.CompleteSessions();
+		await this.HandleClassesIndexAndCompletion(sessions);
+	}
+
+	async CompleteSessions(): Promise<LiveSessionModels.MasterModel[]> {
 		let sessions = await this.SessionService.GetPreviousHourSessions();
 		sessions.forEach((s) => (s.IsCompleted = true));
 		await this.SessionService.BulkUpdate(sessions);
+		return sessions;
+	}
 
+	async HandleClassesIndexAndCompletion(sessions: LiveSessionModels.MasterModel[]) {
 		let classesIds = sessions.map((s) => s.Class.Id);
 		let classes = await this.ClassService.GetByIds(classesIds);
 
