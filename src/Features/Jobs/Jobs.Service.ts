@@ -11,9 +11,9 @@ export class JobsService {
 	) {}
 
 	@Cron(CronExpression.EVERY_HOUR)
-	LiveSessionsNotifiyingCron() {
-		console.log('LiveSessionsNotifiyingCron');
-		this.LiveSessionJobService.LiveSessionsNotifiyingCron();
+	LiveSessionsNotifiyingJob() {
+		console.log('LiveSessionsNotifiyingJob');
+		this.LiveSessionJobService.LiveSessionsNotifiyingJob();
 	}
 
 	@Cron(CronExpression.EVERY_HOUR)

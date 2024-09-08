@@ -50,7 +50,7 @@ export class SessionService {
 		return await this.LiveSessionRepository.Delete(id);
 	}
 
-	async GetCurrentHourSessions(): Promise<LiveSessionModels.MasterModel[]> {
+	async GetNextHourSessions(): Promise<LiveSessionModels.MasterModel[]> {
 		// Get the start and end of today's date in local time
 		const today = new Date();
 		const startOfDay = new Date(today.setHours(0, 0, 0, 0));
@@ -59,8 +59,10 @@ export class SessionService {
 
 		// Get the start and end of the current hour in local time
 		const now = new Date();
-		const startOfHour = new Date(now.setMinutes(0, 0, 0));
-		const endOfHour = new Date(now.setMinutes(61, 59, 999));
+		const startOfCurrentHour = new Date(now.setMinutes(0, 0, 0));
+
+		const startOfHour = new Date(startOfCurrentHour.getTime() + 60 * 60 * 1000);
+		const endOfHour = new Date(startOfCurrentHour.getTime() + 2 * 60 * 60 * 1000);
 		// Get the start and end of the current hour in UTC
 		// const startOfHour = new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),now.getUTCHours(),0, 0, 0 ));
 		// const endOfHour = new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),now.getUTCHours(),59, 59, 999);

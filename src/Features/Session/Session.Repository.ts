@@ -74,7 +74,7 @@ export class LiveSessionRepository {
 			where: {
 				StartDate: Between(startOfHour, endOfHour)
 			},
-			relations: ['Class', 'Class.UserClasses.User']
+			relations: ['Class', 'Class.UserClasses.User', 'Class.Course']
 		});
 	}
 }
