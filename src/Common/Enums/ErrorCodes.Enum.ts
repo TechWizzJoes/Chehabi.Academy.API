@@ -17,5 +17,10 @@ export enum ErrorCodesEnum {
 	STRIPE_WEBHOOK_ERROR = 'STRIPE_WEBHOOK_ERROR',
 	CLASS_INACTIVE = 'CLASS_INACTIVE',
 	CLASS_DELETED = 'CLASS_DELETED',
-	CLASS_Started = 'CLASS_Started'
+	CLASS_Started = 'CLASS_Started',
+
+	//Notification template error
+	EMAIL_NOT_Sent = 'Email not sent:',
+	Invalid_Notification_Type = 'Invalid notification type',
+	Template_Not_Found = 'Template not found'
 }

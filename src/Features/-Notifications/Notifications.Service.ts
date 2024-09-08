@@ -1,9 +1,15 @@
 import { AppConfig, Config } from '@App/Config/App.Config';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { UserHelper } from '../../Common/Helpers/CurrentUser.Helper';
 import * as webpush from 'web-push';
 import { log } from 'console';
 import { NotificationsRepository } from './Notifications.Repository';
+import { NotificationTemplateKey } from './NotificationTemplateKey';
+import { NotificationsModels } from './Notifications.Models';
+import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
+import { ErrorCodesEnum } from '@App/Common/Enums/ErrorCodes.Enum';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class NotificationsService {
@@ -71,5 +77,41 @@ export class NotificationsService {
 			.catch((err) => {
 				console.error('Error sending notification, reason: ', err);
 			});
+	}
+
+	private getSvgLogo(): string {
+		const svgPath = join(__dirname, '..', '..', '..', 'uploads', 'images', 'Logo', 'full-logo.svg');
+		return readFileSync(svgPath, 'utf-8');
+	}
+	async sendNotificationEmail(type: string, payload: NotificationsModels.NotificationPayload): Promise<any> {
+		// Check if the type is valid
+		if (!Object.values(NotificationTemplateKey.Email).includes(type)) {
+			throw new ApplicationException(`${ErrorCodesEnum.Invalid_Notification_Type}`, HttpStatus.BAD_REQUEST);
+		}
+
+		// Fetch the template from the database
+		const template = await this.NotificationsRepository.getTemplateByKey(type);
+
+		if (!template || !template.Template) {
+			throw new ApplicationException(`${ErrorCodesEnum.Template_Not_Found}`, HttpStatus.BAD_REQUEST);
+		}
+		const svgLogo = this.getSvgLogo();
+		let htmlTemplate = template.Template;
+
+		// Replace placeholders in the template with values from payload
+		for (const [key, value] of Object.entries(payload.Placeholders)) {
+			const placeholder = `{{${key}}}`;
+			htmlTemplate = htmlTemplate.replace(new RegExp(placeholder, 'g'), value);
+		}
+		htmlTemplate = htmlTemplate.replace('{{Logo}}', svgLogo);
+
+		const mailOptions = {
+			from: 'info@chehabi-academy.com',
+			to: payload.Email,
+			subject: type.replace(/_/g, ' ').toUpperCase(),
+			html: htmlTemplate
+		};
+
+		return this.NotificationsRepository.sendEmail(mailOptions);
 	}
 }
