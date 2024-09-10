@@ -73,10 +73,12 @@ export class ClassService {
 	}
 
 	async Update(id, newClass: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
-		let dbcourse = (await this.ClassRepository.GetById(id)).Course;
+		let dbClass = await this.ClassRepository.GetById(id);
+		let dbcourse = dbClass.Course;
+
 		this.ValidateCourseDate(dbcourse, newClass);
 		this.ValidateSessionDates(newClass);
-		this.ValidateTodaysDate(newClass);
+		this.ValidateTodaysDate(newClass, dbClass);
 
 		let updatedsessions = await this.SessionService.BulkUpdate(newClass.LiveSessions);
 		let updatedClass = await this.ClassRepository.Update(id, newClass);
@@ -187,7 +189,14 @@ export class ClassService {
 		return true;
 	}
 
-	private ValidateTodaysDate(newClass: ClassModels.ClassReqModel): boolean {
+	private ValidateTodaysDate(newClass: ClassModels.ClassReqModel, dbClass?: ClassModels.MasterModel): boolean {
+		// if start date hasn't changed
+		if (
+			dbClass &&
+			new Date(newClass.StartDate).setHours(0, 0, 0) == new Date(dbClass.StartDate).setHours(0, 0, 0)
+		) {
+			return true;
+		}
 		let newStartDate: Date = new Date(newClass.StartDate);
 		newStartDate.setHours(0, 0, 0, 0); // Set time to 00:00:00 to compare days only
 
