@@ -17,10 +17,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 	}
 
 	async validate(req: Request, user: AccountModels.JwtModel) {
-		console.log('<validate>');
-
+		// console.log('<validate>');
 		// const role = payload.IsAdmin ? RoleEnum.Admin : RoleEnum.User;
-		console.log('</validate>');
+		// console.log('</validate>');
 		return user;
 	}
 }

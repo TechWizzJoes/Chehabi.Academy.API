@@ -13,12 +13,15 @@ export class UserClass {
 	@Column('int', { primary: true, name: 'ClassId' })
 	ClassId: number;
 
+	@Column('tinyint', { name: 'IsPaid', width: 1, default: () => "'0'" })
+	IsPaid: boolean;
+
 	@Column('datetime', {
-		name: 'CreatedAt',
+		name: 'CreatedOn',
 		nullable: true,
 		default: () => 'CURRENT_TIMESTAMP'
 	})
-	CreatedAt: Date | null;
+	CreatedOn: Date | null;
 
 	@ManyToOne(() => User, (User) => User.UserClasses, {
 		onDelete: 'NO ACTION',

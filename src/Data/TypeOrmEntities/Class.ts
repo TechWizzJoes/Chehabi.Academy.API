@@ -52,6 +52,14 @@ export class Class {
 	})
 	IsDeleted: boolean | null;
 
+	@Column('tinyint', {
+		name: 'HasFreeTrial',
+		nullable: true,
+		width: 1,
+		default: () => "'0'"
+	})
+	HasFreeTrial: boolean | null;
+
 	@Column('datetime', {
 		name: 'CreatedOn',
 		nullable: true,

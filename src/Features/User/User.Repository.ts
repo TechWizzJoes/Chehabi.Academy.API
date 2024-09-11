@@ -30,12 +30,12 @@ export class UserRepository {
 		return await this.userRepository.save(user);
 	}
 
-	async AddUserToClass(userId: number, classId: number): Promise<UserClass> {
+	async AddUserToClass(userId: number, classId: number, IsPaid: boolean): Promise<UserClass> {
 		const newUserClass = new UserClass();
 		newUserClass.UserId = userId;
 		newUserClass.ClassId = classId;
-		const userClassEntity = await this.userClassRepository.save(newUserClass);
-
-		return userClassEntity;
+		newUserClass.IsPaid = IsPaid;
+		const userClassEntity = await this.userClassRepository.upsert(newUserClass, ['UserId', 'ClassId']);
+		return userClassEntity.generatedMaps[0] as UserClass;
 	}
 }

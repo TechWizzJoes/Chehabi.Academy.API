@@ -17,6 +17,7 @@ export namespace ClassModels {
 
 		IsActive: boolean | null;
 		IsDeleted: boolean | null;
+		HasFreeTrial: boolean | null;
 		CreatedOn: Date | null;
 		UpdatedOn: Date | null;
 

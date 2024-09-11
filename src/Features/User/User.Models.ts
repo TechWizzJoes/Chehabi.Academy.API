@@ -59,7 +59,8 @@ export namespace UserModels {
 	export class UserClass {
 		UserId: number;
 		ClassId: number;
-		CreatedAt: Date | null;
+		IsPaid: boolean;
+		CreatedOn: Date | null;
 		User: UserModels.MasterModel;
 		Class: ClassModels.MasterModel;
 	}
@@ -67,7 +68,7 @@ export namespace UserModels {
 	export class UserCourse {
 		UserId: number;
 		CourseId: number;
-		CreatedAt: Date | null;
+		CreatedOn: Date | null;
 		Course: CoursesModels.MasterModel;
 		User: UserModels.MasterModel;
 	}

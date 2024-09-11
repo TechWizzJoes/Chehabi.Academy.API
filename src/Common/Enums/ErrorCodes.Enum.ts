@@ -18,6 +18,7 @@ export enum ErrorCodesEnum {
 	CLASS_INACTIVE = 'CLASS_INACTIVE',
 	CLASS_DELETED = 'CLASS_DELETED',
 	CLASS_Started = 'CLASS_Started',
+	CLASS_HAS_NO_FREETRIAL = 'CLASS_HAS_NO_FREETRIAL',
 
 	//Notification template error
 	EMAIL_NOT_Sent = 'Email not sent:',

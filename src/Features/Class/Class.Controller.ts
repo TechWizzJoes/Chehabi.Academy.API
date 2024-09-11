@@ -5,6 +5,7 @@ import { AuthenticatedGuard } from '@App/Common/Auth/Authenticated.Guard';
 import { ClassModels } from './Class.Models';
 import { RefreshTokenGuard } from '@App/Common/Auth/RefreshToken.Guard';
 import { ClassService } from './Class.Service';
+import { UserModels } from '../User/User.Models';
 
 @ApiTags('Class')
 // @UseGuards(AuthenticatedGuard)
@@ -20,7 +21,7 @@ export class ClassController {
 
 	@UseGuards(AuthenticatedGuard)
 	@Get('/user/classes')
-	async GetEnrolledClassesByUserId(): Promise<ClassModels.MasterModel[]> {
+	async GetEnrolledClassesByUserId(): Promise<UserModels.UserClass[]> {
 		let courses = await this.ClassService.GetEnrolledClassesByUserId();
 		return courses;
 	}
@@ -48,4 +49,11 @@ export class ClassController {
 	// JoinClass(@Param('classId') classId: number): Promise<ClassModels.MasterModel> {
 	// 	return this.ClassService.JoinClass(classId);
 	// }
+
+	@UseGuards(AuthenticatedGuard)
+	@Post('join-free-trial/:classId')
+	@ApiBody({ type: ClassModels.ClassReqModel })
+	JoinFreeTrial(@Param('classId') classId: number): Promise<any> {
+		return this.ClassService.JoinFreeTrial(classId);
+	}
 }

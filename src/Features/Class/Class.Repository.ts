@@ -17,7 +17,7 @@ export class ClassRepository {
 		private userClassRepository: Repository<UserClass>
 	) {}
 
-	async GetEnrolledClassesByUserId(userId: number): Promise<Class[]> {
+	async GetEnrolledClassesByUserId(userId: number): Promise<UserClass[]> {
 		const userClasses = await this.userClassRepository.find({
 			where: {
 				UserId: userId
@@ -26,12 +26,11 @@ export class ClassRepository {
 				'Class',
 				// 'Class.Users',
 				'Class.LiveSessions',
-				'Class.Course',
 				'Class.Course.Instructor.User'
 			]
 		});
 
-		return userClasses.map((userclass) => userclass.Class);
+		return userClasses;
 	}
 
 	async GetById(id: number): Promise<Class> {
@@ -88,7 +87,7 @@ export class ClassRepository {
 		return await this.classRepository.save(deleteClass);
 	}
 
-	async GetUsers(classId: number): Promise<User[]> {
+	async GetUsers(classId: number): Promise<UserClass[]> {
 		const userClasses = await this.userClassRepository.find({
 			where: {
 				ClassId: classId
@@ -96,7 +95,7 @@ export class ClassRepository {
 			relations: ['User']
 		});
 
-		return userClasses.map((userclass) => userclass.User);
+		return userClasses;
 	}
 
 	async GetCourse(classId: number): Promise<Course> {

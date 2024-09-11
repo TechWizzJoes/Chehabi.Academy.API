@@ -13,11 +13,11 @@ export class UserCourse {
 	CourseId: number;
 
 	@Column('datetime', {
-		name: 'CreatedAt',
+		name: 'CreatedOn',
 		nullable: true,
 		default: () => 'CURRENT_TIMESTAMP'
 	})
-	CreatedAt: Date | null;
+	CreatedOn: Date | null;
 
 	@ManyToOne(() => Course, (Course) => Course.UserCourses, {
 		onDelete: 'NO ACTION',

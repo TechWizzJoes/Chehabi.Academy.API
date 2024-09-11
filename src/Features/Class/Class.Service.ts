@@ -32,10 +32,17 @@ export class ClassService {
 		this.Config = this.appConfig.Config;
 	}
 
-	async GetEnrolledClassesByUserId(): Promise<ClassModels.MasterModel[]> {
+	async GetEnrolledClassesByUserId(): Promise<UserModels.UserClass[]> {
 		let user = this.UserHelper.GetCurrentUser();
-		let courses = await this.ClassRepository.GetEnrolledClassesByUserId(user.UserId);
-		return courses;
+		let userClasses = await this.ClassRepository.GetEnrolledClassesByUserId(user.UserId);
+		// sort by activeness and start dates asc
+		const sortedUserClasses = userClasses.sort((a, b) => {
+			if (a.Class.IsActive !== b.Class.IsActive) {
+				return a.Class.IsActive ? -1 : 1;
+			}
+			return new Date(a.Class.StartDate) > new Date(b.Class.StartDate) ? -1 : 1;
+		});
+		return sortedUserClasses;
 	}
 
 	async GetById(id: number): Promise<ClassModels.MasterModel> {
@@ -89,26 +96,45 @@ export class ClassService {
 		return await this.ClassRepository.Delete(id);
 	}
 
-	async JoinClass(userId: number, classId: number): Promise<UserModels.UserClass> {
-		await this.ValidateUserJoiningClass(userId, classId);
+	async JoinFreeTrial(classId: number): Promise<UserModels.UserClass> {
+		const CurrentUser = this.UserHelper.GetCurrentUser();
+		await this.ValidateUserJoiningClass(CurrentUser.UserId, classId, true);
 
-		const userClass: UserModels.UserClass = await this.UserService.AddUserToClass(userId, classId);
+		const IsPaid = false;
+		const userClass: UserModels.UserClass = await this.UserService.AddUserToClass(
+			CurrentUser.UserId,
+			classId,
+			IsPaid
+		);
 		return userClass;
 	}
 
-	async ValidateUserJoiningClass(userId: number, classId: number) {
+	async JoinClass(userId: number, classId: number): Promise<UserModels.UserClass> {
+		await this.ValidateUserJoiningClass(userId, classId);
+
+		const IsPaid = true;
+		const userClass: UserModels.UserClass = await this.UserService.AddUserToClass(userId, classId, IsPaid);
+		return userClass;
+	}
+
+	async ValidateUserJoiningClass(userId: number, classId: number, FreeTrial: boolean = false) {
 		const selectedClass: ClassModels.MasterModel = await this.GetById(classId);
 		// const selectedCourse: CoursesModels.MasterModel = await this.CoursesService.GetById(selectedClass.CourseId);
-		const classUsers: UserModels.MasterModel[] = await this.ClassRepository.GetUsers(classId);
+		const userClasses: UserModels.UserClass[] = await this.ClassRepository.GetUsers(classId);
 		// const userExistsInCourse:UserModels.UserCourse = await this.UserService.GetUserCourseByUserId(userId);
 
 		if (!selectedClass) throw new NotFoundException();
+		if (FreeTrial) {
+			// validate the free trial joining
+			if (!selectedClass.HasFreeTrial)
+				throw new HttpException(ErrorCodesEnum.CLASS_HAS_NO_FREETRIAL, HttpStatus.BAD_REQUEST);
+		}
 		if (!selectedClass.IsActive) throw new HttpException(ErrorCodesEnum.CLASS_INACTIVE, HttpStatus.BAD_REQUEST);
 		if (selectedClass.IsDeleted) throw new HttpException(ErrorCodesEnum.CLASS_DELETED, HttpStatus.BAD_REQUEST);
 		if (selectedClass.CurrentIndex) throw new HttpException(ErrorCodesEnum.CLASS_Started, HttpStatus.BAD_REQUEST);
-		if (classUsers.length >= selectedClass.MaxCapacity)
+		if (userClasses.length >= selectedClass.MaxCapacity)
 			throw new HttpException(ErrorCodesEnum.MAX_CLASS_USERS, HttpStatus.BAD_REQUEST);
-		if (classUsers.find((c) => c.Id == userId))
+		if (userClasses.find((c) => c.UserId == userId && c.IsPaid == true))
 			throw new HttpException(ErrorCodesEnum.USER_EXISTS_CLASS, HttpStatus.BAD_REQUEST);
 		// if (userExistsInCourse) throw new HttpException(ErrorCodesEnum.USER_EXISTS_COURSE, HttpStatus.BAD_REQUEST);
 	}

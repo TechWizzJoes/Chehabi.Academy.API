@@ -43,7 +43,7 @@ export class UserService {
 		return { filePath };
 	}
 
-	async AddUserToClass(userId: number, classId: number): Promise<UserModels.UserClass> {
-		return this.UserRepository.AddUserToClass(userId, classId);
+	async AddUserToClass(userId: number, classId: number, IsPaid: boolean): Promise<UserModels.UserClass> {
+		return this.UserRepository.AddUserToClass(userId, classId, IsPaid);
 	}
 }
