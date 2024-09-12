@@ -42,9 +42,7 @@ export class LiveSessionJobService {
 		// notify users of these sessions that the next session is in one hour
 		for (const userSession of userSessions) {
 			for (const user of userSession.Users) {
-				const message = `Class: ${userSession.ClassName}, Session No. ${2} starts in one hour at ${
-					userSession.Time
-				}`;
+				const message = `Next session of ${userSession.ClassName} class starts in one hour at ${userSession.Time}.`;
 				this.NotificationsWebSocketGateway.notifyUser(user.Id, message);
 			}
 		}

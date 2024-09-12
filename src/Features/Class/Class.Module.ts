@@ -9,9 +9,10 @@ import { UserService } from '../User/User.Service';
 import { UserModule } from '../User/User.Module';
 import { CoursesModule } from '../Courses/Courses.Module';
 import { SessionModule } from '../Session/Session.Module';
+import { NotificationsModule } from '../-Notifications/Notifications.Module';
 
 @Module({
-	imports: [DataModule, CommonModule, UserModule, CoursesModule, SessionModule],
+	imports: [DataModule, CommonModule, UserModule, CoursesModule, SessionModule, NotificationsModule],
 	controllers: [ClassController],
 	providers: [AppConfig, ClassService, ClassRepository],
 	exports: [ClassService, ClassRepository]

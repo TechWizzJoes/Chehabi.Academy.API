@@ -8,6 +8,7 @@ import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
 import { LiveSessionRepository } from './Session.Repository';
 import { LiveSessionModels } from './Session.Models';
 import { promises } from 'dns';
+import { ClassModels } from '../Class/Class.Models';
 
 @Injectable()
 export class SessionService {
@@ -48,6 +49,29 @@ export class SessionService {
 
 	async Delete(id: number): Promise<void> {
 		return await this.LiveSessionRepository.Delete(id);
+	}
+
+	async GetSessionsLinkUpdates(
+		newClass: ClassModels.ClassReqModel,
+		dbClass: ClassModels.MasterModel
+	): Promise<LiveSessionModels.MasterModel[]> {
+		const changedSessions: LiveSessionModels.MasterModel[] = [];
+
+		// Map newClass sessions by Id for quick lookup
+		const newSessionsMap = new Map<number, LiveSessionModels.MasterModel>();
+		newClass.LiveSessions.forEach((session) => {
+			newSessionsMap.set(session.Id, session);
+		});
+
+		// Iterate through dbClass sessions and compare links
+		dbClass.LiveSessions.forEach((dbSession) => {
+			const newSession = newSessionsMap.get(dbSession.Id);
+			if (newSession && newSession.Link !== dbSession.Link) {
+				changedSessions.push(newSession);
+			}
+		});
+
+		return changedSessions;
 	}
 
 	async GetNextHourSessions(): Promise<LiveSessionModels.MasterModel[]> {

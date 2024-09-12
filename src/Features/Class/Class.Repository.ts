@@ -42,6 +42,15 @@ export class ClassRepository {
 		});
 	}
 
+	GetUsersByClassId(classId: number): Promise<UserClass[]> {
+		return this.userClassRepository.find({
+			relations: ['User'],
+			where: {
+				ClassId: classId
+			}
+		});
+	}
+
 	async Create(classData: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
 		const newClass = this.classRepository.create({
 			...classData,

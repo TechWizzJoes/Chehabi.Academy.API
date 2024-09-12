@@ -15,6 +15,7 @@ import { CoursesService } from '../Courses/Courses.Service';
 import { SessionService } from '../Session/Session.Service';
 import { LiveSessionModels } from '../Session/Session.Models';
 import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
+import { NotificationsWebSocketGateway } from '../-Notifications/WebsocketGateway';
 
 @Injectable()
 export class ClassService {
@@ -27,7 +28,8 @@ export class ClassService {
 		private CoursesService: CoursesService,
 		private SessionService: SessionService,
 		private JwtService: JwtService,
-		private UserHelper: UserHelper
+		private UserHelper: UserHelper,
+		private NotificationsWebSocketGateway: NotificationsWebSocketGateway
 	) {
 		this.Config = this.appConfig.Config;
 	}
@@ -43,6 +45,10 @@ export class ClassService {
 			return new Date(a.Class.StartDate) > new Date(b.Class.StartDate) ? -1 : 1;
 		});
 		return sortedUserClasses;
+	}
+
+	GetUsersByClassId(classId: number): Promise<UserModels.UserClass[]> {
+		return this.ClassRepository.GetUsersByClassId(classId);
 	}
 
 	async GetById(id: number): Promise<ClassModels.MasterModel> {
@@ -87,7 +93,12 @@ export class ClassService {
 		this.ValidateSessionDates(newClass);
 		this.ValidateTodaysDate(newClass, dbClass);
 
+		const sessionsLinkUpdated = await this.SessionService.GetSessionsLinkUpdates(newClass, dbClass);
 		let updatedsessions = await this.SessionService.BulkUpdate(newClass.LiveSessions);
+		if (sessionsLinkUpdated) {
+			// notify users of links changing
+			this.NotifyUsersForLinkChange(sessionsLinkUpdated, dbClass.Id);
+		}
 		let updatedClass = await this.ClassRepository.Update(id, newClass);
 		return updatedClass;
 	}
@@ -253,5 +264,16 @@ export class ClassService {
 		classes.forEach((c) => delete c.LiveSessions);
 		let updatedClasses = await this.ClassRepository.BulkUpdate(classes);
 		return updatedClasses;
+	}
+
+	async NotifyUsersForLinkChange(sessionsLinkUpdated: LiveSessionModels.MasterModel[], classId: number) {
+		const userClasses = await this.GetUsersByClassId(classId);
+
+		for (const session of sessionsLinkUpdated) {
+			for (const userClass of userClasses) {
+				const message = `next session link is updated.`;
+				this.NotificationsWebSocketGateway.notifyUser(userClass.UserId, message);
+			}
+		}
 	}
 }
