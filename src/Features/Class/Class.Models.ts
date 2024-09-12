@@ -54,6 +54,8 @@ export namespace ClassModels {
 		NumberOfSessions: number | null;
 		@ApiProperty()
 		LiveSessions: LiveSessionModels.MasterModel[];
+		@ApiProperty()
+		HasFreeTrial: boolean | null;
 
 		EndDate: Date | null;
 		IsDeleted: boolean | null;

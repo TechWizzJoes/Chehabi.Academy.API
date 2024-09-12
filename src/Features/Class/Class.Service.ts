@@ -134,8 +134,18 @@ export class ClassService {
 		if (selectedClass.CurrentIndex) throw new HttpException(ErrorCodesEnum.CLASS_Started, HttpStatus.BAD_REQUEST);
 		if (userClasses.length >= selectedClass.MaxCapacity)
 			throw new HttpException(ErrorCodesEnum.MAX_CLASS_USERS, HttpStatus.BAD_REQUEST);
-		if (userClasses.find((c) => c.UserId == userId && c.IsPaid == true))
-			throw new HttpException(ErrorCodesEnum.USER_EXISTS_CLASS, HttpStatus.BAD_REQUEST);
+
+		// check for users that has freetrial and now wants to pay
+		const userJoinedClass = userClasses.find((c) => c.UserId == userId);
+		if (userJoinedClass) {
+			if (FreeTrial) {
+				throw new HttpException(ErrorCodesEnum.USER_EXISTS_CLASS, HttpStatus.BAD_REQUEST);
+			} else {
+				if (userJoinedClass.IsPaid) {
+					throw new HttpException(ErrorCodesEnum.USER_EXISTS_CLASS, HttpStatus.BAD_REQUEST);
+				}
+			}
+		}
 		// if (userExistsInCourse) throw new HttpException(ErrorCodesEnum.USER_EXISTS_COURSE, HttpStatus.BAD_REQUEST);
 	}
 
