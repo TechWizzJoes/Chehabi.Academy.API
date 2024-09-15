@@ -83,6 +83,11 @@ export class NotificationsService {
 		const svgPath = join(__dirname, '..', '..', '..', 'uploads', 'images', 'Logo', 'full-logo.svg');
 		return readFileSync(svgPath, 'utf-8');
 	}
+
+	private getEmailTemplate(): string {
+		const svgPath = join(__dirname, '..', '..', '..', 'uploads', 'template', 'EmailTemplate.txt');
+		return readFileSync(svgPath, 'utf-8');
+	}
 	async sendNotificationEmail(type: string, payload: NotificationsModels.NotificationPayload): Promise<any> {
 		// Check if the type is valid
 		if (!Object.values(NotificationTemplateKey.Email).includes(type)) {
@@ -96,6 +101,7 @@ export class NotificationsService {
 			throw new ApplicationException(`${ErrorCodesEnum.Template_Not_Found}`, HttpStatus.BAD_REQUEST);
 		}
 		const svgLogo = this.getSvgLogo();
+		let emailTemplate = this.getEmailTemplate();
 		let htmlTemplate = template.Template;
 
 		// Replace placeholders in the template with values from payload
@@ -103,13 +109,14 @@ export class NotificationsService {
 			const placeholder = `{{${key}}}`;
 			htmlTemplate = htmlTemplate.replace(new RegExp(placeholder, 'g'), value);
 		}
-		htmlTemplate = htmlTemplate.replace('{{Logo}}', svgLogo);
+		htmlTemplate = htmlTemplate.replace('{{Logo}}', svgLogo !== null ? svgLogo : '');
+		emailTemplate = emailTemplate !== null ? emailTemplate.replace('{0}', htmlTemplate) : htmlTemplate;
 
 		const mailOptions = {
 			from: 'info@chehabi-academy.com',
 			to: payload.Email,
 			subject: type.replace(/_/g, ' ').toUpperCase(),
-			html: htmlTemplate
+			html: emailTemplate
 		};
 
 		return this.NotificationsRepository.sendEmail(mailOptions);
