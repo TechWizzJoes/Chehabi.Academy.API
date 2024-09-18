@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards, Delete, Put } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
-import {} from '@App/Features/Account/Account.Service';
 import { AuthenticatedGuard } from '@App/Common/Auth/Authenticated.Guard';
 import { LiveSessionModels } from './Session.Models';
 import { RefreshTokenGuard } from '@App/Common/Auth/RefreshToken.Guard';
@@ -8,7 +7,7 @@ import { SessionService } from './Session.Service';
 
 @ApiTags('Session')
 // @UseGuards(AuthenticatedGuard)
-@Controller('Session')
+@Controller('session')
 export class SessionController {
 	constructor(private SessionService: SessionService) {}
 
@@ -35,5 +34,10 @@ export class SessionController {
 	@Delete('/:id')
 	Delete(@Param('id') id: number): Promise<void> {
 		return this.SessionService.Delete(id);
+	}
+
+	@Get('/list/upcoming')
+	GetUpcomingByUserId(): Promise<LiveSessionModels.MasterModel[]> {
+		return this.SessionService.GetUpcomingByUserId();
 	}
 }

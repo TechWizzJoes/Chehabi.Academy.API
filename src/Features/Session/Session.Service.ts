@@ -51,6 +51,21 @@ export class SessionService {
 		return await this.LiveSessionRepository.Delete(id);
 	}
 
+	async GetUpcomingByUserId(): Promise<LiveSessionModels.MasterModel[]> {
+		const CurrentUser = this.UserHelper.GetCurrentUser();
+		const userClasses = await this.LiveSessionRepository.GetClassesIdsByUserId(CurrentUser.UserId);
+		const classIds = userClasses.map((uc) => uc.ClassId);
+		const sessions = await this.GetNextWeekSessions(classIds);
+
+		sessions.forEach((session) => {
+			const blocked = !userClasses.find((uc) => uc.ClassId == session.ClassId).IsPaid;
+			session.Link = blocked ? 'blocked' : session.Link;
+			delete session.Class.UserClasses;
+		});
+
+		return sessions;
+	}
+
 	async GetSessionsLinkUpdates(
 		newClass: ClassModels.ClassReqModel,
 		dbClass: ClassModels.MasterModel
@@ -98,12 +113,29 @@ export class SessionService {
 		const now = new Date();
 		const startOfCurrentHour = new Date(now.setMinutes(0, 0, 0));
 		// Calculate the start of the previous hour
-		// const previousMonth = 30 * 24 * 60 * 60 * 1000; // for local testing
+		// const previousHour = 30 * 24 * 60 * 60 * 1000; // for local testing
 		const previousHour = 60 * 60 * 1000;
 		const startOfPreviousHour = new Date(startOfCurrentHour.getTime() - previousHour); // Subtract one hour
 		// Calculate the end of the previous hour
 		const endOfPreviousHour = new Date(startOfCurrentHour.getTime() - 1); // End of previous hour is the last moment of the previous hour
 
 		return await this.LiveSessionRepository.GetCustomHourSessions(startOfPreviousHour, endOfPreviousHour);
+	}
+
+	async GetNextWeekSessions(classIds: number[]): Promise<LiveSessionModels.MasterModel[]> {
+		const today = new Date();
+		const startOfToday = new Date(today.setHours(0, 0, 0, 0));
+		const startOfCurrentWeek = startOfToday;
+
+		const endOfNextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+		endOfNextWeek.setHours(23, 59, 59, 999);
+
+		const relations = ['Class.Course', 'Class.UserClasses'];
+		return await this.LiveSessionRepository.GetCustomHourSessions(
+			startOfCurrentWeek,
+			endOfNextWeek,
+			classIds,
+			relations
+		);
 	}
 }

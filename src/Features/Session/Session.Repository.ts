@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { Between, Repository } from 'typeorm';
+import { Between, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LiveSessionModels } from './Session.Models';
 import { LiveSession } from '@App/Data/TypeOrmEntities/LiveSession';
+import { UserClass } from '@App/Data/TypeOrmEntities/UserClass';
 
 @Injectable()
 export class LiveSessionRepository {
 	constructor(
 		@InjectRepository(LiveSession)
-		private SessionRepository: Repository<LiveSession>
+		private SessionRepository: Repository<LiveSession>,
+		@InjectRepository(UserClass)
+		private userClassRepository: Repository<UserClass>
 	) {}
 
 	async GetallByClassId(classId: number): Promise<LiveSession[]> {
@@ -69,12 +72,36 @@ export class LiveSessionRepository {
 		});
 	}
 
-	async GetCustomHourSessions(startOfHour: Date, endOfHour: Date): Promise<LiveSession[]> {
-		return this.SessionRepository.find({
+	async GetClassesIdsByUserId(userId: number): Promise<UserClass[]> {
+		return this.userClassRepository.find({
 			where: {
-				StartDate: Between(startOfHour, endOfHour)
-			},
-			relations: ['Class', 'Class.UserClasses.User', 'Class.Course.Instructor']
+				UserId: userId,
+				Class: {
+					IsActive: true,
+					IsDeleted: false
+				}
+			}
+		});
+	}
+
+	async GetCustomHourSessions(
+		startOfHour: Date,
+		endOfHour: Date,
+		classesIds?: number[],
+		relations?: string[]
+	): Promise<LiveSession[]> {
+		const where: any = {
+			StartDate: Between(startOfHour, endOfHour)
+		};
+
+		if (classesIds && classesIds.length > 0) {
+			where.ClassId = In(classesIds);
+		}
+
+		return this.SessionRepository.find({
+			where,
+			order: { StartDate: 'ASC' },
+			relations: relations ?? ['Class', 'Class.UserClasses.User', 'Class.Course.Instructor']
 		});
 	}
 }

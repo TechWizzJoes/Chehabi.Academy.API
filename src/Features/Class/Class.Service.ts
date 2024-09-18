@@ -142,7 +142,6 @@ export class ClassService {
 		}
 		if (!selectedClass.IsActive) throw new HttpException(ErrorCodesEnum.CLASS_INACTIVE, HttpStatus.BAD_REQUEST);
 		if (selectedClass.IsDeleted) throw new HttpException(ErrorCodesEnum.CLASS_DELETED, HttpStatus.BAD_REQUEST);
-		if (selectedClass.CurrentIndex) throw new HttpException(ErrorCodesEnum.CLASS_Started, HttpStatus.BAD_REQUEST);
 		if (userClasses.length >= selectedClass.MaxCapacity)
 			throw new HttpException(ErrorCodesEnum.MAX_CLASS_USERS, HttpStatus.BAD_REQUEST);
 
@@ -157,6 +156,9 @@ export class ClassService {
 				}
 			}
 		}
+		if (selectedClass.CurrentIndex && !userJoinedClass)
+			throw new HttpException(ErrorCodesEnum.CLASS_Started, HttpStatus.BAD_REQUEST);
+
 		// if (userExistsInCourse) throw new HttpException(ErrorCodesEnum.USER_EXISTS_COURSE, HttpStatus.BAD_REQUEST);
 	}
 
