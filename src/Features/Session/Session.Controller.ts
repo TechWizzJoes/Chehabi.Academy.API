@@ -6,7 +6,7 @@ import { RefreshTokenGuard } from '@App/Common/Auth/RefreshToken.Guard';
 import { SessionService } from './Session.Service';
 
 @ApiTags('Session')
-// @UseGuards(AuthenticatedGuard)
+@UseGuards(AuthenticatedGuard)
 @Controller('session')
 export class SessionController {
 	constructor(private SessionService: SessionService) {}

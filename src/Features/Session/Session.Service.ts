@@ -57,11 +57,13 @@ export class SessionService {
 		const classIds = userClasses.map((uc) => uc.ClassId);
 		const sessions = await this.GetNextWeekSessions(classIds);
 
-		sessions.forEach((session) => {
-			const blocked = !userClasses.find((uc) => uc.ClassId == session.ClassId).IsPaid;
-			session.Link = blocked ? 'blocked' : session.Link;
-			delete session.Class.UserClasses;
-		});
+		if (!CurrentUser.IsAdmin) {
+			sessions.forEach((session) => {
+				const blocked = !userClasses.find((uc) => uc.ClassId == session.ClassId).IsPaid;
+				session.Link = blocked ? 'blocked' : session.Link;
+				delete session.Class.UserClasses;
+			});
+		}
 
 		return sessions;
 	}
