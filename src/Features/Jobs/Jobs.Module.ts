@@ -8,6 +8,8 @@ import { SessionModule } from '../Session/Session.Module';
 import { LiveSessionJobService } from './Services/LiveSessionJob.Service';
 import { ClassCurrentIndexJobService } from './Services/ClassCurrentIndexJob.Service';
 import { ClassModule } from '../Class/Class.Module';
+import { NotificationsService } from '../-Notifications/Notifications.Service';
+import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
 @Module({
 	imports: [ScheduleModule.forRoot(), NotificationsModule, SessionModule, ClassModule],
 	controllers: [],

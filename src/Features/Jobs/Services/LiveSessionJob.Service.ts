@@ -4,12 +4,16 @@ import { SessionService } from '@App/Features/Session/Session.Service';
 import { InstructorModels } from '@App/Features/User/Instructor.Models';
 import { UserModels } from '@App/Features/User/User.Models';
 import { Injectable } from '@nestjs/common';
+import { NotificationsService } from '@App/Features/-Notifications/Notifications.Service';
+import { NotificationTemplateKey } from '@App/Features/-Notifications/NotificationTemplateKey';
+import { NotificationsModels } from '@App/Features/-Notifications/Notifications.Models';
 
 @Injectable()
 export class LiveSessionJobService {
 	constructor(
 		private SessionService: SessionService,
-		private NotificationsWebSocketGateway: NotificationsWebSocketGateway
+		private NotificationsWebSocketGateway: NotificationsWebSocketGateway,
+		private NotificationsService: NotificationsService
 	) {}
 
 	async LiveSessionsNotifiyingJob() {
@@ -44,6 +48,14 @@ export class LiveSessionJobService {
 			for (const user of userSession.Users) {
 				const message = `Next session of ${userSession.ClassName} class starts in one hour at ${userSession.Time}.`;
 				this.NotificationsWebSocketGateway.notifyUser(user.Id, message);
+				this.SendEmailNotfication({
+					Email: user.Email,
+					Placeholders: {
+						FirstName: user.FirstName,
+						LastName: user.LastName,
+						SessionDetails: message
+					}
+				});
 			}
 		}
 	}
@@ -72,12 +84,32 @@ export class LiveSessionJobService {
 		for (const userSession of userSessions) {
 			const message = `Next session of ${userSession.ClassName} class starts in one hour at ${userSession.Time}.`;
 			this.NotificationsWebSocketGateway.notifyUser(userSession.Instructor.UserId, message);
-
+			this.SendEmailNotfication({
+				Email: userSession.Instructor.User.Email,
+				Placeholders: {
+					FirstName: userSession.Instructor.User.FirstName,
+					LastName: userSession.Instructor.User.LastName,
+					SessionDetails: message
+				}
+			});
 			if (!userSession.Link) {
 				const message = `Please Add a meeting link for the upcoming session from ${userSession.ClassName} class.`;
 				this.NotificationsWebSocketGateway.notifyUser(userSession.Instructor.UserId, message);
+				this.SendEmailNotfication({
+					Email: userSession.Instructor.User.Email,
+					Placeholders: {
+						FirstName: userSession.Instructor.User.FirstName,
+						LastName: userSession.Instructor.User.LastName,
+						SessionDetails: message
+					}
+				});
 			}
 		}
+	}
+
+	SendEmailNotfication(payload: NotificationsModels.NotificationPayload) {
+		const emailType = NotificationTemplateKey.Email.REMINDER;
+		this.NotificationsService.sendNotificationEmail(emailType, payload);
 	}
 }
 

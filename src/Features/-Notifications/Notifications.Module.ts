@@ -11,6 +11,6 @@ import { NotificationsWebSocketGateway } from './WebsocketGateway';
 	imports: [DataModule, CommonModule],
 	controllers: [NotificationsController],
 	providers: [AppConfig, NotificationsService, NotificationsRepository, NotificationsWebSocketGateway],
-	exports: [NotificationsWebSocketGateway]
+	exports: [NotificationsWebSocketGateway, NotificationsService]
 })
 export class NotificationsModule {}
