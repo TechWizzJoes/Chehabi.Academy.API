@@ -91,7 +91,11 @@ export class LiveSessionRepository {
 		relations?: string[]
 	): Promise<LiveSession[]> {
 		const where: any = {
-			StartDate: Between(startOfHour, endOfHour)
+			StartDate: Between(startOfHour, endOfHour),
+			Class: {
+				IsActive: true,
+				IsDeleted: false
+			}
 		};
 
 		if (classesIds && classesIds.length > 0) {

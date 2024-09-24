@@ -108,7 +108,11 @@ export class SessionService {
 		// const startOfHour = new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),now.getUTCHours(),0, 0, 0 ));
 		// const endOfHour = new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),now.getUTCHours(),59, 59, 999);
 
-		return await this.LiveSessionRepository.GetCustomHourSessions(startOfHour, endOfHour);
+		return await this.LiveSessionRepository.GetCustomHourSessions(startOfHour, endOfHour, null, [
+			'Class',
+			'Class.UserClasses.User',
+			'Class.Course.Instructor.User'
+		]);
 	}
 
 	async GetPreviousHourSessions(): Promise<LiveSessionModels.MasterModel[]> {
@@ -126,8 +130,7 @@ export class SessionService {
 
 	async GetNextWeekSessions(classIds: number[]): Promise<LiveSessionModels.MasterModel[]> {
 		const today = new Date();
-		const startOfToday = new Date(today.setHours(0, 0, 0, 0));
-		const startOfCurrentWeek = startOfToday;
+		const startOfCurrentWeek = today;
 
 		const endOfNextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
 		endOfNextWeek.setHours(23, 59, 59, 999);

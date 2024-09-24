@@ -16,6 +16,9 @@ import { SessionService } from '../Session/Session.Service';
 import { LiveSessionModels } from '../Session/Session.Models';
 import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
 import { NotificationsWebSocketGateway } from '../-Notifications/WebsocketGateway';
+import { NotificationsModels } from '../-Notifications/Notifications.Models';
+import { NotificationTemplateKey } from '../-Notifications/NotificationTemplateKey';
+import { NotificationsService } from '../-Notifications/Notifications.Service';
 
 @Injectable()
 export class ClassService {
@@ -29,7 +32,8 @@ export class ClassService {
 		private SessionService: SessionService,
 		private JwtService: JwtService,
 		private UserHelper: UserHelper,
-		private NotificationsWebSocketGateway: NotificationsWebSocketGateway
+		private NotificationsWebSocketGateway: NotificationsWebSocketGateway,
+		private NotificationsService: NotificationsService
 	) {
 		this.Config = this.appConfig.Config;
 	}
@@ -275,7 +279,20 @@ export class ClassService {
 			for (const userClass of userClasses) {
 				const message = `next session link is updated.`;
 				this.NotificationsWebSocketGateway.notifyUser(userClass.UserId, message);
+				this.SendEmailNotfication({
+					Email: userClass.User.Email,
+					Placeholders: {
+						FirstName: userClass.User.FirstName,
+						LastName: userClass.User.LastName,
+						SessionDetails: message
+					}
+				});
 			}
 		}
+	}
+
+	SendEmailNotfication(payload: NotificationsModels.NotificationPayload) {
+		const emailType = NotificationTemplateKey.Email.REMINDER;
+		this.NotificationsService.sendNotificationEmail(emailType, payload);
 	}
 }

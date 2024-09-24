@@ -34,6 +34,12 @@ export class NotificationsWebSocketGateway {
 	handleConnection(socket: Socket) {
 		console.log('on connection');
 		const userId = socket.handshake.query.userId as string;
+		const token = socket.handshake.auth.token;
+		console.log(token);
+
+		if (!token) {
+			socket.disconnect();
+		}
 		if (userId) {
 			this.connectedUsers.set(userId, socket.id);
 			// console.log(this.connectedUsers);

@@ -67,7 +67,7 @@ export class CoursesController {
 				filename: (req, file, callback) => {
 					const uniquName = req.params.id;
 					const ext = extname(file.originalname);
-					const fileName = uniquName + ext;
+					const fileName = uniquName + '.' + new Date().getTime() + ext;
 					callback(null, fileName);
 				}
 			})
