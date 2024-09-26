@@ -19,6 +19,7 @@ import { CartItem } from './TypeOrmEntities/CartItem';
 import { UserClass } from './TypeOrmEntities/UserClass';
 import { UserCourse } from './TypeOrmEntities/UserCourse';
 import { Rating } from './TypeOrmEntities/Rating';
+import { UserPrefrence } from './TypeOrmEntities/UserPrefrence';
 
 const Entities = [
 	User,
@@ -36,7 +37,8 @@ const Entities = [
 	CartItem,
 	UserCourse,
 	UserClass,
-	Rating
+	Rating,
+	UserPrefrence
 ];
 
 @Module({

@@ -24,19 +24,25 @@ import { diskStorage } from 'multer';
 
 @ApiTags('User')
 @UseGuards(AuthenticatedGuard)
-@Controller('User')
+@Controller('user')
 export class UserController {
 	constructor(private UserService: UserService) {}
 
-	@Get('/:id')
-	GetProfileInfo(@Param('id') id: number): Promise<UserModels.UserResModel> {
-		return this.UserService.GetById(id);
+	@Get('')
+	GetProfileInfo(): Promise<UserModels.UserResModel> {
+		return this.UserService.GetProfileInfo();
 	}
 
 	@Put('')
 	@ApiBody({ type: UserModels.UserReqModel })
 	Update(@Body() user: UserModels.UserReqModel): Promise<UserModels.UserResModel> {
 		return this.UserService.UpdateUser(user);
+	}
+
+	@Put('preference')
+	@ApiBody({ type: UserModels.UserReqModel })
+	UpdateUserPreference(@Body() userPrefrence: UserModels.UserPrefrenceReqModel): Promise<UserModels.UserResModel> {
+		return this.UserService.UpdateUserPreference(userPrefrence);
 	}
 
 	@Post('/upload/image/:id')

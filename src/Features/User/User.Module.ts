@@ -6,6 +6,7 @@ import { UserRepository } from './User.Repository';
 import { UserController } from './User.Controller';
 import { UserService } from './User.Service';
 import { InstructorRepository } from './Instructor.Repository';
+import { CartService } from '../Cart/Cart.Service';
 
 @Module({
 	imports: [DataModule, CommonModule],

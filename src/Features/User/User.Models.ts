@@ -1,10 +1,9 @@
 import { NotificationModels } from '../-Notifications/Notifications2.Models';
 import { CartModels } from '../Cart/Cart.Models';
 import { ClassModels } from '../Class/Class.Models';
-import { CoursesModels, CourseType } from '../Courses/Courses.Models';
+import { CoursesModels } from '../Courses/Courses.Models';
 import { FeedbackModels } from '../Feedback/Feedback.Models';
 import { RatingModels } from '../Rating/Rating.Models';
-import { LiveSessionModels, RecordedSessionModels } from '../Session/Session.Models';
 import { WhatsNewModels } from '../WhatsNew/WhatsNew.Models';
 import { InstructorModels } from './Instructor.Models';
 
@@ -32,6 +31,7 @@ export namespace UserModels {
 		NotificationSubscriptions: NotificationModels.NotificationSubscriptions[];
 		NotificationTemplates: NotificationModels.NotificationTemplate[];
 		Ratings: RatingModels.MasterModel[]; //youssef fix this when you add the rating
+		UserPrefrence: UserPrefrence;
 		UserClasses: UserClass[];
 		UserCourses: UserCourse[];
 
@@ -61,7 +61,7 @@ export namespace UserModels {
 		ClassId: number;
 		IsPaid: boolean;
 		CreatedOn: Date | null;
-		User: UserModels.MasterModel;
+		User: MasterModel;
 		Class: ClassModels.MasterModel;
 	}
 
@@ -70,6 +70,25 @@ export namespace UserModels {
 		CourseId: number;
 		CreatedOn: Date | null;
 		Course: CoursesModels.MasterModel;
-		User: UserModels.MasterModel;
+		User: MasterModel;
+	}
+
+	export class UserPrefrence {
+		Id: number;
+		UserId: number;
+		PromotionsNotify: boolean;
+		SessionsReminderNotify: boolean;
+		SessionsUpdateNotify: boolean;
+		InstructorsAnnouncementNotify: boolean;
+		User: MasterModel;
+	}
+
+	export class UserPrefrenceReqModel {
+		Id: number;
+		UserId: number;
+		PromotionsNotify: boolean;
+		SessionsReminderNotify: boolean;
+		SessionsUpdateNotify: boolean;
+		InstructorsAnnouncementNotify: boolean;
 	}
 }

@@ -1,4 +1,4 @@
-import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Cart } from './Cart';
 import { Class } from './Class';
 import { Course } from './Course';
@@ -7,6 +7,7 @@ import { Instructor } from './Instructor';
 import { NotificationSubscriptions } from './NotificationSubscriptions';
 import { NotificationTemplate } from './NotificationTemplate';
 import { Rating } from './Rating';
+import { UserPrefrence } from './UserPrefrence';
 import { UserClass } from './UserClass';
 import { UserCourse } from './UserCourse';
 import { WhatsNew } from './WhatsNew';
@@ -82,6 +83,9 @@ export class User {
 
 	@OneToMany(() => Rating, (Rating) => Rating.User)
 	Ratings: Rating[];
+
+	@OneToOne(() => UserPrefrence, (UserPrefrence) => UserPrefrence.User)
+	UserPrefrence: UserPrefrence;
 
 	@OneToMany(() => UserClass, (UserClass) => UserClass.User)
 	UserClasses: UserClass[];
