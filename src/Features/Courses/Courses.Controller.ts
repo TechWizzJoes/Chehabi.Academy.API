@@ -21,12 +21,15 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { ClassModels } from '../Class/Class.Models';
+import { AdminGuard } from '@App/Common/Auth/Admin.Guard';
 
 @ApiTags('Courses')
 @Controller('courses')
 export class CoursesController {
 	constructor(private CoursesService: CoursesService) {}
 
+	@UseGuards(AuthenticatedGuard)
+	@UseGuards(AdminGuard)
 	@Get('/:id')
 	GetOne(@Param('id', ParseIntPipe) id: number): Promise<CoursesModels.MasterModel> {
 		return this.CoursesService.GetById(id);
@@ -38,6 +41,7 @@ export class CoursesController {
 	}
 
 	@UseGuards(AuthenticatedGuard)
+	@UseGuards(AdminGuard)
 	@Get('/admin/courses')
 	async GetAdminCoursesByUserId(): Promise<CoursesModels.MasterModel[]> {
 		let courses = await this.CoursesService.GetAdminCoursesByUserId();
@@ -52,6 +56,7 @@ export class CoursesController {
 
 	@Post('')
 	@UseGuards(AuthenticatedGuard)
+	@UseGuards(AdminGuard)
 	@ApiBody({ type: CoursesModels.CoursesReqModel })
 	Create(@Body() course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
 		// return this.CoursesService.Create(course);
@@ -78,12 +83,16 @@ export class CoursesController {
 	}
 
 	@Put('/:id')
+	@UseGuards(AuthenticatedGuard)
+	@UseGuards(AdminGuard)
 	@ApiBody({ type: CoursesModels.CoursesReqModel })
 	Update(@Param('id') id: number, @Body() course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
 		return this.CoursesService.Update(id, course);
 	}
 
 	@Delete('/:id')
+	@UseGuards(AuthenticatedGuard)
+	@UseGuards(AdminGuard)
 	Delete(@Param('id') id: number): Promise<CoursesModels.MasterModel> {
 		return this.CoursesService.Delete(id);
 	}

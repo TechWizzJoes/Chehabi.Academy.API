@@ -29,7 +29,6 @@ export class UserController {
 	constructor(private UserService: UserService) {}
 
 	@Get('/:id')
-	@UseGuards(AuthenticatedGuard)
 	GetProfileInfo(@Param('id') id: number): Promise<UserModels.UserResModel> {
 		return this.UserService.GetById(id);
 	}

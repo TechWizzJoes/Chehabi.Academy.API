@@ -4,7 +4,7 @@ import { RoleEnum } from '../Enums/Role.Enum';
 import { ROLES_KEY } from './Roles.Decorator';
 
 @Injectable()
-export class RolesGuard implements CanActivate {
+export class AdminGuard implements CanActivate {
 	constructor(private reflector: Reflector) {}
 
 	canActivate(context: ExecutionContext): boolean {

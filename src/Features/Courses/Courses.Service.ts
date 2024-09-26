@@ -27,7 +27,6 @@ export class CoursesService {
 
 	async GetById(id): Promise<CoursesModels.MasterModel> {
 		let course = await this.CoursesRepository.GetById(id);
-		let user = this.UserHelper.GetCurrentUser();
 		if (course.Classes) course.Classes = course.Classes?.filter((c) => !c.IsDeleted);
 		return course;
 	}
@@ -61,12 +60,15 @@ export class CoursesService {
 
 	async Update(id, course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
 		let dbcourse = await this.CoursesRepository.GetById(id);
+		this.UserHelper.ValidateOwnerShip(dbcourse.CreatedBy);
 		this.ValidateClassesDates(course, dbcourse);
 		this.ValidateTodaysDate(course);
 		return await this.CoursesRepository.Update(id, course);
 	}
 
 	async Delete(id): Promise<CoursesModels.MasterModel> {
+		let dbcourse = await this.CoursesRepository.GetById(id);
+		this.UserHelper.ValidateOwnerShip(dbcourse.CreatedBy);
 		return await this.CoursesRepository.Delete(id);
 	}
 

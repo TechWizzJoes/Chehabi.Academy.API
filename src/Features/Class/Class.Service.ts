@@ -2,12 +2,10 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestj
 import { JwtService } from '@nestjs/jwt';
 
 import { AppConfig, Config } from '@App/Config/App.Config';
-import { CryptoHelper } from '@App/Common/Helpers/Crypto.Helper';
 import { ErrorCodesEnum } from '@App/Common/Enums/ErrorCodes.Enum';
 import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
 import { ClassRepository } from './Class.Repository';
 import { ClassModels } from './Class.Models';
-import { promises } from 'dns';
 import { UserService } from '../User/User.Service';
 import { UserModels } from '../User/User.Models';
 import { CoursesModels } from '../Courses/Courses.Models';
@@ -56,7 +54,9 @@ export class ClassService {
 	}
 
 	async GetById(id: number): Promise<ClassModels.MasterModel> {
-		return this.ClassRepository.GetById(id);
+		const dbClass = await this.ClassRepository.GetById(id);
+		this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
+		return dbClass;
 	}
 
 	async Create(newClass: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
@@ -93,6 +93,7 @@ export class ClassService {
 		let dbClass = await this.ClassRepository.GetById(id);
 		let dbcourse = dbClass.Course;
 
+		this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
 		this.ValidateCourseDate(dbcourse, newClass);
 		this.ValidateSessionDates(newClass);
 		this.ValidateTodaysDate(newClass, dbClass);
@@ -108,6 +109,8 @@ export class ClassService {
 	}
 
 	async Delete(id): Promise<ClassModels.MasterModel> {
+		let dbClass = await this.ClassRepository.GetById(id);
+		this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
 		return await this.ClassRepository.Delete(id);
 	}
 

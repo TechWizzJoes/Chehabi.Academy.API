@@ -23,5 +23,7 @@ export enum ErrorCodesEnum {
 	//Notification template error
 	EMAIL_NOT_Sent = 'Email not sent:',
 	Invalid_Notification_Type = 'Invalid notification type',
-	Template_Not_Found = 'Template not found'
+	Template_Not_Found = 'Template not found',
+	USER_NOT_CREATOR = 'USER_NOT_CREATOR',
+	USER_NOT_ADMIN = 'USER_NOT_ADMIN'
 }
