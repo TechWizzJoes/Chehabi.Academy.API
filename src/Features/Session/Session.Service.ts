@@ -59,7 +59,8 @@ export class SessionService {
 
 		if (!CurrentUser.IsAdmin) {
 			sessions.forEach((session) => {
-				const blocked = !userClasses.find((uc) => uc.ClassId == session.ClassId).IsPaid;
+				const userclass = userClasses.find((uc) => uc.ClassId == session.ClassId);
+				const blocked = !userclass.IsPaid && session.Order > 1;
 				session.Link = blocked ? 'blocked' : session.Link;
 				delete session.Class.UserClasses;
 			});

@@ -55,7 +55,7 @@ export class ClassService {
 
 	async GetById(id: number): Promise<ClassModels.MasterModel> {
 		const dbClass = await this.ClassRepository.GetById(id);
-		this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
+		// this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
 		return dbClass;
 	}
 
@@ -73,10 +73,11 @@ export class ClassService {
 
 		let createdClass = await this.ClassRepository.Create(newClass);
 
-		let sessionsReqModel = sessionDates.map((sess) => {
+		let sessionsReqModel = sessionDates.map((sess, i) => {
 			let newSession = new LiveSessionModels.SessionReqModel();
 			newSession.ClassId = createdClass.Id;
 			newSession.StartDate = sess.Date;
+			newSession.Order = i + 1;
 
 			let endDate = new Date(sess.Date);
 			endDate.setMinutes(endDate.getMinutes() + sess.DurationInMins);
@@ -93,7 +94,7 @@ export class ClassService {
 		let dbClass = await this.ClassRepository.GetById(id);
 		let dbcourse = dbClass.Course;
 
-		this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
+		// this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
 		this.ValidateCourseDate(dbcourse, newClass);
 		this.ValidateSessionDates(newClass);
 		this.ValidateTodaysDate(newClass, dbClass);
@@ -110,7 +111,7 @@ export class ClassService {
 
 	async Delete(id): Promise<ClassModels.MasterModel> {
 		let dbClass = await this.ClassRepository.GetById(id);
-		this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
+		// this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
 		return await this.ClassRepository.Delete(id);
 	}
 

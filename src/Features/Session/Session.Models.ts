@@ -11,6 +11,7 @@ export namespace LiveSessionModels {
 		EndDate: Date;
 		Link: string | null;
 		IsCompleted: boolean;
+		Order: number;
 		Class: ClassModels.MasterModel;
 	}
 
@@ -28,6 +29,7 @@ export namespace LiveSessionModels {
 		@ApiProperty()
 		Link: string;
 
+		Order: number;
 		EndDate: Date;
 	}
 }

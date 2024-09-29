@@ -85,8 +85,8 @@ export class NotificationsService {
 	}
 
 	private getEmailTemplate(): string {
-		const svgPath = join(__dirname, '..', '..', '..', 'uploads', 'template', 'EmailTemplate.txt');
-		return readFileSync(svgPath, 'utf-8');
+		const templatePath = join(__dirname, '..', '..', '..', 'template', 'EmailTemplate.html');
+		return readFileSync(templatePath, 'utf-8');
 	}
 	async sendNotificationEmail(type: string, payload: NotificationsModels.NotificationPayload): Promise<any> {
 		// Check if the type is valid
@@ -109,7 +109,7 @@ export class NotificationsService {
 			const placeholder = `{{${key}}}`;
 			htmlTemplate = htmlTemplate.replace(new RegExp(placeholder, 'g'), value);
 		}
-		htmlTemplate = htmlTemplate.replace('{{Logo}}', svgLogo !== null ? svgLogo : '');
+		// htmlTemplate = htmlTemplate.replace('{{Logo}}', svgLogo !== null ? svgLogo : '');
 		emailTemplate = emailTemplate !== null ? emailTemplate.replace('{0}', htmlTemplate) : htmlTemplate;
 
 		const mailOptions = {

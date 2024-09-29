@@ -20,6 +20,9 @@ export class LiveSession {
 	@Column('varchar', { name: 'Link', nullable: true, length: 100 })
 	Link: string | null;
 
+	@Column('int', { name: 'Order' })
+	Order: number;
+
 	@Column('tinyint', { name: 'IsCompleted', width: 1, default: () => "'0'" })
 	IsCompleted: boolean;
 
