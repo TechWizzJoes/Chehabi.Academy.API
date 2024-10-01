@@ -74,8 +74,9 @@ export namespace CoursesModels {
 		IsActive: boolean | null;
 
 		TypeId: number;
-		IsDeleted: boolean | null;
-		InstructorId: number | null;
+		IsDeleted: boolean;
+		InstructorId: number;
+		CreatedBy: number;
 	}
 
 	export class Filter {

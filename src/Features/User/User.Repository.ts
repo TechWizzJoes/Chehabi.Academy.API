@@ -30,6 +30,15 @@ export class UserRepository {
 		});
 	}
 
+	GetUsersByClassId(classId: number): Promise<UserClass[]> {
+		return this.userClassRepository.find({
+			relations: ['User'],
+			where: {
+				ClassId: classId
+			}
+		});
+	}
+
 	async UpdateUser(user: UserModels.UserResModel): Promise<User> {
 		return await this.userRepository.save(user);
 	}

@@ -57,8 +57,9 @@ export namespace ClassModels {
 		@ApiProperty()
 		HasFreeTrial: boolean | null;
 
-		EndDate: Date | null;
-		IsDeleted: boolean | null;
+		EndDate: Date;
+		IsDeleted: boolean;
+		CreatedBy: number;
 	}
 
 	export class PeriodDto {

@@ -47,12 +47,14 @@ export class CoursesService {
 	}
 
 	async Create(course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
-		course.InstructorId = this.UserHelper.GetCurrentUser()?.InstructorId;
+		const CurrentUser = this.UserHelper.GetCurrentUser();
+		course.InstructorId = CurrentUser.InstructorId;
 		let courseType = CourseTypeEnum[+course.TypeIdString];
 		if (!courseType) throw new ApplicationException('invalid course type id', HttpStatus.BAD_REQUEST);
 		course.TypeId = CourseTypeEnum[courseType];
 		course.IsActive = course.IsActive;
 		course.IsDeleted = false;
+		course.CreatedBy = CurrentUser.UserId;
 
 		this.ValidateTodaysDate(course);
 		return await this.CoursesRepository.Create(course);
@@ -60,7 +62,7 @@ export class CoursesService {
 
 	async Update(id, course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
 		let dbcourse = await this.CoursesRepository.GetById(id);
-		// this.UserHelper.ValidateOwnerShip(dbcourse.CreatedBy);
+		this.UserHelper.ValidateOwnerShip(dbcourse.CreatedBy);
 		this.ValidateClassesDates(course, dbcourse);
 		this.ValidateTodaysDate(course);
 		return await this.CoursesRepository.Update(id, course);
@@ -68,7 +70,7 @@ export class CoursesService {
 
 	async Delete(id): Promise<CoursesModels.MasterModel> {
 		let dbcourse = await this.CoursesRepository.GetById(id);
-		// this.UserHelper.ValidateOwnerShip(dbcourse.CreatedBy);
+		this.UserHelper.ValidateOwnerShip(dbcourse.CreatedBy);
 		return await this.CoursesRepository.Delete(id);
 	}
 

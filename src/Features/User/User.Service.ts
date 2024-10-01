@@ -39,6 +39,10 @@ export class UserService {
 		return this.InstructorRepository.GetByUserId(id);
 	}
 
+	GetUsersByClassId(classId: number): Promise<UserModels.UserClass[]> {
+		return this.UserRepository.GetUsersByClassId(classId);
+	}
+
 	UpdateUser(user: UserModels.UserReqModel) {
 		const CurrentUser = this.UserHelper.GetCurrentUser();
 		// avoid changing mail fraud

@@ -11,12 +11,7 @@ import { UserModels } from '../User/User.Models';
 import { CoursesModels } from '../Courses/Courses.Models';
 import { CoursesService } from '../Courses/Courses.Service';
 import { SessionService } from '../Session/Session.Service';
-import { LiveSessionModels } from '../Session/Session.Models';
 import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
-import { NotificationsWebSocketGateway } from '../-Notifications/WebsocketGateway';
-import { NotificationsModels } from '../-Notifications/Notifications.Models';
-import { NotificationTemplateKey } from '../-Notifications/NotificationTemplateKey';
-import { NotificationsService } from '../-Notifications/Notifications.Service';
 
 @Injectable()
 export class ClassService {
@@ -29,9 +24,7 @@ export class ClassService {
 		private CoursesService: CoursesService,
 		private SessionService: SessionService,
 		private JwtService: JwtService,
-		private UserHelper: UserHelper,
-		private NotificationsWebSocketGateway: NotificationsWebSocketGateway,
-		private NotificationsService: NotificationsService
+		private UserHelper: UserHelper
 	) {
 		this.Config = this.appConfig.Config;
 	}
@@ -49,10 +42,6 @@ export class ClassService {
 		return sortedUserClasses;
 	}
 
-	GetUsersByClassId(classId: number): Promise<UserModels.UserClass[]> {
-		return this.ClassRepository.GetUsersByClassId(classId);
-	}
-
 	async GetById(id: number): Promise<ClassModels.MasterModel> {
 		const dbClass = await this.ClassRepository.GetById(id);
 		// this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
@@ -60,32 +49,24 @@ export class ClassService {
 	}
 
 	async Create(newClass: ClassModels.ClassReqModel): Promise<ClassModels.MasterModel> {
+		const CurrentUser = this.UserHelper.GetCurrentUser();
 		newClass.IsActive = newClass.IsActive ?? true;
 		newClass.IsDeleted = false;
+		newClass.CreatedBy = CurrentUser.UserId;
 
 		let dbcourse = await this.CoursesService.GetById(newClass.CourseId);
 		this.ValidateTodaysDate(newClass);
 		this.ValidateCourseDate(dbcourse, newClass);
 
-		// get session dates from the periodDto
-		const sessionDates = this.GenerateSessionDates(newClass.StartDate, newClass.Period, newClass.NumberOfSessions);
+		const sessionDates = this.SessionService.GenerateSessionDates(
+			newClass.StartDate,
+			newClass.Period,
+			newClass.NumberOfSessions
+		);
 		newClass.EndDate = sessionDates[sessionDates.length - 1].Date;
 
 		let createdClass = await this.ClassRepository.Create(newClass);
-
-		let sessionsReqModel = sessionDates.map((sess, i) => {
-			let newSession = new LiveSessionModels.SessionReqModel();
-			newSession.ClassId = createdClass.Id;
-			newSession.StartDate = sess.Date;
-			newSession.Order = i + 1;
-
-			let endDate = new Date(sess.Date);
-			endDate.setMinutes(endDate.getMinutes() + sess.DurationInMins);
-
-			newSession.EndDate = endDate;
-			return newSession;
-		});
-		createdClass.LiveSessions = await this.SessionService.BulkCreate(sessionsReqModel);
+		await this.SessionService.CreateClassSessions(sessionDates, createdClass);
 
 		return createdClass;
 	}
@@ -94,24 +75,19 @@ export class ClassService {
 		let dbClass = await this.ClassRepository.GetById(id);
 		let dbcourse = dbClass.Course;
 
-		// this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
+		this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
 		this.ValidateCourseDate(dbcourse, newClass);
-		this.ValidateSessionDates(newClass);
 		this.ValidateTodaysDate(newClass, dbClass);
 
-		const sessionsLinkUpdated = await this.SessionService.GetSessionsLinkUpdates(newClass, dbClass);
-		let updatedsessions = await this.SessionService.BulkUpdate(newClass.LiveSessions);
-		if (sessionsLinkUpdated) {
-			// notify users of links changing
-			this.NotifyUsersForLinkChange(sessionsLinkUpdated, dbClass.Id);
-		}
+		this.SessionService.OnClassUpdate(newClass, dbClass);
+
 		let updatedClass = await this.ClassRepository.Update(id, newClass);
 		return updatedClass;
 	}
 
 	async Delete(id): Promise<ClassModels.MasterModel> {
 		let dbClass = await this.ClassRepository.GetById(id);
-		// this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
+		this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
 		return await this.ClassRepository.Delete(id);
 	}
 
@@ -170,75 +146,6 @@ export class ClassService {
 		// if (userExistsInCourse) throw new HttpException(ErrorCodesEnum.USER_EXISTS_COURSE, HttpStatus.BAD_REQUEST);
 	}
 
-	private GenerateSessionDates(
-		startDate: Date, // Starting date in "YYYY-MM-DD" format
-		periodDto: ClassModels.PeriodDto[], // PeriodDto array (Day of week and time)
-		numberOfSessions: number // Number of sessions to generate
-	): ClassModels.SessionDates[] {
-		const sessions: ClassModels.SessionDates[] = [];
-		let currentDate = new Date(startDate); // Convert start date to Date object
-		let sessionCount = 0;
-
-		// Function to find a matching period for a given day
-		function findPeriodForDay(dayOfWeek: number) {
-			return periodDto.find((period) => parseInt(period.Day.toString()) === dayOfWeek);
-		}
-
-		// Generate sessions by scanning day by day
-		while (sessionCount < numberOfSessions) {
-			const dayOfWeek = currentDate.getDay(); // Get current day of the week (0 is Sunday, 1 is Monday, etc.)
-
-			// Find a matching period for the current day
-			const matchingPeriod = findPeriodForDay(dayOfWeek);
-
-			if (matchingPeriod) {
-				// Create a session if a matching period is found
-				const sessionDate = new Date(currentDate);
-				const [hours, minutes] = matchingPeriod.Time.split(':').map(Number);
-				sessionDate.setHours(hours, minutes);
-
-				// Add this session to the sessions array
-				sessions.push({ Date: new Date(sessionDate), DurationInMins: matchingPeriod.DurationInMins });
-
-				// Increment session count
-				sessionCount++;
-			}
-
-			// Move to the next day
-			currentDate.setDate(currentDate.getDate() + 1);
-		}
-
-		return sessions;
-	}
-
-	private ValidateSessionDates(reqModel: ClassModels.ClassReqModel): boolean {
-		const liveSessions = reqModel.LiveSessions;
-
-		// check if the first session is before class start date
-		if (new Date(liveSessions[0].StartDate) < new Date(reqModel.StartDate)) {
-			throw new ApplicationException(ErrorCodesEnum.SESSION_BEFORE_CLASS, HttpStatus.BAD_REQUEST);
-		}
-
-		if (liveSessions.length < 2) {
-			return true;
-		}
-
-		for (let i = 0; i < liveSessions.length - 1; i++) {
-			const currentSession = liveSessions[i];
-			const nextSession = liveSessions[i + 1];
-
-			// check if sessions order is persisted in its dates
-			if (new Date(currentSession.StartDate) > new Date(nextSession.StartDate)) {
-				throw new ApplicationException(
-					`Session ${i + 2} starts before session ${i + 1}.`,
-					HttpStatus.BAD_REQUEST
-				);
-			}
-		}
-
-		return true;
-	}
-
 	private ValidateCourseDate(dbcourse: CoursesModels.MasterModel, newClass: ClassModels.ClassReqModel): boolean {
 		if (new Date(newClass.StartDate) < new Date(dbcourse.StartDate)) {
 			throw new ApplicationException(ErrorCodesEnum.CLASS_BEFORE_COURSE, HttpStatus.BAD_REQUEST);
@@ -274,29 +181,5 @@ export class ClassService {
 		classes.forEach((c) => delete c.LiveSessions);
 		let updatedClasses = await this.ClassRepository.BulkUpdate(classes);
 		return updatedClasses;
-	}
-
-	async NotifyUsersForLinkChange(sessionsLinkUpdated: LiveSessionModels.MasterModel[], classId: number) {
-		const userClasses = await this.GetUsersByClassId(classId);
-
-		for (const session of sessionsLinkUpdated) {
-			for (const userClass of userClasses) {
-				const message = `next session link is updated.`;
-				this.NotificationsWebSocketGateway.notifyUser(userClass.UserId, message);
-				this.SendEmailNotfication({
-					Email: userClass.User.Email,
-					Placeholders: {
-						FirstName: userClass.User.FirstName,
-						LastName: userClass.User.LastName,
-						SessionDetails: message
-					}
-				});
-			}
-		}
-	}
-
-	SendEmailNotfication(payload: NotificationsModels.NotificationPayload) {
-		const emailType = NotificationTemplateKey.Email.REMINDER;
-		this.NotificationsService.sendNotificationEmail(emailType, payload);
 	}
 }

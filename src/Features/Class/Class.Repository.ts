@@ -20,7 +20,11 @@ export class ClassRepository {
 	async GetEnrolledClassesByUserId(userId: number): Promise<UserClass[]> {
 		const userClasses = await this.userClassRepository.find({
 			where: {
-				UserId: userId
+				UserId: userId,
+				Class: {
+					// IsActive:true,//to get completed
+					IsDeleted: false
+				}
 			},
 			relations: [
 				'Class',
@@ -38,15 +42,6 @@ export class ClassRepository {
 			relations: ['UserClasses', 'UserClasses.User', 'LiveSessions', 'Course', 'Course.Classes'],
 			where: {
 				Id: id
-			}
-		});
-	}
-
-	GetUsersByClassId(classId: number): Promise<UserClass[]> {
-		return this.userClassRepository.find({
-			relations: ['User'],
-			where: {
-				ClassId: classId
 			}
 		});
 	}
