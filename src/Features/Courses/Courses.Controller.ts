@@ -11,7 +11,8 @@ import {
 	ParseIntPipe,
 	UseInterceptors,
 	UploadedFile,
-	Res
+	Res,
+	Query
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CoursesModels } from './Courses.Models';
@@ -19,9 +20,10 @@ import { CoursesService } from './Courses.Service';
 import { AuthenticatedGuard } from '@App/Common/Auth/Authenticated.Guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname, join } from 'path';
+import { basename, extname, join } from 'path';
 import { ClassModels } from '../Class/Class.Models';
 import { AdminGuard } from '@App/Common/Auth/Admin.Guard';
+import * as fs from 'fs';
 
 @ApiTags('Courses')
 @Controller('courses')
@@ -68,11 +70,19 @@ export class CoursesController {
 	@UseInterceptors(
 		FileInterceptor('file', {
 			storage: diskStorage({
-				destination: `./uploads/images/courses`,
+				destination: (req, file, callback) => {
+					const id = req.params.id;
+					const dir = `./uploads/files/courses/${id}`;
+					if (!fs.existsSync(dir)) {
+						fs.mkdirSync(dir, { recursive: true });
+					}
+					callback(null, dir);
+				},
 				filename: (req, file, callback) => {
-					const uniquName = req.params.id;
 					const ext = extname(file.originalname);
-					const fileName = uniquName + '.' + new Date().getTime() + ext;
+					const name = basename(file.originalname, ext);
+					const isSample = req.query.IsSample === 'true';
+					const fileName = name + '.' + new Date().getTime() + (isSample ? '.sample' : '') + ext;
 					callback(null, fileName);
 				}
 			})
@@ -97,26 +107,34 @@ export class CoursesController {
 		return this.CoursesService.Delete(id);
 	}
 
-	@Get('uploads/images/courses/:image')
-	GetCourseImage(@Param('image') imageName: any, @Res() res: any) {
-		return res.sendFile(join(process.cwd(), 'uploads/images/courses/' + imageName));
+	@Get('uploads/files/courses/:id/:file')
+	GetCourseFile(@Param('id') id: number, @Param('file') fileName: any, @Res() res: any) {
+		return res.sendFile(join(process.cwd(), `uploads/files/courses/${id}/${fileName}`));
 	}
 
 	@Post('/upload/file/:id')
 	@UseInterceptors(
 		FileInterceptor('file', {
 			storage: diskStorage({
-				destination: `./uploads/files/courses`,
+				destination: (req, file, callback) => {
+					const id = req.params.id;
+					const dir = `./uploads/files/courses/${id}`;
+					if (!fs.existsSync(dir)) {
+						fs.mkdirSync(dir, { recursive: true });
+					}
+					callback(null, dir);
+				},
 				filename: (req, file, callback) => {
-					const uniquName = req.params.id;
 					const ext = extname(file.originalname);
-					const fileName = uniquName + ext;
+					const name = basename(file.originalname, ext);
+					const isSample = req.query.IsSample === 'true';
+					const fileName = name + (isSample ? '.sample' : '') + ext;
 					callback(null, fileName);
 				}
 			})
 		})
 	)
-	UploadFile(@UploadedFile() file: Express.Multer.File): Promise<{}> {
+	UploadFile(@UploadedFile() file: Express.Multer.File, @Query('IsSample') isSample: string): Promise<{}> {
 		return this.CoursesService.Upload(file.path);
 	}
 }

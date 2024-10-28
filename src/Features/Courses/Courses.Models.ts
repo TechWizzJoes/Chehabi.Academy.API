@@ -16,6 +16,7 @@ export namespace CoursesModels {
 		InstructorId: number | null;
 		TypeId: number | null;
 		VideoPath: string | null;
+		FreeFilePath: string | null;
 		FilePath: string | null;
 		StartDate: Date | null;
 		IsActive: boolean | null;

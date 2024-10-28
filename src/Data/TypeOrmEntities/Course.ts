@@ -87,6 +87,9 @@ export class Course {
 	@Column('int', { name: 'CreatedBy', nullable: true })
 	CreatedBy: number | null;
 
+	@Column('varchar', { name: 'FreeFilePath', nullable: true, length: 255 })
+	FreeFilePath: string | null;
+
 	@OneToMany(() => CartItem, (CartItem) => CartItem.Course)
 	CartItems: CartItem[];
 
