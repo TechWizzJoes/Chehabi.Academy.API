@@ -72,7 +72,7 @@ export class CoursesController {
 			storage: diskStorage({
 				destination: (req, file, callback) => {
 					const id = req.params.id;
-					const dir = `./uploads/files/courses/${id}`;
+					const dir = `${process.env.COURSES_STORAGE_FOLDER}/${id}`;
 					if (!fs.existsSync(dir)) {
 						fs.mkdirSync(dir, { recursive: true });
 					}
@@ -109,7 +109,7 @@ export class CoursesController {
 
 	@Get('uploads/files/courses/:id/:file')
 	GetCourseFile(@Param('id') id: number, @Param('file') fileName: any, @Res() res: any) {
-		return res.sendFile(join(process.cwd(), `uploads/files/courses/${id}/${fileName}`));
+		return res.sendFile(join(process.cwd(), `${process.env.COURSES_STORAGE_FOLDER}/${id}/${fileName}`));
 	}
 
 	@Post('/upload/file/:id')
@@ -118,7 +118,7 @@ export class CoursesController {
 			storage: diskStorage({
 				destination: (req, file, callback) => {
 					const id = req.params.id;
-					const dir = `./uploads/files/courses/${id}`;
+					const dir = `${process.env.COURSES_STORAGE_FOLDER}/${id}`;
 					if (!fs.existsSync(dir)) {
 						fs.mkdirSync(dir, { recursive: true });
 					}

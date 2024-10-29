@@ -16,6 +16,7 @@ export default registerAs('Config', () => ({
 		Idle: parseInt(process.env.DATABASE_POOL_IDLE, 10)
 	},
 	StorageFolder: process.env.STORAGE_FOLDER,
+	CoursesStorageFolder: process.env.COURSES_STORAGE_FOLDER,
 	Auth: {
 		EncryptionKey: process.env.AUTH_ENCRYPTION_KEY,
 		Jwt: {
