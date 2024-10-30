@@ -33,6 +33,7 @@ import { RatingModule } from '@App/Features/Rating/Rating.Module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { CartModule } from '@App/Features/Cart/Cart.Module';
 import { JobsModule } from '@App/Features/Jobs/Jobs.Module';
+import { ContactUsModule } from '@App/Features/ContactUs/ContactUs.Module';
 
 @Module({
 	imports: [
@@ -59,6 +60,7 @@ import { JobsModule } from '@App/Features/Jobs/Jobs.Module';
 		WhatsNewModule,
 		RatingModule,
 		CartModule,
+		ContactUsModule,
 		JobsModule
 	],
 	controllers: [AppController],
