@@ -1,20 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { AppConfig, Config } from '@App/Config/App.Config';
-import { Repository } from 'typeorm';
+import { Config } from '@App/Config/App.Config';
+import { And, IsNull, Not, Raw, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Feedback } from '@App/Data/TypeOrmEntities/Feedback';
 import { FeedbackModels } from './Feedback.Models';
-import { UserHelper } from '@App/Common/Helpers/CurrentUser.Helper';
-import { CommonHelper } from '@App/Common/Helpers/Common.Helper';
 
 @Injectable()
 export class FeedbackRepository {
 	Config: Config;
 
-	constructor(@InjectRepository(Feedback) private Feedback: Repository<Feedback>, private UserHelper: UserHelper) {}
+	constructor(
+		@InjectRepository(Feedback)
+		private Feedback: Repository<Feedback>
+	) {}
 
 	async Getall(): Promise<Feedback[]> {
 		return this.Feedback.find({
+			where: {
+				Text: And(
+					Not(IsNull()),
+					Raw((alias) => `TRIM(${alias}) != ''`)
+				)
+			},
+			order: {
+				Rating: 'desc'
+			},
 			relations: ['User']
 		});
 	}
@@ -28,13 +38,23 @@ export class FeedbackRepository {
 		});
 	}
 
-	async Create(Feedback: FeedbackModels.ReqModel): Promise<Feedback> {
-		const newFeedback = this.Feedback.create({
-			Text: Feedback.Text,
-			CreatedBy: this.UserHelper.GetCurrentUser()?.UserId ?? Feedback.CreatedBy,
-			IsDeleted: false
-		});
-		return await this.Feedback.save(newFeedback);
+	async getByUserId(userId: number): Promise<Feedback[]> {
+		return await this.Feedback.find({ where: { CreatedBy: userId } });
+	}
+
+	async getByCourseId(courseId: number): Promise<Feedback[]> {
+		return await this.Feedback.find({ where: { CourseId: courseId } });
+	}
+
+	async Create(feedback: FeedbackModels.ReqModel): Promise<Feedback> {
+		const newFeedback = await this.Feedback.upsert(
+			{
+				...feedback,
+				IsDeleted: false
+			},
+			['CreatedBy', 'CourseId']
+		);
+		return newFeedback.generatedMaps[0] as Feedback;
 	}
 
 	async Update(id, Feedback: FeedbackModels.ReqModel): Promise<Feedback> {
@@ -45,8 +65,7 @@ export class FeedbackRepository {
 		});
 
 		updateFeedback.Text = Feedback.Text;
-		updateFeedback.CreatedBy = Feedback.CreatedBy;
-		updateFeedback.IsDeleted = Feedback.IsDeleted;
+		updateFeedback.Rating = Feedback.Rating;
 		return await this.Feedback.save(updateFeedback);
 	}
 

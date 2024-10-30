@@ -29,7 +29,6 @@ import { ApplicationExceptionFilter } from '@App/Common/Filters/ApplicationExcep
 import { WhatsNewModule } from '@App/Features/WhatsNew/WhatsNew.Module';
 import { MulterModule } from '@nestjs/platform-express';
 import { SessionModule } from '@App/Features/Session/Session.Module';
-import { RatingModule } from '@App/Features/Rating/Rating.Module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { CartModule } from '@App/Features/Cart/Cart.Module';
 import { JobsModule } from '@App/Features/Jobs/Jobs.Module';
@@ -58,7 +57,6 @@ import { ContactUsModule } from '@App/Features/ContactUs/ContactUs.Module';
 		NotificationsModule,
 		EmailSenderModule,
 		WhatsNewModule,
-		RatingModule,
 		CartModule,
 		ContactUsModule,
 		JobsModule

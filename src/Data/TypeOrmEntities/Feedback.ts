@@ -14,6 +14,9 @@ export class Feedback {
 	@Column('text', { name: 'Text', nullable: true })
 	Text: string | null;
 
+	@Column('float', { name: 'Rating', precision: 12 })
+	Rating: number;
+
 	@Column('tinyint', { name: 'IsDeleted', nullable: true, width: 1 })
 	IsDeleted: boolean | null;
 

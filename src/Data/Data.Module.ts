@@ -18,7 +18,6 @@ import { Cart } from './TypeOrmEntities/Cart';
 import { CartItem } from './TypeOrmEntities/CartItem';
 import { UserClass } from './TypeOrmEntities/UserClass';
 import { UserCourse } from './TypeOrmEntities/UserCourse';
-import { Rating } from './TypeOrmEntities/Rating';
 import { UserPrefrence } from './TypeOrmEntities/UserPrefrence';
 import { ContactUs } from './TypeOrmEntities/ContactUs';
 
@@ -38,7 +37,6 @@ const Entities = [
 	CartItem,
 	UserCourse,
 	UserClass,
-	Rating,
 	UserPrefrence,
 	ContactUs
 ];

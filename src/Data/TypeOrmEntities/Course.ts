@@ -5,7 +5,6 @@ import { CourseType } from './CourseType';
 import { Instructor } from './Instructor';
 import { User } from './User';
 import { Feedback } from './Feedback';
-import { Rating } from './Rating';
 import { RecordedSession } from './RecordedSession';
 import { UserCourse } from './UserCourse';
 
@@ -31,8 +30,14 @@ export class Course {
 	@Column('int', { name: 'TypeId', nullable: true })
 	TypeId: number | null;
 
+	@Column('varchar', { name: 'ImageUrl', nullable: true, length: 255 })
+	ImageUrl: string | null;
+
 	@Column('varchar', { name: 'VideoPath', nullable: true, length: 255 })
 	VideoPath: string | null;
+
+	@Column('varchar', { name: 'FreeFilePath', nullable: true, length: 255 })
+	FreeFilePath: string | null;
 
 	@Column('varchar', { name: 'FilePath', nullable: true, length: 255 })
 	FilePath: string | null;
@@ -62,9 +67,6 @@ export class Course {
 	@Column('int', { name: 'Raters', nullable: true })
 	Raters: number | null;
 
-	@Column('varchar', { name: 'ImageUrl', nullable: true, length: 255 })
-	ImageUrl: string | null;
-
 	@Column('text', { name: 'ToBeLearned', nullable: true })
 	ToBeLearned: string | null;
 
@@ -86,9 +88,6 @@ export class Course {
 	@RelationId((Course: Course) => Course.Creator)
 	@Column('int', { name: 'CreatedBy', nullable: true })
 	CreatedBy: number | null;
-
-	@Column('varchar', { name: 'FreeFilePath', nullable: true, length: 255 })
-	FreeFilePath: string | null;
 
 	@OneToMany(() => CartItem, (CartItem) => CartItem.Course)
 	CartItems: CartItem[];
@@ -119,9 +118,6 @@ export class Course {
 
 	@OneToMany(() => Feedback, (Feedback) => Feedback.Course)
 	Feedbacks: Feedback[];
-
-	@OneToMany(() => Rating, (Rating) => Rating.Course)
-	Ratings: Rating[];
 
 	@OneToMany(() => RecordedSession, (RecordedSession) => RecordedSession.Course)
 	RecordedSessions: RecordedSession[];

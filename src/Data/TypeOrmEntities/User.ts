@@ -6,7 +6,6 @@ import { Feedback } from './Feedback';
 import { Instructor } from './Instructor';
 import { NotificationSubscriptions } from './NotificationSubscriptions';
 import { NotificationTemplate } from './NotificationTemplate';
-import { Rating } from './Rating';
 import { UserPrefrence } from './UserPrefrence';
 import { UserClass } from './UserClass';
 import { UserCourse } from './UserCourse';
@@ -80,9 +79,6 @@ export class User {
 
 	@OneToMany(() => NotificationTemplate, (NotificationTemplate) => NotificationTemplate.CreatedBy)
 	NotificationTemplates: NotificationTemplate[];
-
-	@OneToMany(() => Rating, (Rating) => Rating.User)
-	Ratings: Rating[];
 
 	@OneToOne(() => UserPrefrence, (UserPrefrence) => UserPrefrence.User)
 	UserPrefrence: UserPrefrence;
