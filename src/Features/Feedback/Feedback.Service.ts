@@ -6,6 +6,7 @@ import { FeedbackRepository } from './Feedback.Repository';
 import { FeedbackModels } from './Feedback.Models';
 import { CoursesService } from '../Courses/Courses.Service';
 import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
+import { ClassService } from '../Class/Class.Service';
 
 @Injectable()
 export class FeedbackService {
@@ -15,7 +16,8 @@ export class FeedbackService {
 		private appConfig: AppConfig,
 		private FeedbackRepository: FeedbackRepository,
 		private UserHelper: UserHelper,
-		private readonly courseService: CoursesService
+		private readonly courseService: CoursesService,
+		private readonly classService: ClassService
 	) {
 		this.Config = this.appConfig.Config;
 	}
@@ -42,9 +44,13 @@ export class FeedbackService {
 		if (!course) {
 			throw new ApplicationException(ErrorCodesEnum.COURSE_NOT_FOUND, HttpStatus.BAD_REQUEST);
 		}
-
+		const isPaid = (await this.classService.GetEnrolledClassesByUserId()).filter(
+			(c) => c.Class.CourseId == course.Id && c.IsPaid
+		);
+		if (isPaid.length == 0) {
+			throw new ApplicationException(ErrorCodesEnum.COURSE_NOT_PAID_TO_RATE, HttpStatus.BAD_REQUEST);
+		}
 		reqModel.CreatedBy = userId;
-		console.log(reqModel);
 		const newFeedback = await this.FeedbackRepository.Create(reqModel);
 
 		const feedbacks = await this.FeedbackRepository.getByCourseId(reqModel.CourseId);

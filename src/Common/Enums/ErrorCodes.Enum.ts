@@ -19,6 +19,7 @@ export enum ErrorCodesEnum {
 	CLASS_DELETED = 'CLASS_DELETED',
 	CLASS_Started = 'CLASS_Started',
 	CLASS_HAS_NO_FREETRIAL = 'CLASS_HAS_NO_FREETRIAL',
+	COURSE_NOT_PAID_TO_RATE = 'COURSE_NOT_PAID_TO_RATE',
 
 	//Notification template error
 	EMAIL_NOT_Sent = 'Email not sent:',

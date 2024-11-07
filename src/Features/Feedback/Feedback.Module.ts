@@ -6,9 +6,10 @@ import { FeedbackRepository } from './Feedback.Repository';
 import { FeedbackController } from './Feedback.Controller';
 import { FeedbackService } from './Feedback.Service';
 import { CoursesModule } from '../Courses/Courses.Module';
+import { ClassModule } from '../Class/Class.Module';
 
 @Module({
-	imports: [DataModule, CommonModule, CoursesModule],
+	imports: [DataModule, CommonModule, CoursesModule, ClassModule],
 	controllers: [FeedbackController],
 	providers: [AppConfig, FeedbackService, FeedbackRepository]
 })
