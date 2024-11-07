@@ -134,7 +134,7 @@ export class CoursesRepository {
 				InstructorId: InstructorId,
 				IsDeleted: false
 			},
-			relations: ['Instructor.User']
+			relations: ['Instructor.User', 'Level', 'Type']
 		});
 
 		return Classes;
