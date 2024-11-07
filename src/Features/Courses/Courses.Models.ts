@@ -14,6 +14,7 @@ export namespace CoursesModels {
 		Description: string | null;
 		InstructorId: number | null;
 		TypeId: number | null;
+		LevelId: number;
 		VideoPath: string | null;
 		FreeFilePath: string | null;
 		FilePath: string | null;
@@ -25,11 +26,13 @@ export namespace CoursesModels {
 		ImageUrl: string | null;
 		Prerequisite: string | null;
 		ToBeLearned: string | null;
-		Price: number | null;
+		Price: number;
+		PriceBeforeDiscount: number | null;
 		IsLive: boolean;
 		Classes: ClassModels.MasterModel[];
 		Instructor: InstructorModels.MasterModel;
 		Type: CourseType;
+		Level: CourseLevel;
 		Feedbacks: FeedbackModels.MasterModel[];
 		RecordedSessions: RecordedSessionModels.MasterModel[];
 		CreatedOn: Date;
@@ -70,9 +73,12 @@ export namespace CoursesModels {
 		@ApiProperty()
 		TypeIdString: string | null;
 		@ApiProperty()
+		LevelIdString: string | null;
+		@ApiProperty()
 		IsActive: boolean | null;
 
 		TypeId: number;
+		LevelId: number;
 		IsDeleted: boolean;
 		InstructorId: number;
 		CreatedBy: number;
@@ -92,6 +98,13 @@ export namespace CoursesModels {
 }
 
 export class CourseType {
+	Id: number;
+	Code: number;
+	Text: string;
+	Courses: CoursesModels.MasterModel[];
+}
+
+export class CourseLevel {
 	Id: number;
 	Code: number;
 	Text: string;

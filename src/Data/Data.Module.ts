@@ -21,6 +21,7 @@ import { UserCourse } from './TypeOrmEntities/UserCourse';
 import { UserPrefrence } from './TypeOrmEntities/UserPrefrence';
 import { ContactUs } from './TypeOrmEntities/ContactUs';
 import { InAppNotification } from './TypeOrmEntities/InAppNotification';
+import { CourseLevel } from './TypeOrmEntities/CourseLevel';
 
 const Entities = [
 	User,
@@ -32,6 +33,7 @@ const Entities = [
 	WhatsNew,
 	NotificationSubscriptions,
 	CourseType,
+	CourseLevel,
 	Instructor,
 	NotificationTemplate,
 	Cart,

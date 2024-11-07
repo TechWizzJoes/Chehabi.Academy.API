@@ -11,6 +11,7 @@ import { promises } from 'dns';
 import { ClassModels } from '../Class/Class.Models';
 import { CourseTypeEnum } from '@App/Common/Enums/CourseType.Enum';
 import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
+import { CourseLevelEnum } from '@App/Common/Enums/CourseLevel.Enum';
 
 @Injectable()
 export class CoursesService {
@@ -49,9 +50,15 @@ export class CoursesService {
 	async Create(course: CoursesModels.CoursesReqModel): Promise<CoursesModels.MasterModel> {
 		const CurrentUser = this.UserHelper.GetCurrentUser();
 		course.InstructorId = CurrentUser.InstructorId;
+
 		let courseType = CourseTypeEnum[+course.TypeIdString];
 		if (!courseType) throw new ApplicationException('invalid course type id', HttpStatus.BAD_REQUEST);
 		course.TypeId = CourseTypeEnum[courseType];
+
+		let courseLevel = CourseLevelEnum[+course.LevelIdString];
+		if (!courseLevel) throw new ApplicationException('invalid course level id', HttpStatus.BAD_REQUEST);
+		course.LevelId = CourseLevelEnum[courseLevel];
+
 		course.IsActive = course.IsActive;
 		course.IsDeleted = false;
 		course.CreatedBy = CurrentUser.UserId;
@@ -64,7 +71,7 @@ export class CoursesService {
 		let dbcourse = await this.CoursesRepository.GetById(id);
 		this.UserHelper.ValidateOwnerShip(dbcourse.CreatedBy);
 		this.ValidateClassesDates(course, dbcourse);
-		this.ValidateTodaysDate(course);
+		this.ValidateTodaysDate(course, dbcourse);
 		return await this.CoursesRepository.Update(id, course);
 	}
 
@@ -104,7 +111,15 @@ export class CoursesService {
 		return true;
 	}
 
-	private ValidateTodaysDate(course: CoursesModels.CoursesReqModel): boolean {
+	private ValidateTodaysDate(course: CoursesModels.CoursesReqModel, dbcourse?: CoursesModels.MasterModel): boolean {
+		// if start date hasn't changed
+		if (
+			dbcourse &&
+			new Date(course.StartDate).setHours(0, 0, 0) == new Date(dbcourse.StartDate).setHours(0, 0, 0)
+		) {
+			return true;
+		}
+
 		let newStartDate: Date = new Date(course.StartDate);
 		newStartDate.setHours(0, 0, 0, 0); // Set time to 00:00:00 to compare days only
 

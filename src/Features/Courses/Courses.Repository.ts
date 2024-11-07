@@ -46,14 +46,7 @@ export class CoursesRepository {
 		}
 
 		if (filter.Level) {
-			// const { Beginner, Intermediate, Advanced } = filter.Level;
-			// const levels = [];
-			// if (Beginner) levels.push('Beginner');
-			// if (Intermediate) levels.push('Intermediate');
-			// if (Advanced) levels.push('Advanced');
-			// if (levels.length > 0) {
-			// 	query.andWhere('course.Level IN (:...levels)', { levels });
-			// }
+			query.andWhere('course.Level = :level', { level: filter.Level });
 		}
 
 		// console.log(query.getSql());

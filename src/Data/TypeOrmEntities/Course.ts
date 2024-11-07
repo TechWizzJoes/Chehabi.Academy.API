@@ -1,6 +1,7 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { CartItem } from './CartItem';
 import { Class } from './Class';
+import { CourseLevel } from './CourseLevel';
 import { CourseType } from './CourseType';
 import { Instructor } from './Instructor';
 import { User } from './User';
@@ -11,6 +12,7 @@ import { UserCourse } from './UserCourse';
 @Index('Course_Instructor_FK', ['InstructorId'], {})
 @Index('Course_CourseType_FK', ['TypeId'], {})
 @Index('fk_Course_created_by', ['CreatedBy'], {})
+@Index('Course_CourseLevel_FK', ['LevelId'], {})
 @Entity('Course', { schema: 'mydb' })
 export class Course {
 	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
@@ -29,6 +31,9 @@ export class Course {
 	@RelationId((Course: Course) => Course.Type)
 	@Column('int', { name: 'TypeId', nullable: true })
 	TypeId: number | null;
+
+	@Column('int', { name: 'LevelId' })
+	LevelId: number;
 
 	@Column('varchar', { name: 'ImageUrl', nullable: true, length: 255 })
 	ImageUrl: string | null;
@@ -70,8 +75,15 @@ export class Course {
 	@Column('text', { name: 'ToBeLearned', nullable: true })
 	ToBeLearned: string | null;
 
-	@Column('float', { name: 'Price', nullable: true, precision: 12 })
-	Price: number | null;
+	@Column('float', { name: 'Price', nullable: false, precision: 12 })
+	Price: number;
+
+	@Column('float', {
+		name: 'PriceBeforeDiscount',
+		nullable: true,
+		precision: 12
+	})
+	PriceBeforeDiscount: number | null;
 
 	@Column('text', { name: 'Prerequisite', nullable: true })
 	Prerequisite: string | null;
@@ -94,6 +106,13 @@ export class Course {
 
 	@OneToMany(() => Class, (Class) => Class.Course)
 	Classes: Class[];
+
+	@ManyToOne(() => CourseLevel, (CourseLevel) => CourseLevel.Courses, {
+		onDelete: 'NO ACTION',
+		onUpdate: 'NO ACTION'
+	})
+	@JoinColumn([{ name: 'LevelId', referencedColumnName: 'Id' }])
+	Level: CourseLevel;
 
 	@ManyToOne(() => CourseType, (CourseType) => CourseType.Courses, {
 		onDelete: 'NO ACTION',
