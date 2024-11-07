@@ -19,8 +19,13 @@ export class NotificationsController {
 	// }
 
 	@Get('in-app')
-	GetInApp(@Query('isRead') isRead: boolean): Promise<any> {
-		return this.NotificationsService.GetInApp(isRead);
+	GetInApp(@Query('isRead') isRead: boolean, @Query('page') page: number): Promise<any> {
+		return this.NotificationsService.GetInApp(isRead, page);
+	}
+
+	@Post('in-app/read')
+	ReadItems(@Body() ids: number[]): Promise<any> {
+		return this.NotificationsService.ReadItems(ids);
 	}
 
 	@Post('send-notification-email')

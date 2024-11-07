@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { AppConfig, Config } from '@App/Config/App.Config';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NotificationSubscriptions } from '@App/Data/TypeOrmEntities/NotificationSubscriptions';
 import { NotificationTemplate } from '@App/Data/TypeOrmEntities/NotificationTemplate';
@@ -51,7 +51,7 @@ export class NotificationsRepository {
 		return await this.InAppNotification.save(newNotification);
 	}
 
-	async GetInAppNotificationByUserId(userId: number, isRead?: boolean): Promise<InAppNotification[]> {
+	async GetInAppNotificationByUserId(userId: number, isRead?: boolean, page?: number): Promise<InAppNotification[]> {
 		const where = {
 			UserId: userId
 		} as any;
@@ -62,10 +62,22 @@ export class NotificationsRepository {
 
 		return await this.InAppNotification.find({
 			where,
-			take: 11,
+			take: (+(page ?? 0) + 1) * 10,
 			order: {
 				CreatedOn: 'DESC'
 			}
 		});
+	}
+
+	async ReadItems(ids: number[]): Promise<any> {
+		const items = await this.InAppNotification.findBy({ Id: In(ids) });
+
+		items.forEach((item) => {
+			item.IsRead = true;
+		});
+
+		const updated = await this.InAppNotification.save(items);
+		console.log(updated);
+		return updated;
 	}
 }

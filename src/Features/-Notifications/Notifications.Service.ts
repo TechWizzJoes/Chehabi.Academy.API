@@ -95,9 +95,13 @@ export class NotificationsService {
 		return template.Template;
 	}
 
-	async GetInApp(isRead?: boolean) {
+	async GetInApp(isRead?: boolean, page?: number) {
 		const currentUser = this.UserHelper.GetCurrentUser();
-		return this.NotificationsRepository.GetInAppNotificationByUserId(currentUser.UserId, isRead);
+		return this.NotificationsRepository.GetInAppNotificationByUserId(currentUser.UserId, isRead, page);
+	}
+
+	ReadItems(ids: number[]): Promise<any> {
+		return this.NotificationsRepository.ReadItems(ids);
 	}
 
 	async NotifyUser(payload: NotificationModels.NotificationPayload): Promise<any> {
