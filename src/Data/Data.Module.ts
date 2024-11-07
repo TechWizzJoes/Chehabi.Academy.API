@@ -20,6 +20,7 @@ import { UserClass } from './TypeOrmEntities/UserClass';
 import { UserCourse } from './TypeOrmEntities/UserCourse';
 import { UserPrefrence } from './TypeOrmEntities/UserPrefrence';
 import { ContactUs } from './TypeOrmEntities/ContactUs';
+import { InAppNotification } from './TypeOrmEntities/InAppNotification';
 
 const Entities = [
 	User,
@@ -38,7 +39,8 @@ const Entities = [
 	UserCourse,
 	UserClass,
 	UserPrefrence,
-	ContactUs
+	ContactUs,
+	InAppNotification
 ];
 
 @Module({

@@ -1,4 +1,3 @@
-import { NotificationsWebSocketGateway } from '@App/Features/-Notifications/WebsocketGateway';
 import { LiveSessionModels } from '@App/Features/Session/Session.Models';
 import { SessionService } from '@App/Features/Session/Session.Service';
 import { InstructorModels } from '@App/Features/User/Instructor.Models';
@@ -6,15 +5,11 @@ import { UserModels } from '@App/Features/User/User.Models';
 import { Injectable } from '@nestjs/common';
 import { NotificationsService } from '@App/Features/-Notifications/Notifications.Service';
 import { NotificationTemplateKey } from '@App/Features/-Notifications/NotificationTemplateKey';
-import { NotificationsModels } from '@App/Features/-Notifications/Notifications.Models';
+import { NotificationModels } from '@App/Features/-Notifications/Notifications.Models';
 
 @Injectable()
 export class LiveSessionJobService {
-	constructor(
-		private SessionService: SessionService,
-		private NotificationsWebSocketGateway: NotificationsWebSocketGateway,
-		private NotificationsService: NotificationsService
-	) {}
+	constructor(private SessionService: SessionService, private NotificationsService: NotificationsService) {}
 
 	async LiveSessionsNotifiyingJob() {
 		console.log('LiveSessionsCron');
@@ -46,14 +41,14 @@ export class LiveSessionJobService {
 		// notify users of these sessions that the next session is in one hour
 		for (const userSession of userSessions) {
 			for (const user of userSession.Users) {
-				const message = `Next session of ${userSession.ClassName} class starts in one hour at ${userSession.Time}.`;
-				this.NotificationsWebSocketGateway.notifyUser(user.Id, message);
-				this.SendEmailNotfication({
-					Email: user.Email,
+				this.NotificationsService.NotifyUser({
+					Type: NotificationTemplateKey.SESSION_REMINDER_USER,
+					User: user,
 					Placeholders: {
 						FirstName: user.FirstName,
 						LastName: user.LastName,
-						SessionDetails: message
+						ClassName: userSession.ClassName,
+						Time: userSession.Time
 					}
 				});
 			}
@@ -82,34 +77,28 @@ export class LiveSessionJobService {
 	notifyInstructors(userSessions: InstructorSessions[]) {
 		// notify users of these sessions that the next session is in one hour
 		for (const userSession of userSessions) {
-			const message = `Next session of ${userSession.ClassName} class starts in one hour at ${userSession.Time}.`;
-			this.NotificationsWebSocketGateway.notifyUser(userSession.Instructor.UserId, message);
-			this.SendEmailNotfication({
-				Email: userSession.Instructor.User.Email,
+			this.NotificationsService.NotifyUser({
+				Type: NotificationTemplateKey.SESSION_REMINDER_INSTRUCTOR,
+				User: userSession.Instructor.User,
 				Placeholders: {
 					FirstName: userSession.Instructor.User.FirstName,
 					LastName: userSession.Instructor.User.LastName,
-					SessionDetails: message
+					ClassName: userSession.ClassName,
+					Time: userSession.Time
 				}
 			});
 			if (!userSession.Link) {
-				const message = `Please Add a meeting link for the upcoming session from ${userSession.ClassName} class.`;
-				this.NotificationsWebSocketGateway.notifyUser(userSession.Instructor.UserId, message);
-				this.SendEmailNotfication({
-					Email: userSession.Instructor.User.Email,
+				this.NotificationsService.NotifyUser({
+					Type: NotificationTemplateKey.SESSION_MEETING_LINK_REMINDER,
+					User: userSession.Instructor.User,
 					Placeholders: {
 						FirstName: userSession.Instructor.User.FirstName,
 						LastName: userSession.Instructor.User.LastName,
-						SessionDetails: message
+						ClassName: userSession.ClassName
 					}
 				});
 			}
 		}
-	}
-
-	SendEmailNotfication(payload: NotificationsModels.NotificationPayload) {
-		const emailType = NotificationTemplateKey.Email.REMINDER;
-		this.NotificationsService.sendNotificationEmail(emailType, payload);
 	}
 }
 

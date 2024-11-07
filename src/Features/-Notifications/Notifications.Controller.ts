@@ -1,24 +1,26 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { NotificationsService } from '@App/Features/-Notifications/Notifications.Service';
-import { AuthenticatedGuard } from '@App/Common/Auth/Authenticated.Guard';
-import { NotificationsModels } from './Notifications.Models';
-import { RefreshTokenGuard } from '@App/Common/Auth/RefreshToken.Guard';
-import { NotificationTemplateKey } from './NotificationTemplateKey';
+import { NotificationModels } from './Notifications.Models';
 
 @ApiTags('Notifications')
 @Controller('notifications')
 export class NotificationsController {
 	constructor(private NotificationsService: NotificationsService) {}
 
-	@Post('subscribe')
-	SubscribeClient(@Body() subObject: any): Promise<any> {
-		return this.NotificationsService.SubscribeClient(subObject);
-	}
+	// @Post('subscribe')
+	// SubscribeClient(@Body() subObject: any): Promise<any> {
+	// 	return this.NotificationsService.SubscribeClient(subObject);
+	// }
 
-	@Get('publish')
-	Publish(): Promise<any> {
-		return this.NotificationsService.Publish();
+	// @Get('publish')
+	// Publish(): Promise<any> {
+	// 	return this.NotificationsService.Publish();
+	// }
+
+	@Get('in-app')
+	GetInApp(@Query('isRead') isRead: boolean): Promise<any> {
+		return this.NotificationsService.GetInApp(isRead);
 	}
 
 	@Post('send-notification-email')
@@ -58,9 +60,9 @@ export class NotificationsController {
 			}
 		}
 	})
-	async sendNotificationEmail(
-		@Body() { type, payload }: { type: string; payload: NotificationsModels.NotificationPayload }
+	async NotifyUser(
+		@Body() { type, payload }: { type: string; payload: NotificationModels.NotificationPayload }
 	): Promise<any> {
-		return this.NotificationsService.sendNotificationEmail(type, payload);
+		return 'this.NotificationsService.NotifyUser(type, payload)';
 	}
 }

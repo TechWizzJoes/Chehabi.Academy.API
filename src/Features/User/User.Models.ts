@@ -1,4 +1,4 @@
-import { NotificationModels } from '../-Notifications/Notifications2.Models';
+import { NotificationModels } from '../-Notifications/Notifications.Models';
 import { CartModels } from '../Cart/Cart.Models';
 import { ClassModels } from '../Class/Class.Models';
 import { CoursesModels } from '../Courses/Courses.Models';
@@ -32,6 +32,7 @@ export namespace UserModels {
 		UserPrefrence: UserPrefrence;
 		UserClasses: UserClass[];
 		UserCourses: UserCourse[];
+		InAppNotification: NotificationModels.InApp[];
 
 		WhatsNews: WhatsNewModels.MasterModel[];
 	}

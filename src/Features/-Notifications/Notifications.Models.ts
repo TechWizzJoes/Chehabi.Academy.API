@@ -1,84 +1,36 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { UserModels } from '../User/User.Models';
 
-export namespace NotificationsModels {
-	export class User {
-		Id: number;
-		FirstName: string;
-		LastName: string;
-		Birthdate?: string;
-		IsActive?: boolean;
-		IsDeleted?: boolean;
-		Email: string;
-		Password: string;
-		IsAdmin: boolean;
-		ProfilePicturePath: string;
-	}
-
-	export class CurrentUser {
-		Id!: number;
-		FirstName!: string;
-		LastName!: string;
-		Email!: string;
-		IsAdmin!: boolean;
-		ProfilePicturePath: string;
-	}
-
-	export class JwtModel {
-		UserId!: number;
-		IsAdmin!: boolean;
-	}
-
-	export class LoginReqModel {
-		@ApiProperty()
-		Email!: string;
-		@ApiProperty()
-		Password!: string;
-	}
-
-	export class GoogleLoginReqModel {
-		@ApiProperty()
-		IdToken: string;
-	}
-
-	export class RegisterReqModel {
-		@ApiProperty()
-		Email!: string;
-		@ApiProperty()
-		Password!: string;
-		@ApiProperty()
-		FirstName: string;
-		@ApiProperty()
-		LastName: string;
-		@ApiProperty()
-		Birthdate?: string;
-		ProfilePicturePath?: string;
-	}
-
-	export class RefreshTokenReqModel {
-		@ApiProperty()
-		Id!: number;
-		@ApiProperty()
-		RefreshToken!: string;
-		@ApiProperty()
-		AccessToken!: string;
-	}
-
+export namespace NotificationModels {
 	export class NotificationPayload {
-		@ApiProperty()
-		Email!: string;
+		Type: string;
 
-		@ApiProperty()
-		Placeholders: { [key: string]: string }; // e.g., { FirstName: 'John', LastName: 'Doe', Amount: '100' }
-	}
-	export class LoginResModel {
-		constructor(public AccessToken: string, public RefreshToken: string, public CurrentUser: CurrentUser) {}
+		User!: UserModels.MasterModel;
+
+		Placeholders: { [key: string]: string };
 	}
 
-	export class RegisterResModel {
-		constructor(public AccessToken: string, public RefreshToken: string, public CurrentUser: CurrentUser) {}
+	export class NotificationTemplate {
+		Id: number;
+		Key: string | null;
+		Type: string | null;
+		Template: string | null;
+		CreatedBy: number | null;
+		Creator: UserModels.MasterModel;
 	}
 
-	export class RefreshTokenResModel {
-		constructor(public AccessToken: string, public RefreshToken: string) {}
+	export class InApp {
+		Id: number;
+		UserId: number;
+		Text: string;
+		IsRead: boolean;
+		CreatedOn: Date | null;
+		User: UserModels.MasterModel;
+	}
+
+	export class NotificationSubscriptions {
+		Id: number;
+		UserId: number | null;
+		Subscription: string;
+		User: UserModels.MasterModel;
 	}
 }

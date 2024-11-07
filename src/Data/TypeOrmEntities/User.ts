@@ -10,6 +10,7 @@ import { UserPrefrence } from './UserPrefrence';
 import { UserClass } from './UserClass';
 import { UserCourse } from './UserCourse';
 import { WhatsNew } from './WhatsNew';
+import { InAppNotification } from './InAppNotification';
 
 @Index('Email', ['Email'], { unique: true })
 @Entity('User', { schema: 'mydb' })
@@ -67,6 +68,9 @@ export class User {
 
 	@OneToMany(() => Feedback, (Feedback) => Feedback.CreatedBy)
 	Feedbacks: Feedback[];
+
+	@OneToMany(() => InAppNotification, (InAppNotification) => InAppNotification.User)
+	InAppNotification: InAppNotification[];
 
 	@OneToMany(() => Instructor, (Instructor) => Instructor.User)
 	Instructors: Instructor[];

@@ -12,7 +12,6 @@ import { CoursesService } from '../Courses/Courses.Service';
 import { Constants } from '@App/Common/Constants';
 import { StripeService } from './stripe.service';
 import { StripeModels } from './Stripe.Models';
-import { NotificationsWebSocketGateway } from '../-Notifications/WebsocketGateway';
 
 @Injectable()
 export class CartService {
@@ -24,8 +23,7 @@ export class CartService {
 		private UserHelper: UserHelper,
 		private ClassService: ClassService,
 		private CoursesService: CoursesService,
-		private StripeService: StripeService,
-		private NotificationsWebSocketGateway: NotificationsWebSocketGateway
+		private StripeService: StripeService
 	) {
 		this.Config = this.appConfig.Config;
 	}
@@ -178,10 +176,10 @@ export class CartService {
 			// empty the cart
 			if (userClass) {
 				this.RemoveFromCart(product.metadata.CartItemId, userId);
-				this.NotificationsWebSocketGateway.notifyUser(
-					userId,
-					`${classId} payment processed and is now available!`
-				);
+				// this.NotificationsWebSocketGateway.notifyUser(
+				// 	userId,
+				// 	`${classId} payment processed and is now available!`
+				// );
 			}
 		}
 	}

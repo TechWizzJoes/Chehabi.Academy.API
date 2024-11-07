@@ -19,24 +19,24 @@ export class ContactUsService {
 
 	async Create(reqModel: ContactUsModels.ContactUsReqModel): Promise<ContactUsModels.MasterModel> {
 		// notify us
-		this.NotificationsService.sendNotificationEmail(NotificationTemplateKey.Email.CONTACT_US, {
-			Email: 'info@chehabi-academy.com',
-			Placeholders: {
-				FirstName: reqModel.FirstName,
-				LastName: reqModel.LastName,
-				Description: reqModel.Description
-			}
-		});
+		// this.NotificationsService.NotifyUser(NotificationTemplateKey.CONTACT_US, {
+		// 	User: 'info@chehabi-academy.com',
+		// 	Placeholders: {
+		// 		FirstName: reqModel.FirstName,
+		// 		LastName: reqModel.LastName,
+		// 		Description: reqModel.Description
+		// 	}
+		// });
 
-		// reply to the user
-		this.NotificationsService.sendNotificationEmail(NotificationTemplateKey.Email.CONTACT_US_REPLY, {
-			Email: reqModel.Email,
-			Placeholders: {
-				FirstName: reqModel.FirstName,
-				LastName: reqModel.LastName,
-				Description: reqModel.Description
-			}
-		});
+		// // reply to the user
+		// this.NotificationsService.NotifyUser(NotificationTemplateKey.CONTACT_US_REPLY, {
+		// 	User: reqModel.Email,
+		// 	Placeholders: {
+		// 		FirstName: reqModel.FirstName,
+		// 		LastName: reqModel.LastName,
+		// 		Description: reqModel.Description
+		// 	}
+		// });
 		return await this.ContactUsRepository.Create(reqModel);
 	}
 }

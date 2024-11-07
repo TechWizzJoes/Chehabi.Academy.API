@@ -3,7 +3,6 @@ import { ApiBody, ApiTags, ApiOperation, ApiOkResponse, ApiProperty } from '@nes
 import { ConfigService } from '@nestjs/config';
 import { AppConfig } from '@App/Config/App.Config';
 import { spawn, exec } from 'child_process';
-import { NotificationsWebSocketGateway } from '@App/Features/-Notifications/WebsocketGateway';
 
 class command1 {
 	@ApiProperty()
@@ -11,16 +10,11 @@ class command1 {
 }
 @Controller()
 export class AppController {
-	constructor(private AppConfig: AppConfig, private NotificationsWebSocketGateway: NotificationsWebSocketGateway) {}
+	constructor(private AppConfig: AppConfig) {}
 
 	@Get()
 	getHello() {
-		const myconfig = this.AppConfig.Config;
-		this.NotificationsWebSocketGateway.notifyUser(9, ` payment processed and is now available!`);
-
 		return 'Chehabi academy api Works!';
-
-		//return myconfig;
 	}
 
 	@Get('/test')

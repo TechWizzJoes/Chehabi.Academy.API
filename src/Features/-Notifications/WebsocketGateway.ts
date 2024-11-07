@@ -1,23 +1,6 @@
-// import {
-//     WebSocketGateway,
-//     SubscribeMessage,
-//     WebSocketServer,
-//     OnGatewayConnection,
-//     OnGatewayDisconnect,
-//     MessageBody,
-// } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-// @WebSocketGateway(3002, {
-//     transports: ['websocket'],
-//     path: '/socket.io',
-//     cors: {
-//         origin: '*',
-//     },
-// })
 export class NotificationsWebSocketGateway {
-	//implements OnGatewayConnection, OnGatewayDisconnect {
-	// @WebSocketServer() server: Server;
 	server: Server;
 	private connectedUsers: Map<string, string> = new Map(); // Maps userId to socketId
 
@@ -62,9 +45,4 @@ export class NotificationsWebSocketGateway {
 			this.server.to(socketId).emit('notification', { message });
 		}
 	}
-
-	// @SubscribeMessage('events')
-	// handleEvent(@MessageBody() data: string): string {
-	//     return data;
-	// }
 }

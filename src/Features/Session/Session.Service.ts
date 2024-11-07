@@ -11,8 +11,7 @@ import { promises } from 'dns';
 import { ClassModels } from '../Class/Class.Models';
 import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
 import { UserService } from '../User/User.Service';
-import { NotificationsWebSocketGateway } from '../-Notifications/WebsocketGateway';
-import { NotificationsModels } from '../-Notifications/Notifications.Models';
+import { NotificationModels } from '../-Notifications/Notifications.Models';
 import { NotificationTemplateKey } from '../-Notifications/NotificationTemplateKey';
 import { NotificationsService } from '../-Notifications/Notifications.Service';
 
@@ -26,7 +25,6 @@ export class SessionService {
 		private JwtService: JwtService,
 		private UserHelper: UserHelper,
 		private UserService: UserService,
-		private NotificationsWebSocketGateway: NotificationsWebSocketGateway,
 		private NotificationsService: NotificationsService
 	) {
 		this.Config = this.appConfig.Config;
@@ -97,8 +95,8 @@ export class SessionService {
 
 		return await this.LiveSessionRepository.GetCustomHourSessions(startOfHour, endOfHour, null, [
 			'Class',
-			'Class.UserClasses.User',
-			'Class.Course.Instructor.User'
+			'Class.UserClasses.User.UserPrefrence',
+			'Class.Course.Instructor.User.UserPrefrence'
 		]);
 	}
 
@@ -275,24 +273,24 @@ export class SessionService {
 	async NotifyUsersForLinkChange(sessionsLinkUpdated: LiveSessionModels.MasterModel[], classId: number) {
 		const userClasses = await this.UserService.GetUsersByClassId(classId);
 
-		for (const session of sessionsLinkUpdated) {
-			for (const userClass of userClasses) {
-				const message = `next session link is updated.`;
-				this.NotificationsWebSocketGateway.notifyUser(userClass.UserId, message);
-				this.SendEmailNotfication({
-					Email: userClass.User.Email,
-					Placeholders: {
-						FirstName: userClass.User.FirstName,
-						LastName: userClass.User.LastName,
-						SessionDetails: message
-					}
-				});
-			}
-		}
+		// for (const session of sessionsLinkUpdated) {
+		// 	for (const userClass of userClasses) {
+		// 		const message = `next session link is updated.`;
+		// 		// this.NotificationsWebSocketGateway.notifyUser(userClass.UserId, message);
+		// 		this.SendEmailNotfication({
+		// 			User: userClass.User,
+		// 			Placeholders: {
+		// 				FirstName: userClass.User.FirstName,
+		// 				LastName: userClass.User.LastName,
+		// 				SessionDetails: message
+		// 			}
+		// 		});
+		// 	}
+		// }
 	}
 
-	SendEmailNotfication(payload: NotificationsModels.NotificationPayload) {
-		const emailType = NotificationTemplateKey.Email.REMINDER;
-		this.NotificationsService.sendNotificationEmail(emailType, payload);
-	}
+	// SendEmailNotfication(payload: NotificationModels.NotificationPayload) {
+	// 	const emailType = NotificationTemplateKey.REMINDER;
+	// 	this.NotificationsService.NotifyUser(emailType, payload);
+	// }
 }
