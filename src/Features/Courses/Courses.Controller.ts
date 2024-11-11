@@ -12,7 +12,9 @@ import {
 	UseInterceptors,
 	UploadedFile,
 	Res,
-	Query
+	Query,
+	HttpStatus,
+	ParseBoolPipe
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CoursesModels } from './Courses.Models';
@@ -24,6 +26,8 @@ import { basename, extname, join } from 'path';
 import { ClassModels } from '../Class/Class.Models';
 import { AdminGuard } from '@App/Common/Auth/Admin.Guard';
 import * as fs from 'fs';
+import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
+import { ErrorCodesEnum } from '@App/Common/Enums/ErrorCodes.Enum';
 
 @ApiTags('Courses')
 @Controller('courses')
@@ -108,7 +112,30 @@ export class CoursesController {
 	}
 
 	@Get('uploads/files/courses/:id/:file')
-	GetCourseFile(@Param('id') id: number, @Param('file') fileName: any, @Res() res: any) {
+	GetCourseFilePublic(@Param('id') id: number, @Param('file') fileName: string, @Res() res: any) {
+		const valid = this.CoursesService.ValidateDownloadPublic(fileName);
+		if (valid) {
+			res.set({
+				'Content-Disposition': `attachment; filename="${fileName}"`,
+				'Access-Control-Expose-Headers': 'Content-Disposition' // This line exposes the header to get the filename in web as its not the last section of the url
+			});
+			return res.sendFile(join(process.cwd(), `${process.env.COURSES_STORAGE_FOLDER}/${id}/${fileName}`));
+		} else throw new ApplicationException(ErrorCodesEnum.NON_PAID_MATERIAL_DOWNLOAD, HttpStatus.FORBIDDEN);
+	}
+
+	@Get('uploads/files/courses/:id/:file/:isadmin')
+	@UseGuards(AuthenticatedGuard)
+	async GetCourseFile(
+		@Param('id') id: number,
+		@Param('file') fileName: string,
+		@Param('isadmin', ParseBoolPipe) isAdmin: boolean,
+		@Res() res: any
+	) {
+		await this.CoursesService.ValidateDownload(id, fileName, isAdmin);
+		res.set({
+			'Content-Disposition': `attachment; filename="${fileName}"`,
+			'Access-Control-Expose-Headers': 'Content-Disposition' // This line exposes the header to get the filename in web as its not the last section of the url
+		});
 		return res.sendFile(join(process.cwd(), `${process.env.COURSES_STORAGE_FOLDER}/${id}/${fileName}`));
 	}
 

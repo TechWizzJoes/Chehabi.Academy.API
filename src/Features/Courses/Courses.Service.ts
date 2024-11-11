@@ -12,6 +12,7 @@ import { ClassModels } from '../Class/Class.Models';
 import { CourseTypeEnum } from '@App/Common/Enums/CourseType.Enum';
 import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
 import { CourseLevelEnum } from '@App/Common/Enums/CourseLevel.Enum';
+import { ClassService } from '../Class/Class.Service';
 
 @Injectable()
 export class CoursesService {
@@ -20,6 +21,7 @@ export class CoursesService {
 	constructor(
 		private appConfig: AppConfig,
 		private CoursesRepository: CoursesRepository,
+		// private classService: ClassService,
 		private JwtService: JwtService,
 		private UserHelper: UserHelper
 	) {
@@ -134,5 +136,25 @@ export class CoursesService {
 
 	async UpdateCourseRating(id: number, Rating: number, Raters: number): Promise<CoursesModels.MasterModel> {
 		return await this.CoursesRepository.UpdateCourseRating(id, Rating, Raters);
+	}
+
+	ValidateDownloadPublic(fileName: string) {
+		const isSample = fileName.includes('.sample.');
+		return isSample;
+	}
+
+	async ValidateDownload(courseId: number, fileName: string, isAdmin: boolean) {
+		const CurrentUser = this.UserHelper.GetCurrentUser();
+		const course = await this.GetById(courseId);
+
+		if (isAdmin && course.Instructor.UserId != CurrentUser.UserId)
+			throw new ApplicationException(ErrorCodesEnum.NON_INSTRUCTOR_MATERIAL_DOWNLOAD, HttpStatus.FORBIDDEN);
+
+		const userEnrolled = (await this.CoursesRepository.GetEnrolledCoursesByUserId(CurrentUser.UserId)).filter(
+			(c) => c.Class.CourseId == courseId && c.IsPaid
+		);
+		const isSample = fileName.includes('.sample.');
+		if (!userEnrolled && !isSample)
+			throw new ApplicationException(ErrorCodesEnum.NON_PAID_MATERIAL_DOWNLOAD, HttpStatus.FORBIDDEN);
 	}
 }

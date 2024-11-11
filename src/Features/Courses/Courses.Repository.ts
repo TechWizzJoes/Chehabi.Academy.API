@@ -5,14 +5,15 @@ import { Course } from '@App/Data/TypeOrmEntities/Course';
 import { CoursesModels } from './Courses.Models';
 import { Class } from '@App/Data/TypeOrmEntities/Class';
 import { User } from '@App/Data/TypeOrmEntities/User';
+import { UserClass } from '@App/Data/TypeOrmEntities/UserClass';
 
 @Injectable()
 export class CoursesRepository {
 	constructor(
 		@InjectRepository(Course)
 		private courseRepository: Repository<Course>,
-		@InjectRepository(User)
-		private userRepository: Repository<User>
+		@InjectRepository(UserClass)
+		private userClassRepository: Repository<UserClass>
 	) {}
 
 	async GetAll(filter: CoursesModels.Filter): Promise<Course[]> {
@@ -36,9 +37,12 @@ export class CoursesRepository {
 		}
 
 		if (filter.SearchInput) {
-			query.andWhere('(course.Name LIKE :search OR course.Description LIKE :search)', {
-				search: `%${filter.SearchInput.trim()}%`
-			});
+			query.andWhere(
+				'(course.Name LIKE :search OR course.Description LIKE :search OR course.ToBeLearned LIKE :search)',
+				{
+					search: `%${filter.SearchInput.trim()}%`
+				}
+			);
 		}
 
 		if (filter.Type) {
@@ -81,6 +85,20 @@ export class CoursesRepository {
 			.getOne();
 
 		return dbCourse;
+	}
+
+	async GetEnrolledCoursesByUserId(userId: number): Promise<UserClass[]> {
+		const userClasses = await this.userClassRepository.find({
+			where: {
+				UserId: userId,
+				Class: {
+					IsDeleted: false
+				}
+			},
+			relations: ['Class.Course']
+		});
+
+		return userClasses;
 	}
 
 	async Create(courseData: CoursesModels.CoursesReqModel): Promise<Course> {
