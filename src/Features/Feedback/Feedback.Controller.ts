@@ -21,6 +21,11 @@ export class FeedbackController {
 		return this.FeedbackService.Getall();
 	}
 
+	@Get('list/home/:take')
+	GetForHome(@Param('take', ParseIntPipe) take: number): Promise<FeedbackModels.MasterModel[]> {
+		return this.FeedbackService.GetForHome(take);
+	}
+
 	@Get('user/:userId')
 	@UseGuards(AuthenticatedGuard)
 	@ApiResponse({ status: 200, description: 'Rating for the user and course', type: FeedbackModels.MasterModel })

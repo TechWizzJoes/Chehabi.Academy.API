@@ -25,7 +25,23 @@ export class FeedbackRepository {
 			order: {
 				Rating: 'desc'
 			},
-			relations: ['User']
+			relations: ['User', 'Course']
+		});
+	}
+
+	async GetForHome(take: number): Promise<Feedback[]> {
+		return this.Feedback.find({
+			where: {
+				Text: And(
+					Not(IsNull()),
+					Raw((alias) => `TRIM(${alias}) != ''`)
+				)
+			},
+			order: {
+				Rating: 'desc'
+			},
+			take: take,
+			relations: ['User', 'Course']
 		});
 	}
 
@@ -63,6 +79,10 @@ export class FeedbackRepository {
 				Id: id
 			}
 		});
+
+		if (!updateFeedback) {
+			return null;
+		}
 
 		updateFeedback.Text = Feedback.Text;
 		updateFeedback.Rating = Feedback.Rating;

@@ -30,6 +30,10 @@ export class FeedbackService {
 		return this.FeedbackRepository.Getall();
 	}
 
+	async GetForHome(take: number): Promise<FeedbackModels.MasterModel[]> {
+		return this.FeedbackRepository.GetForHome(take);
+	}
+
 	async getByUser(): Promise<FeedbackModels.MasterModel[]> {
 		const userId = this.UserHelper.GetCurrentUser().UserId;
 		const feedbacks = await this.FeedbackRepository.getByUserId(userId);
