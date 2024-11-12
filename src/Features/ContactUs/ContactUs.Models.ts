@@ -7,6 +7,8 @@ export namespace ContactUsModels {
 		FirstName: string;
 		LastName: string;
 		Description: string;
+		IsSentToUs: boolean | null;
+		IsSentToUser: boolean | null;
 	}
 
 	export class ContactUsReqModel implements Partial<MasterModel> {
@@ -18,5 +20,8 @@ export namespace ContactUsModels {
 		LastName: string;
 		@ApiProperty()
 		Description: string;
+
+		IsSentToUs: boolean;
+		IsSentToUser: boolean;
 	}
 }

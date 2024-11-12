@@ -14,6 +14,22 @@ export class ContactUs {
 	@Column('varchar', { name: 'LastName', length: 100 })
 	LastName: string;
 
-	@Column('varchar', { name: 'Description', length: 100 })
+	@Column('text', { name: 'Description' })
 	Description: string;
+
+	@Column('tinyint', {
+		name: 'IsSentToUs',
+		nullable: true,
+		width: 1,
+		default: () => "'0'"
+	})
+	IsSentToUs: boolean | null;
+
+	@Column('tinyint', {
+		name: 'IsSentToUser',
+		nullable: true,
+		width: 1,
+		default: () => "'0'"
+	})
+	IsSentToUser: boolean | null;
 }

@@ -11,6 +11,8 @@ export class NotificationTemplateKey {
 	static readonly SESSION_REMINDER_USER = 'session_reminder_user';
 	static readonly SESSION_REMINDER_INSTRUCTOR = 'session_reminder_instructor';
 	static readonly SESSION_MEETING_LINK_REMINDER = 'session_meeting_link_reminder';
+	static readonly CONTACT_US = 'contact_us';
+	static readonly CONTACT_US_REPLY = 'contact_us_reply';
 }
 export class NotificationTemplateType {
 	static readonly EMAIL = 'Email';

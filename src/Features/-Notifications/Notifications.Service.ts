@@ -104,25 +104,30 @@ export class NotificationsService {
 		return this.NotificationsRepository.ReadItems(ids);
 	}
 
-	async NotifyUser(payload: NotificationModels.NotificationPayload): Promise<any> {
+	async NotifyUser(payload: NotificationModels.NotificationPayload): Promise<boolean> {
 		// Check on template and type
 		if (!Object.values(NotificationTemplateKey).includes(payload.Type)) {
 			throw new ApplicationException(`${ErrorCodesEnum.Invalid_Notification_Type}`, HttpStatus.BAD_REQUEST);
 		}
 
 		switch (payload.Type) {
-			case NotificationTemplateKey.SESSION_REMINDER_USER || NotificationTemplateKey.SESSION_REMINDER_INSTRUCTOR:
+			case NotificationTemplateKey.SESSION_REMINDER_USER:
+			case NotificationTemplateKey.SESSION_REMINDER_INSTRUCTOR:
 				if (payload.User.UserPrefrence.SessionsReminderNotify) {
 					// this.sendEmail(payload);
-					this.sendAppNotification(payload);
+					await this.sendAppNotification(payload);
 				}
+				break;
+			case NotificationTemplateKey.CONTACT_US:
+			case NotificationTemplateKey.CONTACT_US_REPLY:
+				await this.sendEmail(payload);
 				break;
 
 			default:
 				break;
 		}
 
-		return;
+		return true;
 	}
 
 	replaceTemplatePlaceholders(payload: NotificationModels.NotificationPayload, template: string) {
