@@ -4,32 +4,24 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
 import { CartModels } from './Cart.Models';
 import { AppConfig } from '@App/Config/App.Config';
+import { PaymentModels } from './Payment.Models';
+import { v4 as uuidv4 } from 'uuid';
+import { PaymentRepository } from './Payment.Repository';
 
 @Injectable()
 export class StripeService {
 	stripe!: Stripe;
 	currentCustomer!: Stripe.Customer | Stripe.DeletedCustomer;
 	endpointSecret = this.AppConfig.Config.Stripe.EndpointSecret;
-	constructor(private AppConfig: AppConfig) {
+	constructor(private AppConfig: AppConfig, private PaymentRepository: PaymentRepository) {
 		this.initStripe();
 	}
-	// test cards
-	// https://docs.stripe.com/testing#cards
-	// https://www.memberstack.com/blog/stripe-test-cards
 
-	// // 4242 4242 4242 4242  success
-	// // 4000 0000 0000 9995  failure
 	initStripe() {
 		this.stripe = new Stripe(this.AppConfig.Config.Stripe.Secret);
 	}
 
 	async getSessionLink(products) {
-		// manage expired inventory
-		// https://docs.stripe.com/payments/checkout/managing-limited-inventory
-
-		// discounts
-		// https://docs.stripe.com/payments/checkout/discounts
-
 		const session = await this.stripe.checkout.sessions.create({
 			payment_method_types: ['card'], // List of accepted payment methods (e.g., 'card', 'ideal')
 			// saved_payment_method_options: {
@@ -104,19 +96,37 @@ export class StripeService {
 		}
 	}
 
-	async getSessionProducts(sessionId) {
-		// Retrieve the Checkout Session from the API with line_items expanded
+	async getSession(sessionId): Promise<Stripe.Response<Stripe.Checkout.Session>> {
 		const checkoutSession = await this.stripe.checkout.sessions.retrieve(sessionId, {
 			expand: ['line_items']
 		});
+		return checkoutSession;
+	}
 
+	async AuditPayment(session: Stripe.Response<Stripe.Checkout.Session>): Promise<PaymentModels.MasterModel> {
+		let newPayment = {
+			Id: 0,
+			StripeSessionId: session.payment_intent,
+			StripePaymentIntent: session.payment_intent,
+			RefrenceNumber: uuidv4(),
+			Currency: session.currency,
+			TotalAmount: session.amount_total.toString(),
+			PaymentMethod: session.payment_method_types[0],
+			PaymentEmail: session.customer_details.email,
+			PaymentPhone: session.customer_details.phone,
+			PaymentName: session.customer_details.name
+		} as PaymentModels.MasterModel;
+
+		return this.PaymentRepository.Create(newPayment);
+	}
+
+	async getSessionProducts(session: Stripe.Response<Stripe.Checkout.Session>): Promise<CartModels.StripeProduct[]> {
 		let products: CartModels.StripeProduct[] = [];
 
 		// Check the Checkout Session's payment_status property
 		// to determine if fulfillment should be peformed
-		if (checkoutSession.payment_status !== 'unpaid') {
-			// console.log(checkoutSession.line_items.data);
-			for (const item of checkoutSession.line_items.data) {
+		if (session.payment_status !== 'unpaid') {
+			for (const item of session.line_items.data) {
 				const stripeProductId = item.price.product.toString();
 				const product = (await this.stripe.products.retrieve(stripeProductId)) as any;
 				products.push(product);

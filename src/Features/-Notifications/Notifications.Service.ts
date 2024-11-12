@@ -118,9 +118,15 @@ export class NotificationsService {
 					await this.sendAppNotification(payload);
 				}
 				break;
+
 			case NotificationTemplateKey.CONTACT_US:
 			case NotificationTemplateKey.CONTACT_US_REPLY:
 				await this.sendEmail(payload);
+				break;
+
+			case NotificationTemplateKey.PAYMENT_SUCCESS:
+				await this.sendEmail(payload);
+				await this.sendAppNotification(payload);
 				break;
 
 			default:

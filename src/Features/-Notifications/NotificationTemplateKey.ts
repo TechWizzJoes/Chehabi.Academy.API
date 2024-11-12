@@ -13,6 +13,7 @@ export class NotificationTemplateKey {
 	static readonly SESSION_MEETING_LINK_REMINDER = 'session_meeting_link_reminder';
 	static readonly CONTACT_US = 'contact_us';
 	static readonly CONTACT_US_REPLY = 'contact_us_reply';
+	static readonly PAYMENT_SUCCESS = 'payment_success';
 }
 export class NotificationTemplateType {
 	static readonly EMAIL = 'Email';

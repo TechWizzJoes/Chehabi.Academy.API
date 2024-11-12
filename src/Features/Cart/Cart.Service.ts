@@ -12,6 +12,11 @@ import { CoursesService } from '../Courses/Courses.Service';
 import { Constants } from '@App/Common/Constants';
 import { StripeService } from './stripe.service';
 import { StripeModels } from './Stripe.Models';
+import { NotificationsService } from '../-Notifications/Notifications.Service';
+import { NotificationModels } from '../-Notifications/Notifications.Models';
+import { NotificationTemplateKey } from '../-Notifications/NotificationTemplateKey';
+import { UserService } from '../User/User.Service';
+import { PaymentModels } from './Payment.Models';
 
 @Injectable()
 export class CartService {
@@ -23,7 +28,9 @@ export class CartService {
 		private UserHelper: UserHelper,
 		private ClassService: ClassService,
 		private CoursesService: CoursesService,
-		private StripeService: StripeService
+		private StripeService: StripeService,
+		private NotificationsService: NotificationsService,
+		private UserService: UserService
 	) {
 		this.Config = this.appConfig.Config;
 	}
@@ -158,14 +165,9 @@ export class CartService {
 	}
 
 	async fulfillCheckout(sessionId: string) {
-		// stripe listen --forward-to localhost:3001/api/cart/webhook
-
-		// TODO: Make this function safe to run multiple times,
-		// even concurrently, with the same session ID
-
-		// TODO: Make sure fulfillment hasn't already been
-		// peformed for this Checkout Session
-		let products = await this.StripeService.getSessionProducts(sessionId);
+		let session = await this.StripeService.getSession(sessionId);
+		const payment = await this.StripeService.AuditPayment(session);
+		let products = await this.StripeService.getSessionProducts(session);
 		// console.log(products);
 		if (products.length == 0) return;
 
@@ -173,14 +175,26 @@ export class CartService {
 		for (const product of products) {
 			const classId = product.metadata.ClassId;
 			const userClass = await this.ClassService.JoinClass(userId, classId);
-			// empty the cart
 			if (userClass) {
 				this.RemoveFromCart(product.metadata.CartItemId, userId);
-				// this.NotificationsWebSocketGateway.notifyUser(
-				// 	userId,
-				// 	`${classId} payment processed and is now available!`
-				// );
 			}
 		}
+		this.NotifyUser(userId, payment);
+	}
+
+	async NotifyUser(userId: number, payment: PaymentModels.MasterModel) {
+		const user = await this.UserService.GetById(userId);
+		const payload = new NotificationModels.NotificationPayload();
+		payload.Type = NotificationTemplateKey.PAYMENT_SUCCESS;
+		payload.User = user;
+		payload.Placeholders = {
+			FirstName: user.FirstName,
+			LastName: user.LastName,
+			TotalAmount: payment.TotalAmount,
+			RefrenceNumber: payment.RefrenceNumber,
+			SiteUrl: 'www.google.com'
+		};
+
+		this.NotificationsService.NotifyUser(payload);
 	}
 }

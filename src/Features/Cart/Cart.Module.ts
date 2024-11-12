@@ -9,10 +9,12 @@ import { ClassModule } from '../Class/Class.Module';
 import { CoursesModule } from '../Courses/Courses.Module';
 import { StripeService } from './stripe.service';
 import { NotificationsModule } from '../-Notifications/Notifications.Module';
+import { PaymentRepository } from './Payment.Repository';
+import { UserModule } from '../User/User.Module';
 
 @Module({
-	imports: [DataModule, CommonModule, ClassModule, CoursesModule, NotificationsModule],
+	imports: [DataModule, CommonModule, ClassModule, CoursesModule, NotificationsModule, UserModule],
 	controllers: [CartController],
-	providers: [AppConfig, CartService, CartRepository, StripeService]
+	providers: [AppConfig, CartService, CartRepository, StripeService, PaymentRepository]
 })
 export class CartModule {}

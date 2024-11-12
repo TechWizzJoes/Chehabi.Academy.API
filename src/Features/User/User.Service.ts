@@ -26,9 +26,9 @@ export class UserService {
 		this.Config = this.appConfig.Config;
 	}
 
-	// async GetById(id: number): Promise<UserModels.MasterModel> {
-	// 	return this.UserRepository.GetById(id);
-	// }
+	async GetById(id: number): Promise<UserModels.MasterModel> {
+		return this.UserRepository.GetById(id);
+	}
 
 	async GetProfileInfo(): Promise<UserModels.MasterModel> {
 		const CurrentUser = this.UserHelper.GetCurrentUser();
