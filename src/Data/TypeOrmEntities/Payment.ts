@@ -39,6 +39,13 @@ export class Payment {
 	@Column('varchar', { name: 'PaymentName', length: 100 })
 	PaymentName: string;
 
+	@Column('datetime', {
+		name: 'CreatedOn',
+		nullable: true,
+		default: () => 'CURRENT_TIMESTAMP'
+	})
+	CreatedOn: Date | null;
+
 	@ManyToOne(() => User, (User) => User.Payments, {
 		onDelete: 'NO ACTION',
 		onUpdate: 'NO ACTION'

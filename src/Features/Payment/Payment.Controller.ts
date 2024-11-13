@@ -11,7 +11,7 @@ export class PaymentController {
 
 	@UseGuards(AuthenticatedGuard)
 	@Get('')
-	GetByUserId(): Promise<PaymentModels.MasterModel> {
+	GetByUserId(): Promise<PaymentModels.MasterModel[]> {
 		return this.PaymentService.GetByUserId();
 	}
 

@@ -13,6 +13,7 @@ export namespace PaymentModels {
 		PaymentEmail: string;
 		PaymentPhone: string | null;
 		PaymentName: string;
+		CreatedOn: Date | null;
 
 		User: UserModels.MasterModel | null;
 	}

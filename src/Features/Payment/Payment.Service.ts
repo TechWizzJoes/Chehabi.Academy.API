@@ -32,13 +32,9 @@ export class PaymentService {
 		this.Config = this.appConfig.Config;
 	}
 
-	async GetByUserId(userId?: number): Promise<PaymentModels.MasterModel> {
-		if (!userId) {
-			const CurrentUser = this.UserHelper.GetCurrentUser();
-			userId = CurrentUser.UserId;
-		}
-
-		return this.PaymentRepository.GetByUserId(userId);
+	async GetByUserId(): Promise<PaymentModels.MasterModel[]> {
+		const CurrentUser = this.UserHelper.GetCurrentUser();
+		return this.PaymentRepository.GetByUserId(CurrentUser.UserId);
 	}
 
 	async getSessionLink() {
@@ -103,7 +99,7 @@ export class PaymentService {
 			StripePaymentIntent: session.payment_intent,
 			RefrenceNumber: session.metadata.RefrenceNumber,
 			Currency: session.currency,
-			TotalAmount: session.amount_total.toString(),
+			TotalAmount: (session.amount_total / 100).toString(),
 			PaymentMethod: session.payment_method_types[0],
 			PaymentEmail: session.customer_details.email,
 			PaymentPhone: session.customer_details.phone,

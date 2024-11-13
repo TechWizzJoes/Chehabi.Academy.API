@@ -11,10 +11,17 @@ export class PaymentRepository {
 		private paymentRepository: Repository<Payment>
 	) {}
 
-	async GetByUserId(userId: number): Promise<Payment> {
-		return this.paymentRepository.findOne({
+	async GetByUserId(userId: number): Promise<Payment[]> {
+		return this.paymentRepository.find({
 			where: {
 				UserId: userId
+			},
+			select: {
+				Id: true,
+				RefrenceNumber: true,
+				CreatedOn: true,
+				Currency: true,
+				TotalAmount: true
 			}
 		});
 	}
