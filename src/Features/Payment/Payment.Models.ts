@@ -17,4 +17,9 @@ export namespace PaymentModels {
 
 		User: UserModels.MasterModel | null;
 	}
+
+	export class PaymentSession {
+		Id: number;
+		SessionObject: string;
+	}
 }

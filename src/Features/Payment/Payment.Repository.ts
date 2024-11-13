@@ -3,12 +3,15 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Payment } from '@App/Data/TypeOrmEntities/Payment';
 import { PaymentModels } from './Payment.Models';
+import { PaymentSession } from '@App/Data/TypeOrmEntities/PaymentSession';
 
 @Injectable()
 export class PaymentRepository {
 	constructor(
 		@InjectRepository(Payment)
-		private paymentRepository: Repository<Payment>
+		private paymentRepository: Repository<Payment>,
+		@InjectRepository(PaymentSession)
+		private paymentSessionRepository: Repository<PaymentSession>
 	) {}
 
 	async GetByUserId(userId: number): Promise<Payment[]> {
@@ -31,5 +34,12 @@ export class PaymentRepository {
 			...paymentData
 		});
 		return await this.paymentRepository.save(newPayment);
+	}
+
+	async CreatePaymentSession(paymentData: PaymentModels.PaymentSession): Promise<PaymentModels.PaymentSession> {
+		const newPayment = this.paymentSessionRepository.create({
+			...paymentData
+		});
+		return await this.paymentSessionRepository.save(newPayment);
 	}
 }

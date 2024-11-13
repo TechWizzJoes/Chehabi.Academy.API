@@ -92,6 +92,12 @@ export class PaymentService {
 	}
 
 	async AuditPayment(session: Stripe.Response<Stripe.Checkout.Session>): Promise<PaymentModels.MasterModel> {
+		let paymentSession = {
+			Id: 0,
+			SessionObject: JSON.stringify(session)
+		} as PaymentModels.PaymentSession;
+		await this.PaymentRepository.CreatePaymentSession(paymentSession);
+
 		let newPayment = {
 			Id: 0,
 			UserId: parseInt(session.metadata.UserId),
