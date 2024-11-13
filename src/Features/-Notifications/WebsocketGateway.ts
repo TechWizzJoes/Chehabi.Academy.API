@@ -1,4 +1,5 @@
 import { Server, Socket } from 'socket.io';
+import { NotificationModels } from './Notifications.Models';
 
 export class NotificationsWebSocketGateway {
 	server: Server;
@@ -15,10 +16,10 @@ export class NotificationsWebSocketGateway {
 	}
 
 	handleConnection(socket: Socket) {
-		console.log('on connection');
+		// console.log('on connection');
 		const userId = socket.handshake.query.userId as string;
 		const token = socket.handshake.auth.token;
-		console.log(token);
+		// console.log(token);
 
 		if (!token) {
 			socket.disconnect();
@@ -30,19 +31,18 @@ export class NotificationsWebSocketGateway {
 	}
 
 	handleDisconnect(socket: Socket, reason: string) {
-		console.log('on disconnection');
-		console.log('reason', reason);
+		// console.log('on disconnection');
+		// console.log('reason', reason);
 		const userId = Array.from(this.connectedUsers.entries()).find(([, socketId]) => socketId === socket.id)?.[0];
 		if (userId) {
 			this.connectedUsers.delete(userId);
 		}
-		console.log(this.connectedUsers);
 	}
 
-	notifyUser(userId: number, message: string) {
+	notifyUser(userId: number, notification: NotificationModels.InApp) {
 		const socketId = this.connectedUsers.get(userId.toString());
 		if (socketId) {
-			this.server.to(socketId).emit('notification', { message });
+			this.server.to(socketId).emit('notification', notification);
 		}
 	}
 }

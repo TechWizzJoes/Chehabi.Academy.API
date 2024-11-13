@@ -187,8 +187,8 @@ export class NotificationsService {
 			Text: template
 		} as NotificationModels.InApp;
 
-		await this.NotificationsRepository.SaveInAppNotification(newNotification);
-		await this.WebSocketGateway.notifyUser(payload.User.Id, template);
+		const notification = await this.NotificationsRepository.SaveInAppNotification(newNotification);
+		await this.WebSocketGateway.notifyUser(payload.User.Id, notification);
 		return true;
 	}
 }
