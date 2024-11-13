@@ -11,14 +11,13 @@ export class PaymentRepository {
 		private paymentRepository: Repository<Payment>
 	) {}
 
-	// async GetByUserId(userId: number): Promise<Cart> {
-	// 	return this.cartRepository.findOne({
-	// 		relations: ['CartItems.Class', 'CartItems.Course'],
-	// 		where: {
-	// 			UserId: userId
-	// 		}
-	// 	});
-	// }
+	async GetByUserId(userId: number): Promise<Payment> {
+		return this.paymentRepository.findOne({
+			where: {
+				UserId: userId
+			}
+		});
+	}
 
 	async Create(paymentData: PaymentModels.MasterModel): Promise<PaymentModels.MasterModel> {
 		const newPayment = this.paymentRepository.create({

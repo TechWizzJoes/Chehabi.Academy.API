@@ -10,13 +10,6 @@ import { Events } from '@App/Common/Events/Events';
 import { ClassService } from '../Class/Class.Service';
 import { CoursesService } from '../Courses/Courses.Service';
 import { Constants } from '@App/Common/Constants';
-import { StripeService } from './stripe.service';
-import { StripeModels } from './Stripe.Models';
-import { NotificationsService } from '../-Notifications/Notifications.Service';
-import { NotificationModels } from '../-Notifications/Notifications.Models';
-import { NotificationTemplateKey } from '../-Notifications/NotificationTemplateKey';
-import { UserService } from '../User/User.Service';
-import { PaymentModels } from './Payment.Models';
 
 @Injectable()
 export class CartService {
@@ -27,10 +20,7 @@ export class CartService {
 		private CartRepository: CartRepository,
 		private UserHelper: UserHelper,
 		private ClassService: ClassService,
-		private CoursesService: CoursesService,
-		private StripeService: StripeService,
-		private NotificationsService: NotificationsService,
-		private UserService: UserService
+		private CoursesService: CoursesService
 	) {
 		this.Config = this.appConfig.Config;
 	}
@@ -126,75 +116,5 @@ export class CartService {
 			return this.GetByUserId();
 		}
 		return cart;
-	}
-
-	async getSessionLink() {
-		const cart = await this.GetByUserId();
-		const CurrentUser = this.UserHelper.GetCurrentUser();
-		const checkouProducts = this.GetCheckoutProducts(cart, CurrentUser.UserId);
-		return this.StripeService.getSessionLink(checkouProducts);
-	}
-
-	GetCheckoutProducts(cart: CartModels.MasterModel, userId: number): StripeModels.CheckoutProduct[] {
-		return cart.CartItems.map((item) => {
-			let stripelineItem = new StripeModels.CheckoutProduct();
-			stripelineItem.price_data.currency = cart.Currency;
-			stripelineItem.price_data.unit_amount = item.Price * 100; // to convert to cents
-			stripelineItem.quantity = item.Quantity;
-			stripelineItem.price_data.product_data.metadata.UserId = userId;
-			stripelineItem.price_data.product_data.metadata.CartItemId = item.Id;
-			if (item.CourseId) {
-				stripelineItem.price_data.product_data.name = item.Course.Name;
-				stripelineItem.price_data.product_data.metadata.CourseId = item.Course.Id;
-			}
-			if (item.ClassId) {
-				stripelineItem.price_data.product_data.name = item.Class.Name;
-				stripelineItem.price_data.product_data.metadata.ClassId = item.Class.Id;
-			}
-			return stripelineItem;
-		});
-	}
-
-	HandleStripeWebhook(payload: any, sig: any) {
-		let event;
-		event = this.StripeService.ConstructEvent(payload.toString(), sig);
-
-		if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
-			this.fulfillCheckout(event.data.object.id);
-		}
-	}
-
-	async fulfillCheckout(sessionId: string) {
-		let session = await this.StripeService.getSession(sessionId);
-		const payment = await this.StripeService.AuditPayment(session);
-		let products = await this.StripeService.getSessionProducts(session);
-		// console.log(products);
-		if (products.length == 0) return;
-
-		const userId = products[0].metadata.UserId;
-		for (const product of products) {
-			const classId = product.metadata.ClassId;
-			const userClass = await this.ClassService.JoinClass(userId, classId);
-			if (userClass) {
-				this.RemoveFromCart(product.metadata.CartItemId, userId);
-			}
-		}
-		this.NotifyUser(userId, payment);
-	}
-
-	async NotifyUser(userId: number, payment: PaymentModels.MasterModel) {
-		const user = await this.UserService.GetById(userId);
-		const payload = new NotificationModels.NotificationPayload();
-		payload.Type = NotificationTemplateKey.PAYMENT_SUCCESS;
-		payload.User = user;
-		payload.Placeholders = {
-			FirstName: user.FirstName,
-			LastName: user.LastName,
-			TotalAmount: payment.TotalAmount,
-			RefrenceNumber: payment.RefrenceNumber,
-			SiteUrl: 'www.google.com'
-		};
-
-		this.NotificationsService.NotifyUser(payload);
 	}
 }

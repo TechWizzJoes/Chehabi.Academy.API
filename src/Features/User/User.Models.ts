@@ -3,6 +3,7 @@ import { CartModels } from '../Cart/Cart.Models';
 import { ClassModels } from '../Class/Class.Models';
 import { CoursesModels } from '../Courses/Courses.Models';
 import { FeedbackModels } from '../Feedback/Feedback.Models';
+import { PaymentModels } from '../Payment/Payment.Models';
 import { WhatsNewModels } from '../WhatsNew/WhatsNew.Models';
 import { InstructorModels } from './Instructor.Models';
 
@@ -33,6 +34,7 @@ export namespace UserModels {
 		UserClasses: UserClass[];
 		UserCourses: UserCourse[];
 		InAppNotification: NotificationModels.InApp[];
+		Payments: PaymentModels.MasterModel[];
 
 		WhatsNews: WhatsNewModels.MasterModel[];
 	}

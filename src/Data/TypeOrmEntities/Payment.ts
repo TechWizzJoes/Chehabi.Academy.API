@@ -1,6 +1,8 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import { User } from './User';
 
 @Index('Payments_UNIQUE', ['StripePaymentIntent'], { unique: true })
+@Index('Payment_User_FK', ['UserId'], {})
 @Entity('Payment', { schema: 'mydb' })
 export class Payment {
 	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
@@ -11,6 +13,10 @@ export class Payment {
 
 	@Column('varchar', { name: 'StripePaymentIntent', unique: true, length: 100 })
 	StripePaymentIntent: string;
+
+	@RelationId((Payment: Payment) => Payment.User)
+	@Column('int', { name: 'UserId' })
+	UserId: number;
 
 	@Column('varchar', { name: 'RefrenceNumber', length: 100 })
 	RefrenceNumber: string;
@@ -32,4 +38,11 @@ export class Payment {
 
 	@Column('varchar', { name: 'PaymentName', length: 100 })
 	PaymentName: string;
+
+	@ManyToOne(() => User, (User) => User.Payments, {
+		onDelete: 'NO ACTION',
+		onUpdate: 'NO ACTION'
+	})
+	@JoinColumn([{ name: 'UserId', referencedColumnName: 'Id' }])
+	User: User;
 }

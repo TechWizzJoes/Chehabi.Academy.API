@@ -33,6 +33,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { CartModule } from '@App/Features/Cart/Cart.Module';
 import { JobsModule } from '@App/Features/Jobs/Jobs.Module';
 import { ContactUsModule } from '@App/Features/ContactUs/ContactUs.Module';
+import { PaymentModule } from '@App/Features/Payment/Payment.Module';
 
 @Module({
 	imports: [
@@ -58,6 +59,7 @@ import { ContactUsModule } from '@App/Features/ContactUs/ContactUs.Module';
 		EmailSenderModule,
 		WhatsNewModule,
 		CartModule,
+		PaymentModule,
 		ContactUsModule,
 		JobsModule
 	],

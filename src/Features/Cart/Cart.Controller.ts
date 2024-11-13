@@ -27,18 +27,4 @@ export class CartController {
 	RemoveFromCart(@Param('id') itemId: number, @Body() payload: any): Promise<CartModels.MasterModel> {
 		return this.CartService.RemoveFromCart(itemId);
 	}
-
-	@UseGuards(AuthenticatedGuard)
-	@Get('/checkout')
-	getSessionLink() {
-		return this.CartService.getSessionLink();
-	}
-
-	// stripe listen --forward-to localhost:3001/api/cart/webhook
-	@Post('/webhook')
-	StripeWebhook(@Req() request: Request) {
-		const rawBody = request['rawBody']; // Access raw body
-		const sig = request.headers['stripe-signature'];
-		this.CartService.HandleStripeWebhook(rawBody, sig);
-	}
 }

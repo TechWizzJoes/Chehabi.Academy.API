@@ -3,14 +3,15 @@ import { Cart } from './Cart';
 import { Class } from './Class';
 import { Course } from './Course';
 import { Feedback } from './Feedback';
+import { InAppNotification } from './InAppNotification';
 import { Instructor } from './Instructor';
 import { NotificationSubscriptions } from './NotificationSubscriptions';
 import { NotificationTemplate } from './NotificationTemplate';
+import { Payment } from './Payment';
 import { UserPrefrence } from './UserPrefrence';
 import { UserClass } from './UserClass';
 import { UserCourse } from './UserCourse';
 import { WhatsNew } from './WhatsNew';
-import { InAppNotification } from './InAppNotification';
 
 @Index('Email', ['Email'], { unique: true })
 @Entity('User', { schema: 'mydb' })
@@ -83,6 +84,9 @@ export class User {
 
 	@OneToMany(() => NotificationTemplate, (NotificationTemplate) => NotificationTemplate.CreatedBy)
 	NotificationTemplates: NotificationTemplate[];
+
+	@OneToMany(() => Payment, (Payment) => Payment.User)
+	Payments: Payment[];
 
 	@OneToOne(() => UserPrefrence, (UserPrefrence) => UserPrefrence.User)
 	UserPrefrence: UserPrefrence;

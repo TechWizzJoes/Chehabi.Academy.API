@@ -7,14 +7,11 @@ import { CartController } from './Cart.Controller';
 import { CartService } from './Cart.Service';
 import { ClassModule } from '../Class/Class.Module';
 import { CoursesModule } from '../Courses/Courses.Module';
-import { StripeService } from './stripe.service';
-import { NotificationsModule } from '../-Notifications/Notifications.Module';
-import { PaymentRepository } from './Payment.Repository';
-import { UserModule } from '../User/User.Module';
 
 @Module({
-	imports: [DataModule, CommonModule, ClassModule, CoursesModule, NotificationsModule, UserModule],
+	imports: [DataModule, CommonModule, ClassModule, CoursesModule],
 	controllers: [CartController],
-	providers: [AppConfig, CartService, CartRepository, StripeService, PaymentRepository]
+	providers: [AppConfig, CartService, CartRepository],
+	exports: [CartService, CartRepository]
 })
 export class CartModule {}
