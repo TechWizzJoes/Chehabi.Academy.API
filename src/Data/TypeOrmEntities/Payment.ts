@@ -1,8 +1,11 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import { PaymentSession } from './PaymentSession';
 import { User } from './User';
+import { PaymentProduct } from './PaymentProduct';
 
 @Index('Payments_UNIQUE', ['StripePaymentIntent'], { unique: true })
 @Index('Payment_User_FK', ['UserId'], {})
+@Index('Payment_PaymentSession_FK', ['PaymentSessionId'], {})
 @Entity('Payment', { schema: 'mydb' })
 export class Payment {
 	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
@@ -46,10 +49,24 @@ export class Payment {
 	})
 	CreatedOn: Date | null;
 
+	@RelationId((Payment: Payment) => Payment.PaymentSession)
+	@Column('int', { name: 'PaymentSessionId' })
+	PaymentSessionId: number;
+
+	@ManyToOne(() => PaymentSession, (PaymentSession) => PaymentSession.Payment, {
+		onDelete: 'NO ACTION',
+		onUpdate: 'NO ACTION'
+	})
+	@JoinColumn([{ name: 'PaymentSessionId', referencedColumnName: 'Id' }])
+	PaymentSession: PaymentSession;
+
 	@ManyToOne(() => User, (User) => User.Payments, {
 		onDelete: 'NO ACTION',
 		onUpdate: 'NO ACTION'
 	})
 	@JoinColumn([{ name: 'UserId', referencedColumnName: 'Id' }])
 	User: User;
+
+	@OneToMany(() => PaymentProduct, (PaymentProduct) => PaymentProduct.Payment)
+	PaymentProducts: PaymentProduct[];
 }

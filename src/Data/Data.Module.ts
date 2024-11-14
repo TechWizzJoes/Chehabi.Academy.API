@@ -24,6 +24,7 @@ import { InAppNotification } from './TypeOrmEntities/InAppNotification';
 import { CourseLevel } from './TypeOrmEntities/CourseLevel';
 import { Payment } from './TypeOrmEntities/Payment';
 import { PaymentSession } from './TypeOrmEntities/PaymentSession';
+import { PaymentProduct } from './TypeOrmEntities/PaymentProduct';
 
 const Entities = [
 	User,
@@ -46,7 +47,8 @@ const Entities = [
 	ContactUs,
 	InAppNotification,
 	Payment,
-	PaymentSession
+	PaymentSession,
+	PaymentProduct
 ];
 
 @Module({

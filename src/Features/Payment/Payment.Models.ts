@@ -1,3 +1,4 @@
+import { ClassModels } from '../Class/Class.Models';
 import { UserModels } from '../User/User.Models';
 
 export namespace PaymentModels {
@@ -14,12 +15,25 @@ export namespace PaymentModels {
 		PaymentPhone: string | null;
 		PaymentName: string;
 		CreatedOn: Date | null;
+		PaymentSessionId: number;
 
 		User: UserModels.MasterModel | null;
+		PaymentSession: PaymentSession;
+		PaymentProducts: PaymentProduct[];
 	}
 
 	export class PaymentSession {
 		Id: number;
 		SessionObject: string;
+
+		Payment: MasterModel;
+	}
+
+	export class PaymentProduct {
+		PaymentId: number;
+		ClassId: number;
+		CreatedOn: Date | null;
+		Payment: MasterModel;
+		Class: ClassModels.MasterModel;
 	}
 }

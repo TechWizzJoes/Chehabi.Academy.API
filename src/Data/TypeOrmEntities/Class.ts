@@ -3,6 +3,7 @@ import { CartItem } from './CartItem';
 import { Course } from './Course';
 import { User } from './User';
 import { LiveSession } from './LiveSession';
+import { PaymentProduct } from './PaymentProduct';
 import { UserClass } from './UserClass';
 import { BooleanTransformer } from '@App/Common/Transformers/Boolean.Transformer';
 
@@ -97,6 +98,9 @@ export class Class {
 
 	@OneToMany(() => LiveSession, (LiveSession) => LiveSession.Class)
 	LiveSessions: LiveSession[];
+
+	@OneToMany(() => PaymentProduct, (PaymentProduct) => PaymentProduct.Class)
+	PaymentProducts: PaymentProduct[];
 
 	@OneToMany(() => UserClass, (UserClass) => UserClass.Class)
 	UserClasses: UserClass[];

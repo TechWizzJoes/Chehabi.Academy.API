@@ -86,17 +86,18 @@ export class PaymentService {
 			const userClass = await this.ClassService.JoinClass(userId, classId);
 			if (userClass) {
 				this.CartService.RemoveFromCart(product.metadata.CartItemId, userId);
+				await this.PaymentRepository.CreatePaymentProduct(classId, payment.Id);
 			}
 		}
 		this.NotifyUser(userId, payment);
 	}
 
 	async AuditPayment(session: Stripe.Response<Stripe.Checkout.Session>): Promise<PaymentModels.MasterModel> {
-		let paymentSession = {
+		let newPaymentSession = {
 			Id: 0,
 			SessionObject: JSON.stringify(session)
 		} as PaymentModels.PaymentSession;
-		await this.PaymentRepository.CreatePaymentSession(paymentSession);
+		const paymentSession = await this.PaymentRepository.CreatePaymentSession(newPaymentSession);
 
 		let newPayment = {
 			Id: 0,
@@ -109,7 +110,8 @@ export class PaymentService {
 			PaymentMethod: session.payment_method_types[0],
 			PaymentEmail: session.customer_details.email,
 			PaymentPhone: session.customer_details.phone,
-			PaymentName: session.customer_details.name
+			PaymentName: session.customer_details.name,
+			PaymentSessionId: paymentSession.Id
 		} as PaymentModels.MasterModel;
 
 		return this.PaymentRepository.Create(newPayment);

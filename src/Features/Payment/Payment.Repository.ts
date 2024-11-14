@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Payment } from '@App/Data/TypeOrmEntities/Payment';
 import { PaymentModels } from './Payment.Models';
 import { PaymentSession } from '@App/Data/TypeOrmEntities/PaymentSession';
+import { PaymentProduct } from '@App/Data/TypeOrmEntities/PaymentProduct';
 
 @Injectable()
 export class PaymentRepository {
@@ -11,7 +12,9 @@ export class PaymentRepository {
 		@InjectRepository(Payment)
 		private paymentRepository: Repository<Payment>,
 		@InjectRepository(PaymentSession)
-		private paymentSessionRepository: Repository<PaymentSession>
+		private paymentSessionRepository: Repository<PaymentSession>,
+		@InjectRepository(PaymentProduct)
+		private paymentProductRepository: Repository<PaymentProduct>
 	) {}
 
 	async GetByUserId(userId: number): Promise<Payment[]> {
@@ -25,6 +28,9 @@ export class PaymentRepository {
 				CreatedOn: true,
 				Currency: true,
 				TotalAmount: true
+			},
+			order: {
+				CreatedOn: 'desc'
 			}
 		});
 	}
@@ -41,5 +47,13 @@ export class PaymentRepository {
 			...paymentData
 		});
 		return await this.paymentSessionRepository.save(newPayment);
+	}
+
+	async CreatePaymentProduct(classId: number, paymentId: number) {
+		const newPayment = this.paymentProductRepository.create({
+			ClassId: classId,
+			PaymentId: paymentId
+		});
+		return await this.paymentProductRepository.save(newPayment);
 	}
 }
