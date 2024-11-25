@@ -77,7 +77,7 @@ export class NotificationsRepository {
 		});
 
 		const updated = await this.InAppNotification.save(items);
-		console.log(updated);
+		// console.log(updated);
 		return updated;
 	}
 }
