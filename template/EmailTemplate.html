@@ -3,102 +3,155 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Chehabi Academy</title>
+		<title>Academy Notification</title>
 		<style>
+			/* General styles */
 			body {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				height: 100vh;
-				margin: 0;
+				font-family: Arial, sans-serif;
 				background-color: #f4f4f4;
+				margin: 0;
+				padding: 0;
 			}
-			table {
-				width: 100%;
-				max-width: 1200px;
-				border-collapse: collapse;
+
+			.email-container {
+				max-width: 600px;
+				margin: 20px auto;
+				background-color: #ffffff;
+				border-radius: 8px;
+				overflow: hidden;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 			}
-			td {
-				vertical-align: top;
-			}
-			.container {
-				width: 100%;
+
+			.header {
+				background-color: #364555;
+				color: white;
 				text-align: center;
-				border: 1px solid #eee;
-				margin: 20px 0;
+				padding: 20px 10px;
 			}
-			.top-bar {
-				height: 25px;
-				background: linear-gradient(45deg, rgba(255, 255, 255, 1), rgba(207, 216, 217, 1));
+
+			.header h1 {
+				margin: 0;
+				font-size: 24px;
 			}
-			.content {
-				height: 200px;
-				padding: 5%;
+
+			.body {
+				padding: 20px;
+				color: #333333;
+				line-height: 1.6;
+			}
+
+			.body h2 {
+				font-size: 20px;
+				margin-bottom: 10px;
+			}
+
+			.footer {
+				background-color: #f4f4f4;
+				text-align: center;
+				padding: 10px 20px;
+				font-size: 12px;
+				color: #666666;
+			}
+
+			.footer .main {
+				display: flex;
+				justify-content: space-around;
+			}
+
+			.footer .main img {
+				height: 30px;
+				width: 20%;
+				object-fit: contain;
+			}
+
+			.footer .main ul {
+				list-style: none;
+				text-align: center;
+				font-size: 18px;
+				line-height: 1.6;
+				margin-bottom: 0;
+				display: flex;
+				flex-direction: column;
+			}
+
+			.footer .main ul li a {
+				text-decoration: none;
+				color: black;
+			}
+
+			.footer .main .social {
+				width: 20%;
+				text-align: center;
+				padding-bottom: 10px;
+				display: flex;
+				justify-content: flex-end;
+				a {
+					i {
+						font-size: 24px;
+					}
+					padding: 10px;
+					color: black;
+					&:hover {
+						color: black;
+					}
+				}
+			}
+
+			.footer .main .social a {
+				padding: 10px;
+				color: black;
+				&:hover {
+					color: black;
+				}
+			}
+
+			.footer .main .social a i {
+				font-size: 24px;
+			}
+
+			.footer .copyright {
+				text-align: center;
 				display: flex;
 				justify-content: center;
-				align-items: center;
+				margin-top: 12px;
 			}
-			.footer {
-				width: 100%;
-				text-align: center;
-				border: 1px solid #eee;
-				background: linear-gradient(45deg, rgba(255, 255, 255, 1), rgba(207, 216, 217, 1));
+
+			.footer .copyrighta {
+				color: black;
 			}
-			.footer-bar {
-				height: 25px;
-				background: linear-gradient(45deg, rgba(255, 255, 255, 1), rgba(207, 216, 217, 1));
+
+			.cta-button {
+				display: inline-block;
+				background-color: #364555;
+				color: white;
+				padding: 10px 20px;
+				border-radius: 5px;
+				text-decoration: none;
+				font-size: 16px;
 				margin-top: 20px;
 			}
-			.footer-text {
-				padding: 20px;
-				font-size: 15px;
-				color: #536d87;
-				direction: rtl;
-				text-align: right;
+
+			.cta-button:hover {
+				background-color: #45a049;
 			}
 		</style>
 	</head>
 	<body>
-		<table>
-			<tr>
-				<td style="width: 20%"></td>
-				<td style="width: 60%">
-					<div class="container">
-						<div class="top-bar"></div>
-						<div class="content">
-							<!-- Base64 PNG image here -->
-							<!-- <img
-								src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmCy16nhIbV3pI1qLYHMJKwbH2458oiC9EmA&s"
-								alt="CHEHABI ACADEMY"
-								style="max-width: 100%; height: auto" /> -->
-						</div>
-						<div class="footer">
-							<div class="footer-bar"></div>
-							<table style="width: 100%; border-collapse: collapse">
-								{0}
-								<tr>
-									<td class="footer-text">
-										© 2024,
-										<a
-											href="mailto:techwizzjoes@gmail.com"
-											style="color: #536d87; text-decoration: none"
-											>techwizzjoes@gmail.com</a
-										><br />
-										All Rights Reserved. <small>version 0.0.21</small>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<div
-											style="width: 100%; height: 25px; background: #fff; margin-top: 20px"></div>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</td>
-				<td style="width: 20%"></td>
-			</tr>
-		</table>
+		<div class="email-container">
+			<!-- Header Section -->
+			<div class="header">
+				<h1>Chehabi Academy</h1>
+			</div>
+
+			<!-- Body Section -->
+			<div class="body">{0}</div>
+
+			<!-- Footer Section -->
+			<div class="footer">
+				<div class="copyright">
+					<div>© 2024 Chehabi Academy., All rights reserved.</div>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
