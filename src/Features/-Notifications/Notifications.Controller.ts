@@ -35,14 +35,14 @@ export class NotificationsController {
 		schema: {
 			type: 'object',
 			properties: {
-				type: {
-					type: 'string',
-					description: 'Type of the email notification',
-					example: 'welcome_email'
-				},
 				payload: {
 					type: 'object',
 					properties: {
+						Type: {
+							type: 'string',
+							description: 'Type of the email notification',
+							example: 'welcome_email'
+						},
 						Email: {
 							type: 'string',
 							description: 'Recipient email address',
@@ -65,9 +65,8 @@ export class NotificationsController {
 			}
 		}
 	})
-	async NotifyUser(
-		@Body() { type, payload }: { type: string; payload: NotificationModels.NotificationPayload }
-	): Promise<any> {
-		return 'this.NotificationsService.NotifyUser(type, payload)';
+	async NotifyUser(@Body() { payload }: { payload: NotificationModels.NotificationPayload }): Promise<any> {
+		console.log(payload);
+		return this.NotificationsService.NotifyUser(payload);
 	}
 }

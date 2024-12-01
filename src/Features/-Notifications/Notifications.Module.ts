@@ -6,11 +6,18 @@ import { NotificationsController } from '@App/Features/-Notifications/Notificati
 import { NotificationsService } from '@App/Features/-Notifications/Notifications.Service';
 import { NotificationsRepository } from './Notifications.Repository';
 import { NotificationsWebSocketGateway } from './WebsocketGateway';
+import { AccountRepository } from '../Account/Account.Repository';
 
 @Module({
 	imports: [DataModule, CommonModule],
 	controllers: [NotificationsController],
-	providers: [AppConfig, NotificationsService, NotificationsRepository, NotificationsWebSocketGateway],
+	providers: [
+		AppConfig,
+		NotificationsService,
+		NotificationsRepository,
+		NotificationsWebSocketGateway,
+		AccountRepository
+	],
 	exports: [NotificationsService]
 })
 export class NotificationsModule {}

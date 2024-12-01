@@ -1,5 +1,5 @@
 export class NotificationTemplateKey {
-	// static readonly WELCOME_EMAIL = 'welcome_email';
+	static readonly WELCOME_EMAIL = 'welcome_email';
 	// static readonly PASSWORD_RESET = 'password_reset_email';
 	// static readonly ACCOUNT_VERIFICATION = 'account_verification_email';
 	// static readonly REMINDER = 'reminder_email';

@@ -12,6 +12,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import * as nodemailer from 'nodemailer';
 import { NotificationsWebSocketGateway } from './WebsocketGateway';
+import { AccountRepository } from '../Account/Account.Repository';
 
 @Injectable()
 export class NotificationsService {
@@ -21,7 +22,8 @@ export class NotificationsService {
 		private appConfig: AppConfig,
 		private UserHelper: UserHelper,
 		private NotificationsRepository: NotificationsRepository,
-		private WebSocketGateway: NotificationsWebSocketGateway
+		private WebSocketGateway: NotificationsWebSocketGateway,
+		private AccountRepository: AccountRepository
 	) {
 		this.Config = this.appConfig.Config;
 		// webpush.setVapidDetails(
@@ -105,6 +107,10 @@ export class NotificationsService {
 	}
 
 	async NotifyUser(payload: NotificationModels.NotificationPayload): Promise<boolean> {
+		//Using the mail notification in the payload is just for testing
+		if (payload.Email !== undefined || payload.Email !== null) {
+			payload.User = (await this.AccountRepository.GetUserByEmail(payload.Email.toLowerCase().trim())) ?? null;
+		}
 		// Check on template and type
 		if (!Object.values(NotificationTemplateKey).includes(payload.Type)) {
 			throw new ApplicationException(`${ErrorCodesEnum.Invalid_Notification_Type}`, HttpStatus.BAD_REQUEST);
@@ -128,7 +134,10 @@ export class NotificationsService {
 				await this.sendEmail(payload);
 				await this.sendAppNotification(payload);
 				break;
-
+			//Testing send welcom mail
+			case NotificationTemplateKey.WELCOME_EMAIL:
+				await this.sendEmail(payload);
+				break;
 			default:
 				break;
 		}
@@ -153,7 +162,7 @@ export class NotificationsService {
 
 		const mailOptions = {
 			from: 'info@chehabi-academy.com',
-			to: payload.User.Email,
+			to: payload.Email ?? payload.User.Email,
 			subject: payload.Type.replace(/_/g, ' ').toUpperCase(),
 			html: emailStructure
 		};
