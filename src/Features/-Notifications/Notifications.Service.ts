@@ -114,6 +114,7 @@ export class NotificationsService {
 		if (!payload.User && !payload.User.Email) {
 			throw new ApplicationException(`${ErrorCodesEnum.USER_NOT_FOUND}`, HttpStatus.BAD_REQUEST);
 		}
+
 		// Check on template and type
 		if (!Object.values(NotificationTemplateKey).includes(payload.Type)) {
 			throw new ApplicationException(`${ErrorCodesEnum.Invalid_Notification_Type}`, HttpStatus.BAD_REQUEST);

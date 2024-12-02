@@ -161,7 +161,7 @@ export class CoursesController {
 			})
 		})
 	)
-	UploadFile(@UploadedFile() file: Express.Multer.File, @Query('IsSample') isSample: string): Promise<{}> {
+	UploadFile(@UploadedFile() file: Express.Multer.File): Promise<{}> {
 		return this.CoursesService.Upload(file.path);
 	}
 }

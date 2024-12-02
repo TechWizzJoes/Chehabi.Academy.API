@@ -13,6 +13,7 @@ import { InstructorModels } from '../User/Instructor.Models';
 import { InstructorRepository } from '../User/Instructor.Repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Events } from '@App/Common/Events/Events';
+import { Constants } from '@App/Common/Constants';
 
 @Injectable()
 export class AccountService {
@@ -91,6 +92,9 @@ export class AccountService {
 		}
 		const encryptedPassword = CryptoHelper.AES.Encrypt(registerReqModel.Password, this.Config.Auth.EncryptionKey);
 		registerReqModel.Password = encryptedPassword;
+
+		registerReqModel.FirstName = Constants.CapitalizeFirstLetter(registerReqModel.FirstName);
+		registerReqModel.LastName = Constants.CapitalizeFirstLetter(registerReqModel.LastName);
 		user = await this.AccountRepository.CreateUser(registerReqModel as UserModels.MasterModel);
 		this.eventEmitter.emit(Events.USER_CREATED, user);
 		const accessToken = await this.GetAccessToken(user);

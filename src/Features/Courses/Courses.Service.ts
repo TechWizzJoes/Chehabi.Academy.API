@@ -54,11 +54,11 @@ export class CoursesService {
 		course.InstructorId = CurrentUser.InstructorId;
 
 		let courseType = CourseTypeEnum[+course.TypeIdString];
-		if (!courseType) throw new ApplicationException('invalid course type id', HttpStatus.BAD_REQUEST);
+		if (!courseType) throw new ApplicationException(ErrorCodesEnum.INVALID_COURSE_TYPE, HttpStatus.BAD_REQUEST);
 		course.TypeId = CourseTypeEnum[courseType];
 
 		let courseLevel = CourseLevelEnum[+course.LevelIdString];
-		if (!courseLevel) throw new ApplicationException('invalid course level id', HttpStatus.BAD_REQUEST);
+		if (!courseLevel) throw new ApplicationException(ErrorCodesEnum.INVALID_COURSE_LEVEL, HttpStatus.BAD_REQUEST);
 		course.LevelId = CourseLevelEnum[courseLevel];
 
 		course.IsActive = course.IsActive;
@@ -139,7 +139,7 @@ export class CoursesService {
 	}
 
 	ValidateDownloadPublic(fileName: string) {
-		const isSample = fileName.includes('.sample.');
+		const isSample = fileName.includes('.sample.') || !fileName.includes('.pdf'); //for courses images
 		return isSample;
 	}
 

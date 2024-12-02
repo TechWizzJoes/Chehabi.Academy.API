@@ -11,6 +11,7 @@ import { InstructorRepository } from './Instructor.Repository';
 import { InstructorModels } from './Instructor.Models';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Events } from '@App/Common/Events/Events';
+import { Constants } from '@App/Common/Constants';
 
 @Injectable()
 export class UserService {
@@ -47,6 +48,8 @@ export class UserService {
 		const CurrentUser = this.UserHelper.GetCurrentUser();
 		// avoid changing mail fraud
 		user.Email = CurrentUser.Email;
+		user.FirstName = Constants.CapitalizeFirstLetter(user.FirstName);
+		user.LastName = Constants.CapitalizeFirstLetter(user.LastName);
 		return this.UserRepository.UpdateUser(user);
 	}
 
