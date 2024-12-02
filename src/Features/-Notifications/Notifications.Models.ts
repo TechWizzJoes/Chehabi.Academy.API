@@ -5,7 +5,7 @@ export namespace NotificationModels {
 		Type: string;
 
 		User!: UserModels.MasterModel;
-		Email!: string;
+		Email?: string;
 
 		Placeholders: { [key: string]: string };
 	}
