@@ -23,29 +23,32 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
 @ApiTags('User')
-@UseGuards(AuthenticatedGuard)
 @Controller('user')
 export class UserController {
 	constructor(private UserService: UserService) {}
 
 	@Get('')
+	@UseGuards(AuthenticatedGuard)
 	GetProfileInfo(): Promise<UserModels.UserResModel> {
 		return this.UserService.GetProfileInfo();
 	}
 
 	@Put('')
+	@UseGuards(AuthenticatedGuard)
 	@ApiBody({ type: UserModels.UserReqModel })
 	Update(@Body() user: UserModels.UserReqModel): Promise<UserModels.UserResModel> {
 		return this.UserService.UpdateUser(user);
 	}
 
 	@Put('preference')
+	@UseGuards(AuthenticatedGuard)
 	@ApiBody({ type: UserModels.UserReqModel })
 	UpdateUserPreference(@Body() userPrefrence: UserModels.UserPrefrenceReqModel): Promise<UserModels.UserResModel> {
 		return this.UserService.UpdateUserPreference(userPrefrence);
 	}
 
 	@Post('/upload/image/:id')
+	@UseGuards(AuthenticatedGuard)
 	@UseInterceptors(
 		FileInterceptor('file', {
 			storage: diskStorage({
