@@ -42,7 +42,7 @@ export class CartService {
 	async Create(userId: number): Promise<CartModels.MasterModel> {
 		const cartReq: CartModels.CartReqModel = new CartModels.CartReqModel();
 		cartReq.UserId = userId;
-		cartReq.Currency = 'usd';
+		cartReq.Currency = 'eur';
 		let createdCart = await this.CartRepository.Create(cartReq);
 		return createdCart;
 	}
