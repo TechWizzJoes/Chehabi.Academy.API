@@ -23,7 +23,7 @@ export class PaymentController {
 
 	// stripe listen --forward-to localhost:3001/api/cart/webhook
 	@Post('/webhook')
-	StripeWebhook(@Req() request: Request) {
+	StripeWebhook(@Req() request: any) {
 		const rawBody = request['rawBody']; // Access raw body
 		const sig = request.headers['stripe-signature'];
 		this.PaymentService.HandleStripeWebhook(rawBody, sig);
