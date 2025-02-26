@@ -7,6 +7,7 @@ export interface Config {
 	Server: {
 		Host: string;
 		Port: number;
+		FrontEndHost: string;
 	};
 	Database: {
 		Host: string;
@@ -32,7 +33,7 @@ export interface Config {
 			ClientID: string;
 		};
 	};
-	Notification: {
+	Notification?: {
 		PublicKey: string;
 		PrivateKey: string;
 	};

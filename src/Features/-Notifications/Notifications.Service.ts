@@ -84,9 +84,15 @@ export class NotificationsService {
 	// 		});
 	// }
 
-	private getEmailStructureTemplate(): string {
-		const templatePath = join(__dirname, '..', '..', '..', 'template', 'EmailTemplate.html');
-		return readFileSync(templatePath, 'utf-8');
+	private async getEmailStructureTemplate(): Promise<string> {
+		const template = await this.NotificationsRepository.getTemplateByKeyAndType(
+			NotificationTemplateKey.MAIN_TEMPLATE,
+			null
+		);
+		if (!template || !template.Template) {
+			throw new ApplicationException(`${ErrorCodesEnum.Template_Not_Found}`, HttpStatus.BAD_REQUEST);
+		}
+		return template.Template;
 	}
 
 	private async getTemplate(key: string, type: string): Promise<string> {
@@ -108,7 +114,7 @@ export class NotificationsService {
 
 	async NotifyUser(payload: NotificationModels.NotificationPayload): Promise<boolean> {
 		//Using the mail notification in the payload is just for testing
-		if (payload.Email !== undefined || payload.Email !== null) {
+		if (payload.Email !== undefined && payload.Email !== null) {
 			payload.User = (await this.AccountRepository.GetUserByEmail(payload.Email.toLowerCase().trim())) ?? null;
 		}
 		if (!payload.User && !payload.User.Email) {
@@ -124,8 +130,8 @@ export class NotificationsService {
 			case NotificationTemplateKey.SESSION_REMINDER_USER:
 			case NotificationTemplateKey.SESSION_REMINDER_INSTRUCTOR:
 				if (payload.User.UserPrefrence.SessionsReminderNotify) {
-					// this.sendEmail(payload);
 					await this.sendAppNotification(payload);
+					// this.sendEmail(payload);
 				}
 				break;
 
@@ -135,8 +141,8 @@ export class NotificationsService {
 				break;
 
 			case NotificationTemplateKey.PAYMENT_SUCCESS:
-				await this.sendEmail(payload);
 				await this.sendAppNotification(payload);
+				await this.sendEmail(payload);
 				break;
 			//Testing send welcom mail
 			case NotificationTemplateKey.WELCOME_EMAIL:
@@ -158,7 +164,7 @@ export class NotificationsService {
 	}
 
 	async sendEmail(payload: NotificationModels.NotificationPayload): Promise<boolean> {
-		let emailStructure = this.getEmailStructureTemplate();
+		let emailStructure = await this.getEmailStructureTemplate();
 		let template = await this.getTemplate(payload.Type, NotificationTemplateType.EMAIL);
 
 		template = this.replaceTemplatePlaceholders(payload, template);

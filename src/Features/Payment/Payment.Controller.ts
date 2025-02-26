@@ -21,7 +21,7 @@ export class PaymentController {
 		return this.PaymentService.getSessionLink();
 	}
 
-	// stripe listen --forward-to localhost:3001/api/cart/webhook
+	// stripe listen --forward-to localhost:3001/api/payment/webhook
 	@Post('/webhook')
 	StripeWebhook(@Req() request: any) {
 		const rawBody = request['rawBody']; // Access raw body

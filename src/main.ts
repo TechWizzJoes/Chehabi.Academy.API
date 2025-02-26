@@ -10,18 +10,7 @@ import { Server } from 'socket.io';
 import { NotificationsWebSocketGateway } from './Features/-Notifications/WebsocketGateway';
 
 async function bootstrap() {
-	// SSL/TLS Certificate
-	let httpsOptions = null;
-	// if (process.env.NODE_ENV === 'production') {
-	// 	console.log('App is running in production mode');
-	// 	httpsOptions = {
-	// 		key: fs.readFileSync('/etc/pki/tls/private/teleplus.key', 'utf8'),
-	// 		cert: fs.readFileSync('/etc/pki/tls/certs/teleplus.crt', 'utf8')
-	// 	};
-	// }
-
 	const app = await NestFactory.create(AppModule, {
-		httpsOptions,
 		rawBody: true
 	});
 	app.setGlobalPrefix('api');

@@ -40,7 +40,7 @@ export class NotificationsRepository {
 		return this.NotificationSubscriptions.find();
 	}
 
-	async getTemplateByKeyAndType(key: string, type: string): Promise<NotificationTemplate | null> {
+	async getTemplateByKeyAndType(key: string, type?: string): Promise<NotificationTemplate | null> {
 		return this.NotificationTemplates.findOne({ where: { Key: key, Type: type } });
 	}
 

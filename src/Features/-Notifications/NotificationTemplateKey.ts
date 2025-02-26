@@ -14,6 +14,7 @@ export class NotificationTemplateKey {
 	static readonly CONTACT_US = 'contact_us';
 	static readonly CONTACT_US_REPLY = 'contact_us_reply';
 	static readonly PAYMENT_SUCCESS = 'payment_success';
+	static readonly MAIN_TEMPLATE = 'main_template';
 }
 export class NotificationTemplateType {
 	static readonly EMAIL = 'Email';

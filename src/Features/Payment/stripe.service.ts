@@ -11,6 +11,7 @@ export class StripeService {
 	stripe!: Stripe;
 	currentCustomer!: Stripe.Customer | Stripe.DeletedCustomer;
 	endpointSecret = this.AppConfig.Config.Stripe.EndpointSecret;
+
 	constructor(private AppConfig: AppConfig) {
 		this.initStripe();
 	}
@@ -30,8 +31,8 @@ export class StripeService {
 				UserId: userId,
 				RefrenceNumber: refrenceNumber
 			},
-			success_url: `http://localhost:4200/success?session_id={CHECKOUT_SESSION_ID}&reference_number=${refrenceNumber}`, // Replace with your success URL
-			cancel_url: 'http://localhost:4200/cart' // Replace with your cancel URL
+			success_url: `${this.AppConfig.Config.Server.FrontEndHost}/success?session_id={CHECKOUT_SESSION_ID}&reference_number=${refrenceNumber}`, // Replace with your success URL
+			cancel_url: `${this.AppConfig.Config.Server.FrontEndHost}/cart` // Replace with your cancel URL
 			//#region
 			// saved_payment_method_options: {
 			//   allow_redisplay_filters: true,

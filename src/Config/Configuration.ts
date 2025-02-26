@@ -4,7 +4,8 @@ export default registerAs('Config', () => ({
 	Env: process.env.ENV,
 	Server: {
 		Host: process.env.SERVER_HOST,
-		Port: parseInt(process.env.SERVER_PORT, 10)
+		Port: parseInt(process.env.SERVER_PORT, 10),
+		FrontEndHost: process.env.SERVER_FRONTEND_HOST
 	},
 	Database: {
 		Host: process.env.DATABASE_HOSTT,
@@ -30,10 +31,10 @@ export default registerAs('Config', () => ({
 			ClientID: process.env.AUTH_GOOGLE_CLIENT_ID
 		}
 	},
-	Notification: {
-		PublicKey: process.env.NOTIFICATION_PUBLIC_KEY,
-		PrivateKey: process.env.NOTIFICATION_PRIVATE_KEY
-	},
+	// Notification: {
+	// 	PublicKey: process.env.NOTIFICATION_PUBLIC_KEY,
+	// 	PrivateKey: process.env.NOTIFICATION_PRIVATE_KEY
+	// },
 	Stripe: {
 		Secret: process.env.STRIPE_SECRET,
 		EndpointSecret: process.env.STRIPE_ENDPOINT_SECRET
