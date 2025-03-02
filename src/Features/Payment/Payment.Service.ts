@@ -126,8 +126,7 @@ export class PaymentService {
 			FirstName: user.FirstName,
 			LastName: user.LastName,
 			TotalAmount: payment.TotalAmount,
-			RefrenceNumber: payment.RefrenceNumber,
-			SiteUrl: 'www.google.com'
+			RefrenceNumber: payment.RefrenceNumber
 		};
 		this.NotificationsService.NotifyUser(payload);
 

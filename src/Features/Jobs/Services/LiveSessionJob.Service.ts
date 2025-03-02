@@ -94,7 +94,8 @@ export class LiveSessionJobService {
 					Placeholders: {
 						FirstName: userSession.Instructor.User.FirstName,
 						LastName: userSession.Instructor.User.LastName,
-						ClassName: userSession.ClassName
+						ClassName: userSession.ClassName,
+						Time: userSession.Time
 					}
 				});
 			}

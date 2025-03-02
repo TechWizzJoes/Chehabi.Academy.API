@@ -37,7 +37,7 @@ export class ContactUsService {
 
 		const payload = new NotificationModels.NotificationPayload();
 		payload.User = ourUser;
-		payload.Type = NotificationTemplateKey.CONTACT_US;
+		payload.Type = NotificationTemplateKey.CONTACT_US_REPLY;
 		payload.Placeholders = {
 			FirstName: reqModel.FirstName,
 			LastName: reqModel.LastName,
@@ -53,7 +53,7 @@ export class ContactUsService {
 
 		const payload = new NotificationModels.NotificationPayload();
 		payload.User = userContactingUs;
-		payload.Type = NotificationTemplateKey.CONTACT_US_REPLY;
+		payload.Type = NotificationTemplateKey.CONTACT_US;
 		payload.Placeholders = {
 			FirstName: reqModel.FirstName,
 			LastName: reqModel.LastName,

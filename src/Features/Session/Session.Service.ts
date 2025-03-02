@@ -288,9 +288,4 @@ export class SessionService {
 		// 	}
 		// }
 	}
-
-	// SendEmailNotfication(payload: NotificationModels.NotificationPayload) {
-	// 	const emailType = NotificationTemplateKey.REMINDER;
-	// 	this.NotificationsService.NotifyUser(emailType, payload);
-	// }
 }
