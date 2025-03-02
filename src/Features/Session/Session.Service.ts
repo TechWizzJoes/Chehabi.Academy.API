@@ -64,7 +64,7 @@ export class SessionService {
 		const classIds = userClasses.map((uc) => uc.ClassId);
 		const sessions = await this.GetNextWeekSessions(classIds);
 
-		if (!CurrentUser.IsAdmin) {
+		if (!CurrentUser.IsAdmin && userClasses.length > 0) {
 			sessions.forEach((session) => {
 				const userclass = userClasses.find((uc) => uc.ClassId == session.ClassId);
 				const blocked = !userclass.IsPaid && session.Order > 1;
