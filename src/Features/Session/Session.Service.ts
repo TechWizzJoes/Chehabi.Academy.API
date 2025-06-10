@@ -132,6 +132,7 @@ export class SessionService {
 	GenerateSessionDates(
 		startDate: Date, // Starting date in "YYYY-MM-DD" format
 		periodDto: ClassModels.PeriodDto[],
+		UTCHoursOffset: number,
 		numberOfSessions: number
 	): ClassModels.SessionDates[] {
 		const sessions: ClassModels.SessionDates[] = [];
@@ -150,7 +151,7 @@ export class SessionService {
 			if (matchingPeriod) {
 				const sessionDate = new Date(currentDate);
 				const [hours, minutes] = matchingPeriod.Time.split(':').map(Number);
-				sessionDate.setHours(hours, minutes);
+				sessionDate.setHours(hours - UTCHoursOffset, minutes); // adjusting for time zone to save as utc in database
 
 				sessions.push({ Date: new Date(sessionDate), DurationInMins: matchingPeriod.DurationInMins });
 				sessionCount++;

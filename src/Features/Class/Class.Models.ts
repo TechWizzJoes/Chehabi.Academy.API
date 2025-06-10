@@ -58,6 +58,8 @@ export namespace ClassModels {
 		LiveSessions: LiveSessionModels.MasterModel[];
 		@ApiProperty()
 		HasFreeTrial: boolean | null;
+		@ApiProperty()
+		UTCHoursOffset!: number;
 
 		EndDate: Date;
 		IsDeleted: boolean;

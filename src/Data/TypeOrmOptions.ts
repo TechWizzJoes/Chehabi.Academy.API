@@ -28,7 +28,8 @@ export const TypeOrmOptions: TypeOrmModuleAsyncOptions = {
 				max: Config.Database.Max,
 				min: Config.Database.Min,
 				idleTimeoutMillis: Config.Database.Idle
-			}
+			},
+			timezone: 'Z',
 			// logger: LoggerService
 		};
 	},

@@ -61,8 +61,10 @@ export class ClassService {
 		const sessionDates = this.SessionService.GenerateSessionDates(
 			newClass.StartDate,
 			newClass.Period,
+			newClass.UTCHoursOffset,
 			newClass.NumberOfSessions
 		);
+		console.log(sessionDates)
 		newClass.EndDate = sessionDates[sessionDates.length - 1].Date;
 
 		let createdClass = await this.ClassRepository.Create(newClass);

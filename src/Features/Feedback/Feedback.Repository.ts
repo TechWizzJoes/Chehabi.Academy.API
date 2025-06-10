@@ -12,7 +12,7 @@ export class FeedbackRepository {
 	constructor(
 		@InjectRepository(Feedback)
 		private Feedback: Repository<Feedback>
-	) {}
+	) { }
 
 	async Getall(): Promise<Feedback[]> {
 		return this.Feedback.find({
@@ -20,7 +20,8 @@ export class FeedbackRepository {
 				Text: And(
 					Not(IsNull()),
 					Raw((alias) => `TRIM(${alias}) != ''`)
-				)
+				),
+				IsDeleted: false
 			},
 			order: {
 				Rating: 'desc'
@@ -35,7 +36,8 @@ export class FeedbackRepository {
 				Text: And(
 					Not(IsNull()),
 					Raw((alias) => `TRIM(${alias}) != ''`)
-				)
+				),
+				IsDeleted: false
 			},
 			order: {
 				Rating: 'desc'
@@ -48,18 +50,29 @@ export class FeedbackRepository {
 	async GetById(id: number): Promise<Feedback> {
 		return this.Feedback.findOne({
 			where: {
-				Id: id
+				Id: id,
+				IsDeleted: false
 			},
 			relations: ['User']
 		});
 	}
 
 	async getByUserId(userId: number): Promise<Feedback[]> {
-		return await this.Feedback.find({ where: { CreatedBy: userId } });
+		return await this.Feedback.find({
+			where: {
+				CreatedBy: userId,
+				IsDeleted: false
+			}
+		});
 	}
 
 	async getByCourseId(courseId: number): Promise<Feedback[]> {
-		return await this.Feedback.find({ where: { CourseId: courseId } });
+		return await this.Feedback.find({
+			where: {
+				CourseId: courseId,
+				IsDeleted: false
+			}
+		});
 	}
 
 	async Create(feedback: FeedbackModels.ReqModel): Promise<Feedback> {
