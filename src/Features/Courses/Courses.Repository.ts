@@ -14,7 +14,7 @@ export class CoursesRepository {
 		private courseRepository: Repository<Course>,
 		@InjectRepository(UserClass)
 		private userClassRepository: Repository<UserClass>
-	) {}
+	) { }
 
 	async GetAll(filter: CoursesModels.Filter): Promise<Course[]> {
 		// return this.courseRepository.find({
@@ -30,7 +30,7 @@ export class CoursesRepository {
 			.leftJoinAndSelect('course.Instructor', 'instructor')
 			.leftJoinAndSelect('instructor.User', 'user')
 			.where('course.IsDeleted = :isDeleted', { isDeleted: false })
-			.andWhere('course.IsActive = :isActive', { isActive: true });
+		// .andWhere('course.IsActive = :isActive', { isActive: true });
 
 		if (filter.Rating) {
 			query.andWhere('course.Rating >= :rating', { rating: filter.Rating });
