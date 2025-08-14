@@ -28,11 +28,12 @@ import { AdminGuard } from '@App/Common/Auth/Admin.Guard';
 import * as fs from 'fs';
 import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
 import { ErrorCodesEnum } from '@App/Common/Enums/ErrorCodes.Enum';
+import { GetUserIfAnyGuard } from '@App/Common/Auth/GetUserIfAny.Guard';
 
 @ApiTags('Courses')
 @Controller('courses')
 export class CoursesController {
-	constructor(private CoursesService: CoursesService) {}
+	constructor(private CoursesService: CoursesService) { }
 
 	@UseGuards(AuthenticatedGuard)
 	@UseGuards(AdminGuard)
@@ -41,6 +42,7 @@ export class CoursesController {
 		return this.CoursesService.GetById(id);
 	}
 
+	@UseGuards(GetUserIfAnyGuard)
 	@Get('/public/:id')
 	GetOnePublic(@Param('id', ParseIntPipe) id: number): Promise<CoursesModels.MasterModel> {
 		return this.CoursesService.GetByIdPublic(id);

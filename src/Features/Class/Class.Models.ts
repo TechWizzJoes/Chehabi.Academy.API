@@ -31,6 +31,10 @@ export namespace ClassModels {
 		LiveSessions: LiveSessionModels.MasterModel[];
 		UserClasses: UserModels.UserClass[];
 		PaymentProducts: PaymentModels.PaymentProduct[];
+
+		AvailableSlots?: number;
+		IsJoined?: boolean; // for joined badge display
+		IsJoinedFreeTrial?: boolean; // for joined badge display
 	}
 
 	export type EntityModel = Omit<MasterModel, ''>;

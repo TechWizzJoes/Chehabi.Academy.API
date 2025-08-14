@@ -30,12 +30,27 @@ export class CoursesService {
 
 	async GetById(id): Promise<CoursesModels.MasterModel> {
 		let course = await this.CoursesRepository.GetById(id);
-		if (course.Classes) course.Classes = course.Classes?.filter((c) => !c.IsDeleted);
+		if (course.Classes) {
+			course.Classes = course.Classes?.filter((c) => !c.IsDeleted);
+
+		}
 		return course;
 	}
 
 	async GetByIdPublic(id): Promise<CoursesModels.MasterModel> {
+		let user = this.UserHelper.GetCurrentUser();
 		let course = await this.CoursesRepository.GetByIdPublic(id);
+		course.Classes?.forEach(c => {
+			c.AvailableSlots = c.MaxCapacity - c.UserClasses.length;
+			const joinedClass = c.UserClasses.find(uc => uc.UserId == user.UserId);
+			if (joinedClass) {
+				if (joinedClass.IsPaid) {
+					c.IsJoined = true;
+				}
+				else
+					c.IsJoinedFreeTrial = true;
+			}
+		});
 		return course;
 	}
 
