@@ -1,6 +1,7 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { CartItem } from './CartItem';
 import { Class } from './Class';
+import { CourseLanguage } from './CourseLanguage';
 import { CourseLevel } from './CourseLevel';
 import { CourseType } from './CourseType';
 import { Instructor } from './Instructor';
@@ -13,6 +14,7 @@ import { UserCourse } from './UserCourse';
 @Index('Course_CourseType_FK', ['TypeId'], {})
 @Index('fk_Course_created_by', ['CreatedBy'], {})
 @Index('Course_CourseLevel_FK', ['LevelId'], {})
+@Index('Course_CourseLanguage_FK', ['LanguageId'], {})
 @Entity('Course', { schema: 'mydb' })
 export class Course {
 	@PrimaryGeneratedColumn({ type: 'int', name: 'Id' })
@@ -32,8 +34,11 @@ export class Course {
 	@Column('int', { name: 'TypeId', nullable: true })
 	TypeId: number | null;
 
-	@Column('int', { name: 'LevelId' })
-	LevelId: number;
+	@Column('int', { name: 'LevelId', nullable: true })
+	LevelId: number | null;
+
+	@Column('int', { name: 'LanguageId', nullable: true })
+	LanguageId: number | null;
 
 	@Column('varchar', { name: 'ImageUrl', nullable: true, length: 255 })
 	ImageUrl: string | null;
@@ -106,6 +111,13 @@ export class Course {
 
 	@OneToMany(() => Class, (Class) => Class.Course)
 	Classes: Class[];
+
+	@ManyToOne(() => CourseLanguage, (CourseLanguage) => CourseLanguage.Courses, {
+		onDelete: 'RESTRICT',
+		onUpdate: 'RESTRICT'
+	})
+	@JoinColumn([{ name: 'LanguageId', referencedColumnName: 'Id' }])
+	Language: CourseLanguage;
 
 	@ManyToOne(() => CourseLevel, (CourseLevel) => CourseLevel.Courses, {
 		onDelete: 'NO ACTION',

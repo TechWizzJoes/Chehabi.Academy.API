@@ -53,6 +53,14 @@ export class CoursesRepository {
 			query.andWhere('course.Level = :level', { level: filter.Level });
 		}
 
+		if (filter.Level) {
+			query.andWhere('course.Level = :level', { level: filter.Level });
+		}
+
+		if (filter.Language) {
+			query.andWhere('course.Language = :language', { language: filter.Language });
+		}
+
 		// console.log(query.getSql());
 		return query.getMany();
 	}
@@ -152,7 +160,7 @@ export class CoursesRepository {
 				InstructorId: InstructorId,
 				IsDeleted: false
 			},
-			relations: ['Instructor.User', 'Level', 'Type']
+			relations: ['Instructor.User', 'Level', 'Type', 'Language']
 		});
 
 		return Classes;

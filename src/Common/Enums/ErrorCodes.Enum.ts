@@ -24,6 +24,7 @@ export enum ErrorCodesEnum {
 	NON_PAID_MATERIAL_DOWNLOAD = 'NON_PAID_MATERIAL_DOWNLOAD',
 	INVALID_COURSE_TYPE = 'INVALID_COURSE_TYPE',
 	INVALID_COURSE_LEVEL = 'INVALID_COURSE_LEVEL',
+	INVALID_COURSE_LANGUAGE = 'INVALID_COURSE_LANGUAGE',
 	//Notification template error
 	EMAIL_NOT_Sent = 'Email not sent:',
 	Invalid_Notification_Type = 'Invalid notification type',

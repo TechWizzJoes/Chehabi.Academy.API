@@ -25,6 +25,7 @@ import { CourseLevel } from './TypeOrmEntities/CourseLevel';
 import { Payment } from './TypeOrmEntities/Payment';
 import { PaymentSession } from './TypeOrmEntities/PaymentSession';
 import { PaymentProduct } from './TypeOrmEntities/PaymentProduct';
+import { CourseLanguage } from './TypeOrmEntities/CourseLanguage';
 
 const Entities = [
 	User,
@@ -37,6 +38,7 @@ const Entities = [
 	NotificationSubscriptions,
 	CourseType,
 	CourseLevel,
+	CourseLanguage,
 	Instructor,
 	NotificationTemplate,
 	Cart,
@@ -56,4 +58,4 @@ const Entities = [
 	providers: [AppConfig],
 	exports: [TypeOrmModule.forFeature(Entities)] //to use entities outside of the module
 })
-export class DataModule {}
+export class DataModule { }

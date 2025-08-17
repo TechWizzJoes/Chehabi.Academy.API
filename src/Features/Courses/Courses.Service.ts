@@ -13,6 +13,7 @@ import { CourseTypeEnum } from '@App/Common/Enums/CourseType.Enum';
 import { ApplicationException } from '@App/Common/Exceptions/Application.Exception';
 import { CourseLevelEnum } from '@App/Common/Enums/CourseLevel.Enum';
 import { ClassService } from '../Class/Class.Service';
+import { CourseLanguageEnum } from '@App/Common/Enums/CourseLanguage.Enum';
 
 @Injectable()
 export class CoursesService {
@@ -75,6 +76,11 @@ export class CoursesService {
 		let courseLevel = CourseLevelEnum[+course.LevelIdString];
 		if (!courseLevel) throw new ApplicationException(ErrorCodesEnum.INVALID_COURSE_LEVEL, HttpStatus.BAD_REQUEST);
 		course.LevelId = CourseLevelEnum[courseLevel];
+
+
+		let CourseLanguage = CourseLanguageEnum[+course.LanguageIdString];
+		if (!CourseLanguage) throw new ApplicationException(ErrorCodesEnum.INVALID_COURSE_LANGUAGE, HttpStatus.BAD_REQUEST);
+		course.LanguageId = CourseLanguageEnum[CourseLanguage];
 
 		course.IsActive = course.IsActive;
 		course.IsDeleted = false;

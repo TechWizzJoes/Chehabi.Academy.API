@@ -15,6 +15,7 @@ export namespace CoursesModels {
 		InstructorId: number | null;
 		TypeId: number | null;
 		LevelId: number;
+		LanguageId: number;
 		VideoPath: string | null;
 		FreeFilePath: string | null;
 		FilePath: string | null;
@@ -33,6 +34,7 @@ export namespace CoursesModels {
 		Instructor: InstructorModels.MasterModel;
 		Type: CourseType;
 		Level: CourseLevel;
+		Language;
 		Feedbacks: FeedbackModels.MasterModel[];
 		RecordedSessions: RecordedSessionModels.MasterModel[];
 		CreatedOn: Date;
@@ -75,10 +77,13 @@ export namespace CoursesModels {
 		@ApiProperty()
 		LevelIdString: string | null;
 		@ApiProperty()
+		LanguageIdString: string | null;
+		@ApiProperty()
 		IsActive: boolean | null;
 
 		TypeId: number;
 		LevelId: number;
+		LanguageId: number;
 		IsDeleted: boolean;
 		InstructorId: number;
 		CreatedBy: number;
@@ -89,6 +94,7 @@ export namespace CoursesModels {
 		Rating!: number;
 		Type!: string;
 		Level: Levels = new Levels();
+		Language!: string;
 	}
 	export class Levels {
 		Beginner!: boolean;
@@ -105,6 +111,13 @@ export class CourseType {
 }
 
 export class CourseLevel {
+	Id: number;
+	Code: number;
+	Text: string;
+	Courses: CoursesModels.MasterModel[];
+}
+
+export class CourseLanguage {
 	Id: number;
 	Code: number;
 	Text: string;
