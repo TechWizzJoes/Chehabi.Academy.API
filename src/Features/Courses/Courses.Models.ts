@@ -95,6 +95,7 @@ export namespace CoursesModels {
 		Type!: string;
 		Level: Levels = new Levels();
 		Language!: string;
+		SortBy?: string;
 	}
 	export class Levels {
 		Beginner!: boolean;

@@ -61,6 +61,22 @@ export class CoursesRepository {
 			query.andWhere('course.Language = :language', { language: filter.Language });
 		}
 
+		if (filter.SortBy) {
+			switch (filter.SortBy) {
+				case 'newest':
+					query.orderBy('course.CreatedOn', 'DESC');
+					break;
+				case 'PriceLowtoHigh':
+					query.orderBy('course.Price', 'ASC');
+					break;
+				case 'PriceHightoLow':
+					query.orderBy('course.Price', 'DESC');
+					break;
+				case 'highestRated':
+					query.orderBy('course.Rating', 'DESC');
+					break;
+			}
+		}
 		// console.log(query.getSql());
 		return query.getMany();
 	}
@@ -89,7 +105,7 @@ export class CoursesRepository {
 			.leftJoinAndSelect('userClasses.User', 'userInClass')
 			.where('course.Id = :id', { id })
 			.andWhere('course.IsDeleted = false')
-			.andWhere('course.IsActive = true')
+			// .andWhere('course.IsActive = true')
 			.getOne();
 
 		return dbCourse;
