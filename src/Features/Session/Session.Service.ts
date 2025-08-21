@@ -14,6 +14,7 @@ import { UserService } from '../User/User.Service';
 import { NotificationModels } from '../-Notifications/Notifications.Models';
 import { NotificationTemplateKey } from '../-Notifications/NotificationTemplateKey';
 import { NotificationsService } from '../-Notifications/Notifications.Service';
+import { Constants } from '@App/Common/Constants';
 
 @Injectable()
 export class SessionService {
@@ -132,7 +133,7 @@ export class SessionService {
 	GenerateSessionDates(
 		startDate: Date, // Starting date in "YYYY-MM-DD" format
 		periodDto: ClassModels.PeriodDto[],
-		UTCHoursOffset: number,
+		timeZone: string,
 		numberOfSessions: number
 	): ClassModels.SessionDates[] {
 		const sessions: ClassModels.SessionDates[] = [];
@@ -149,11 +150,17 @@ export class SessionService {
 			const matchingPeriod = findPeriodForDay(dayOfWeek);
 
 			if (matchingPeriod) {
-				const sessionDate = new Date(currentDate);
 				const [hours, minutes] = matchingPeriod.Time.split(':').map(Number);
-				sessionDate.setHours(hours - UTCHoursOffset, minutes); // adjusting for time zone to save as utc in database
 
-				sessions.push({ Date: new Date(sessionDate), DurationInMins: matchingPeriod.DurationInMins });
+				// build a naive local datetime string (no timezone yet)
+				const localDateTime = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
+
+				const utcDate = Constants.convertLocalToUTC(
+					localDateTime,
+					timeZone
+				);
+				sessions.push({ Date: utcDate, DurationInMins: matchingPeriod.DurationInMins });
+
 				sessionCount++;
 			}
 			currentDate.setDate(currentDate.getDate() + 1);

@@ -61,7 +61,7 @@ export class ClassService {
 		const sessionDates = this.SessionService.GenerateSessionDates(
 			newClass.StartDate,
 			newClass.Period,
-			newClass.UTCHoursOffset,
+			newClass.TimeZone,
 			newClass.NumberOfSessions
 		);
 		// console.log(sessionDates)

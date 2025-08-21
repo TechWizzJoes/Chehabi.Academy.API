@@ -63,7 +63,7 @@ export namespace ClassModels {
 		@ApiProperty()
 		HasFreeTrial: boolean | null;
 		@ApiProperty()
-		UTCHoursOffset!: number;
+		TimeZone!: string;
 
 		EndDate: Date;
 		IsDeleted: boolean;
