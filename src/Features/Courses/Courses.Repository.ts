@@ -105,6 +105,8 @@ export class CoursesRepository {
 			.leftJoinAndSelect('userClasses.User', 'userInClass')
 			.where('course.Id = :id', { id })
 			.andWhere('course.IsDeleted = false')
+			.orderBy('liveSessions.Order', 'ASC')
+
 			// .andWhere('course.IsActive = true')
 			.getOne();
 

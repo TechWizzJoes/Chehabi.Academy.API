@@ -80,8 +80,9 @@ export class ClassService {
 		this.UserHelper.ValidateOwnerShip(dbClass.CreatedBy);
 		this.ValidateCourseDate(dbcourse, newClass);
 		this.ValidateTodaysDate(newClass, dbClass);
+		this.ValidateSessionDates(newClass, dbClass);
 
-		this.SessionService.OnClassUpdate(newClass, dbClass);
+		await this.SessionService.OnClassUpdate(newClass, dbClass);
 
 		let updatedClass = await this.ClassRepository.Update(id, newClass);
 		return updatedClass;
@@ -171,6 +172,14 @@ export class ClassService {
 
 		if (newStartDate < todaysDate) {
 			throw new ApplicationException(ErrorCodesEnum.Class_STARTDATE_BEFORE_TODAY, HttpStatus.BAD_REQUEST);
+		}
+		return true;
+	}
+
+	private ValidateSessionDates(newClass: ClassModels.ClassReqModel, dbClass?: ClassModels.MasterModel): boolean {
+		const firstSession = dbClass.LiveSessions.find((s) => s.Order === 1);
+		if (firstSession && new Date(firstSession.StartDate) < new Date(newClass.StartDate)) {
+			throw new ApplicationException(ErrorCodesEnum.CLASS_AFTER_SESSION, HttpStatus.BAD_REQUEST);
 		}
 		return true;
 	}
