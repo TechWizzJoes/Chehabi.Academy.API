@@ -177,7 +177,7 @@ export class SessionService {
 			newSession.Order = i + 1;
 
 			let endDate = new Date(sess.Date);
-			endDate.setMinutes(endDate.getMinutes() + sess.DurationInMins);
+			endDate.setMinutes(endDate.getMinutes() + parseInt(sess.DurationInMins.toString())); // makesure its always a number
 			newSession.EndDate = endDate;
 
 			return newSession;
