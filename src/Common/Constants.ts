@@ -14,6 +14,10 @@ export class Constants {
 		return new Date();
 	}
 
+	public static GetYear() {
+		return new Date().getFullYear().toString();
+	}
+
 	public static CapitalizeFirstLetter(name: string): string {
 		if (!name) return '';
 		return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();

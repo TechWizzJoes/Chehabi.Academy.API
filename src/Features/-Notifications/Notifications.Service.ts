@@ -13,6 +13,7 @@ import { join } from 'path';
 import * as nodemailer from 'nodemailer';
 import { NotificationsWebSocketGateway } from './WebsocketGateway';
 import { AccountRepository } from '../Account/Account.Repository';
+import { Constants } from '@App/Common/Constants';
 
 @Injectable()
 export class NotificationsService {
@@ -32,7 +33,7 @@ export class NotificationsService {
 		// 	this.Config.Notification.PrivateKey
 		// );
 	}
-
+	//#region push notifications
 	// private notificationPayload = {
 	// 	notification: {
 	// 		title: 'Chehaby Academy',
@@ -83,6 +84,7 @@ export class NotificationsService {
 	// 			console.error('Error sending notification, reason: ', err);
 	// 		});
 	// }
+	//#endregion
 
 	private async getEmailStructureTemplate(): Promise<string> {
 		const template = await this.NotificationsRepository.getTemplateByKeyAndType(
@@ -92,6 +94,8 @@ export class NotificationsService {
 		if (!template || !template.Template) {
 			throw new ApplicationException(`${ErrorCodesEnum.Template_Not_Found}`, HttpStatus.BAD_REQUEST);
 		}
+
+		template.Template = template.Template.replace('{year}', Constants.GetYear());
 		return template.Template;
 	}
 
