@@ -12,6 +12,9 @@ import { InstructorModels } from './Instructor.Models';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Events } from '@App/Common/Events/Events';
 import { Constants } from '@App/Common/Constants';
+import { NotificationsService } from '../-Notifications/Notifications.Service';
+import { NotificationModels } from '../-Notifications/Notifications.Models';
+import { NotificationTemplateKey } from '../-Notifications/NotificationTemplateKey';
 
 @Injectable()
 export class UserService {
@@ -22,7 +25,8 @@ export class UserService {
 		private UserRepository: UserRepository,
 		private InstructorRepository: InstructorRepository,
 		private JwtService: JwtService,
-		private UserHelper: UserHelper
+		private UserHelper: UserHelper,
+		private NotificationsService: NotificationsService
 	) {
 		this.Config = this.appConfig.Config;
 	}
@@ -73,5 +77,13 @@ export class UserService {
 	@OnEvent(Events.USER_CREATED)
 	handleEvent(user: UserModels.MasterModel) {
 		this.CreateUserPreference(user.Id);
+		const payload = new NotificationModels.NotificationPayload();
+		payload.User = user;
+		payload.Type = NotificationTemplateKey.WELCOME_EMAIL;
+		payload.Placeholders = {
+			FirstName: user.FirstName,
+			LastName: user.LastName,
+		};
+		this.NotificationsService.NotifyUser(payload);
 	}
 }

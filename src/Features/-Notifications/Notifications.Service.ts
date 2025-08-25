@@ -144,7 +144,6 @@ export class NotificationsService {
 				await this.sendAppNotification(payload);
 				await this.sendEmail(payload);
 				break;
-			//Testing send welcom mail
 			case NotificationTemplateKey.WELCOME_EMAIL:
 				await this.sendEmail(payload);
 				break;
@@ -171,7 +170,7 @@ export class NotificationsService {
 		emailStructure = emailStructure !== null ? emailStructure.replace('{0}', template) : template;
 
 		const mailOptions = {
-			from: 'info@chehabi-academy.com',
+			from: process.env.Email_NoReply_User,
 			to: payload.Email ?? payload.User.Email,
 			subject: payload.Type.replace(/_/g, ' ').toUpperCase(),
 			html: emailStructure
@@ -182,7 +181,7 @@ export class NotificationsService {
 			port: process.env.Email_Port,
 			secure: true,
 			auth: {
-				user: process.env.Email_User,
+				user: process.env.Email_NoReply_User,
 				pass: process.env.Email_Password
 			}
 		});

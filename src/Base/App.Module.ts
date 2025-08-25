@@ -22,7 +22,6 @@ import { ClassModule } from '@App/Features/Class/Class.Module';
 import { FeedbackModule } from '@App/Features/Feedback/Feedback.Module';
 import { RefreshJwtStrategy } from '@App/Common/Auth/RefreshToken-Strategy';
 import { NotificationsModule } from '@App/Features/-Notifications/Notifications.Module';
-import { EmailSenderModule } from '@App/Features/EmailSender/EmailSender.Module';
 import { DatabaseExceptionFilter } from '@App/Common/Filters/DatabaseException.Filter';
 import { ValidationExceptionFilter } from '@App/Common/Filters/ValidationException.Filter';
 import { ApplicationExceptionFilter } from '@App/Common/Filters/ApplicationException.Filter';
@@ -56,7 +55,6 @@ import { PaymentModule } from '@App/Features/Payment/Payment.Module';
 		SessionModule,
 		FeedbackModule,
 		NotificationsModule,
-		EmailSenderModule,
 		WhatsNewModule,
 		CartModule,
 		PaymentModule,
@@ -88,4 +86,4 @@ import { PaymentModule } from '@App/Features/Payment/Payment.Module';
 		{ provide: APP_INTERCEPTOR, useClass: CurrentUserInterceptor }
 	]
 })
-export class AppModule {}
+export class AppModule { }

@@ -23,17 +23,17 @@ export class ContactUsService {
 		try {
 			await this.SendUsMail(reqModel);
 			reqModel.IsSentToUs = true;
-		} catch (error) {}
+		} catch (error) { }
 		try {
 			await this.SendUserMail(reqModel);
 			reqModel.IsSentToUser = true;
-		} catch (error) {}
+		} catch (error) { }
 		return await this.ContactUsRepository.Create(reqModel);
 	}
 
 	private async SendUsMail(reqModel: ContactUsModels.ContactUsReqModel) {
 		const ourUser = new UserModels.MasterModel();
-		ourUser.Email = 'info@chehabi-academy.com';
+		ourUser.Email = process.env.Email_Contact_User;
 
 		const payload = new NotificationModels.NotificationPayload();
 		payload.User = ourUser;

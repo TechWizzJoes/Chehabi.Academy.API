@@ -7,11 +7,12 @@ import { UserController } from './User.Controller';
 import { UserService } from './User.Service';
 import { InstructorRepository } from './Instructor.Repository';
 import { CartService } from '../Cart/Cart.Service';
+import { NotificationsModule } from '../-Notifications/Notifications.Module';
 
 @Module({
-	imports: [DataModule, CommonModule],
+	imports: [DataModule, CommonModule, NotificationsModule],
 	controllers: [UserController],
 	providers: [AppConfig, UserService, UserRepository, InstructorRepository],
 	exports: [UserService, UserRepository]
 })
-export class UserModule {}
+export class UserModule { }
