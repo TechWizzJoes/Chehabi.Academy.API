@@ -39,6 +39,13 @@ export class UserPrefrence {
 	})
 	InstructorsAnnouncementNotify: boolean;
 
+	@Column('varchar', {
+		name: 'PreferredLanguage',
+		length: 100,
+		default: () => "'en'"
+	})
+	PreferredLanguage: string;
+
 	@OneToOne(() => User, (User) => User.UserPrefrence, {
 		onDelete: 'NO ACTION',
 		onUpdate: 'NO ACTION'

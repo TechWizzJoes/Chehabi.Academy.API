@@ -15,6 +15,7 @@ export namespace NotificationModels {
 		Key: string | null;
 		Type: string | null;
 		Template: string | null;
+		Language: string | null;
 		CreatedBy: number | null;
 		Creator: UserModels.MasterModel;
 	}

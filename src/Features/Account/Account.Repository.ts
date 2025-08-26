@@ -9,7 +9,7 @@ import { UserModels } from '../User/User.Models';
 export class AccountRepository {
 	Config: Config;
 
-	constructor(@InjectRepository(User) private User: Repository<User>) {}
+	constructor(@InjectRepository(User) private User: Repository<User>) { }
 
 	async GetUserById(id: number): Promise<User> {
 		return this.User.findOne({
@@ -24,6 +24,15 @@ export class AccountRepository {
 			where: {
 				Email: email
 			}
+		});
+	}
+
+	async GetUserByEmailForNotifications(email: string): Promise<User> {
+		return this.User.findOne({
+			where: {
+				Email: email
+			},
+			relations: ['UserPrefrence']
 		});
 	}
 

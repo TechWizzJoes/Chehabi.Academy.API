@@ -86,9 +86,10 @@ export class NotificationsService {
 	// }
 	//#endregion
 
-	private async getEmailStructureTemplate(): Promise<string> {
+	private async getEmailStructureTemplate(lang: string): Promise<string> {
 		const template = await this.NotificationsRepository.getTemplateByKeyAndType(
 			NotificationTemplateKey.MAIN_TEMPLATE,
+			lang,
 			null
 		);
 		if (!template || !template.Template) {
@@ -99,8 +100,8 @@ export class NotificationsService {
 		return template.Template;
 	}
 
-	private async getTemplate(key: string, type: string): Promise<string> {
-		const template = await this.NotificationsRepository.getTemplateByKeyAndType(key, type);
+	private async getTemplate(key: string, lang: string, type: string): Promise<string> {
+		const template = await this.NotificationsRepository.getTemplateByKeyAndType(key, lang, type);
 		if (!template || !template.Template) {
 			throw new ApplicationException(`${ErrorCodesEnum.Template_Not_Found}`, HttpStatus.BAD_REQUEST);
 		}
@@ -119,7 +120,7 @@ export class NotificationsService {
 	async NotifyUser(payload: NotificationModels.NotificationPayload): Promise<boolean> {
 		//Using the mail notification in the payload is just for testing
 		if (payload.Email !== undefined && payload.Email !== null) {
-			payload.User = (await this.AccountRepository.GetUserByEmail(payload.Email.toLowerCase().trim())) ?? null;
+			payload.User = (await this.AccountRepository.GetUserByEmailForNotifications(payload.Email.toLowerCase().trim())) ?? null;
 		}
 		if (!payload.User && !payload.User.Email) {
 			throw new ApplicationException(`${ErrorCodesEnum.USER_NOT_FOUND}`, HttpStatus.BAD_REQUEST);
@@ -135,7 +136,7 @@ export class NotificationsService {
 			case NotificationTemplateKey.SESSION_REMINDER_INSTRUCTOR:
 				if (payload.User.UserPrefrence.SessionsReminderNotify) {
 					await this.sendAppNotification(payload);
-					// this.sendEmail(payload);
+					this.sendEmail(payload);
 				}
 				break;
 
@@ -167,8 +168,8 @@ export class NotificationsService {
 	}
 
 	async sendEmail(payload: NotificationModels.NotificationPayload): Promise<boolean> {
-		let emailStructure = await this.getEmailStructureTemplate();
-		let template = await this.getTemplate(payload.Type, NotificationTemplateType.EMAIL);
+		let emailStructure = await this.getEmailStructureTemplate(payload.User.UserPrefrence.PreferredLanguage);
+		let template = await this.getTemplate(payload.Type, payload.User.UserPrefrence.PreferredLanguage, NotificationTemplateType.EMAIL);
 
 		template = this.replaceTemplatePlaceholders(payload, template);
 		emailStructure = emailStructure !== null ? emailStructure.replace('{0}', template) : template;
@@ -201,7 +202,7 @@ export class NotificationsService {
 	}
 
 	async sendAppNotification(payload: NotificationModels.NotificationPayload): Promise<boolean> {
-		let template = await this.getTemplate(payload.Type, NotificationTemplateType.IN_APP);
+		let template = await this.getTemplate(payload.Type, payload.User.UserPrefrence.PreferredLanguage, NotificationTemplateType.IN_APP);
 		template = this.replaceTemplatePlaceholders(payload, template);
 
 		let newNotification = {

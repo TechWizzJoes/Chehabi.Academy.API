@@ -20,7 +20,7 @@ export class NotificationsRepository {
 		private NotificationTemplates: Repository<NotificationTemplate>,
 		@InjectRepository(InAppNotification)
 		private InAppNotification: Repository<InAppNotification>
-	) {}
+	) { }
 
 	async GetBySubObject(subObject: string): Promise<NotificationSubscriptions[]> {
 		let sub = await this.NotificationSubscriptions.find({
@@ -40,8 +40,8 @@ export class NotificationsRepository {
 		return this.NotificationSubscriptions.find();
 	}
 
-	async getTemplateByKeyAndType(key: string, type?: string): Promise<NotificationTemplate | null> {
-		return this.NotificationTemplates.findOne({ where: { Key: key, Type: type } });
+	async getTemplateByKeyAndType(key: string, lang?: string, type?: string): Promise<NotificationTemplate | null> {
+		return this.NotificationTemplates.findOne({ where: { Key: key, Type: type, Language: lang } });
 	}
 
 	async SaveInAppNotification(createDto: NotificationModels.InApp): Promise<InAppNotification> {

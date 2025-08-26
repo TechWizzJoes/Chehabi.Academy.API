@@ -16,6 +16,9 @@ export class NotificationTemplate {
 	@Column('varchar', { name: 'Template', nullable: true, length: 300 })
 	Template: string | null;
 
+	@Column('varchar', { name: 'Language', nullable: false, length: 100 })
+	Language: string | null;
+
 	@RelationId((NotificationTemplate: NotificationTemplate) => NotificationTemplate.Creator)
 	@Column('int', { name: 'CreatedBy', nullable: true })
 	CreatedBy: number | null;
