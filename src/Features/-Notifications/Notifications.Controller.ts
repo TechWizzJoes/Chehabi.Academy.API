@@ -2,11 +2,12 @@ import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nest
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { NotificationsService } from '@App/Features/-Notifications/Notifications.Service';
 import { NotificationModels } from './Notifications.Models';
+import { AuthenticatedGuard } from '@App/Common/Auth/Authenticated.Guard';
 
 @ApiTags('Notifications')
 @Controller('notifications')
 export class NotificationsController {
-	constructor(private NotificationsService: NotificationsService) {}
+	constructor(private NotificationsService: NotificationsService) { }
 
 	// @Post('subscribe')
 	// SubscribeClient(@Body() subObject: any): Promise<any> {
@@ -19,11 +20,13 @@ export class NotificationsController {
 	// }
 
 	@Get('in-app')
+	@UseGuards(AuthenticatedGuard)
 	GetInApp(@Query('isRead') isRead: boolean, @Query('page') page: number): Promise<any> {
 		return this.NotificationsService.GetInApp(isRead, page);
 	}
 
 	@Post('in-app/read')
+	@UseGuards(AuthenticatedGuard)
 	ReadItems(@Body() ids: number[]): Promise<any> {
 		return this.NotificationsService.ReadItems(ids);
 	}
