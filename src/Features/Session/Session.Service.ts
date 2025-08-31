@@ -63,7 +63,7 @@ export class SessionService {
 		const CurrentUser = this.UserHelper.GetCurrentUser();
 		const userClasses = await this.LiveSessionRepository.GetClassesIdsByUserId(CurrentUser.UserId);
 		const classIds = userClasses.map((uc) => uc.ClassId);
-		const sessions = await this.GetNextWeekSessions(classIds);
+		const sessions = classIds.length > 0 ? await this.GetNextWeekSessions(classIds) : [];
 
 		if (!CurrentUser.IsAdmin && userClasses.length > 0) {
 			sessions.forEach((session) => {
